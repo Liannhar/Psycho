@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
 UCLASS()
-class PSYCHO_API ABaseCharacter : public AActor
+class PSYCHO_API ABaseCharacter : public ACharacter
 {
 	GENERATED_BODY()
 	
@@ -18,7 +18,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
