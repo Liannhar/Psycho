@@ -31,6 +31,8 @@ void AP_PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
+	if (!InputActions) return;
+
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent)) 
 	{

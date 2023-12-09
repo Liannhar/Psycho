@@ -28,9 +28,6 @@ protected:
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
-    class UInputMappingContext* InputMapping;
-
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Sprint(const FInputActionValue& Value);
