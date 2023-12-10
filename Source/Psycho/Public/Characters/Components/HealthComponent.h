@@ -33,6 +33,9 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void ApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -40,9 +43,6 @@ public:
 	float GetMaxHP();
 	float GetCurrentHP();
 	float GetPercentHP();
-
-	UFUNCTION(BlueprintCallable)
-	void ApplyDamage(float Damage);
 
 	UFUNCTION(BlueprintCallable)
 	void RestoreHP(float RestoreAmount);

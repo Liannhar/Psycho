@@ -20,6 +20,11 @@ void UHealthComponent::BeginPlay()
 	Super::BeginPlay();
 
 	if (MaxHP > 0) CalculatePercentHP();
+
+	if (AActor* Owner = GetOwner())
+	{
+		Owner->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::ApplyDamage);
+	}
 }
 
 
@@ -35,7 +40,7 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 float UHealthComponent::CalculatePercentHP()
 {
 	int Precission = 2;
-	int X = FMath::Pow(10, Precission);
+	int X = FMath::Pow(10, (float)Precission);
 	return PercentHP = FMath::RoundHalfFromZero(X * (CurrentHP / MaxHP)) / X;
 }
 
@@ -54,8 +59,7 @@ float UHealthComponent::GetPercentHP()
 	return PercentHP;
 }
 
-
-void UHealthComponent::ApplyDamage(float Damage)
+void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	CurrentHP = FMath::Clamp(CurrentHP - Damage, 0, MaxHP);
 	CalculatePercentHP();
