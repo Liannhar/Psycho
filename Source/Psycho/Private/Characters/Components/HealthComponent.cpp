@@ -9,7 +9,7 @@ UHealthComponent::UHealthComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 }
 
@@ -36,12 +36,12 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	// ...
 }
 
-
-float UHealthComponent::CalculatePercentHP()
+void UHealthComponent::CalculatePercentHP()
 {
-	int Precission = 2;
-	int X = FMath::Pow(10, (float)Precission);
-	return PercentHP = FMath::RoundHalfFromZero(X * (CurrentHP / MaxHP)) / X;
+	// int Precission = 2;
+	// int X = FMath::Pow(10, (float)Precission);
+	// PercentHP = FMath::RoundHalfFromZero(X * (CurrentHP / MaxHP)) / X;
+	PercentHP = CurrentHP / MaxHP;
 }
 
 float UHealthComponent::GetMaxHP()

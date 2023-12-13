@@ -10,9 +10,10 @@ UCLASS()
 class PSYCHO_API ABaseCharacter : public ACharacter
 {
 	GENERATED_BODY()
-	
+private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Health, meta = (AllowPrivateAccess = "true"))
 	class UHealthComponent* HealthComponent;
+	
 public:	
 	// Sets default values for this actor's properties
 	ABaseCharacter();

@@ -14,13 +14,25 @@ UCLASS()
 class PSYCHO_API AP_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
-	
+private:
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* DefaultMappingContext;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UPlayerInputActions* InputActions;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
+	float DefaultWalkSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
+	float SprintSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
+	float SlowWalkSpeed;
+
+	bool bIsSprinting;
+	bool bIsSlowWalking;
 
 	class APlayerCharacter* PlayerCharacter;
 	

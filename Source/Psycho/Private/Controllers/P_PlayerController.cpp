@@ -25,6 +25,8 @@ void AP_PlayerController::BeginPlay()
 		Subsystem->ClearAllMappings();
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
 	}
+
+	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = DefaultWalkSpeed;
 }
 
 void AP_PlayerController::SetupInputComponent() 
@@ -50,6 +52,8 @@ void AP_PlayerController::SetupInputComponent()
 		// Attacks
 		EnhancedInputComponent->BindAction(InputActions->LightAttackAction, ETriggerEvent::Triggered, this, &AP_PlayerController::LightAttack);
 		EnhancedInputComponent->BindAction(InputActions->HeavyAttackAction, ETriggerEvent::Triggered, this, &AP_PlayerController::HeavyAttack);
+
+		EnhancedInputComponent->BindAction(InputActions->TakePillAction, ETriggerEvent::Triggered, this, &AP_PlayerController::TakePill);
 	}
 }
 
@@ -69,8 +73,11 @@ void AP_PlayerController::Move(const FInputActionValue& Value)
 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
 	// add movement 
-	PlayerCharacter->AddMovementInput(ForwardDirection, MovementVector.Y);
-	PlayerCharacter->AddMovementInput(RightDirection, MovementVector.X);
+	if (PlayerCharacter) 
+	{
+		PlayerCharacter->AddMovementInput(ForwardDirection, MovementVector.Y);
+		PlayerCharacter->AddMovementInput(RightDirection, MovementVector.X);
+	}
 }
 
 void AP_PlayerController::Look(const FInputActionValue& Value)
@@ -79,13 +86,22 @@ void AP_PlayerController::Look(const FInputActionValue& Value)
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 	
 	// add yaw and pitch input to controller
-	PlayerCharacter->AddControllerYawInput(LookAxisVector.X);
-	PlayerCharacter->AddControllerPitchInput(-LookAxisVector.Y);
+	if (PlayerCharacter) 
+	{
+		PlayerCharacter->AddControllerYawInput(LookAxisVector.X);
+		PlayerCharacter->AddControllerPitchInput(-LookAxisVector.Y);
+	}
 }
 
 void AP_PlayerController::Sprint(const FInputActionValue& Value)
 {
-	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed *= 3.f;
+	bIsSprinting = true;
+	bIsSlowWalking = false;
+
+	if (PlayerCharacter) 
+	{
+		PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+	}
 
 	if(GEngine)
      GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Sprint!"));
@@ -94,7 +110,12 @@ void AP_PlayerController::Sprint(const FInputActionValue& Value)
 
 void AP_PlayerController::StopSprint(const FInputActionValue& Value)
 {
-	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed /= 3.f;
+	bIsSprinting = false;
+
+	if (PlayerCharacter && !bIsSlowWalking) 
+	{
+		PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = DefaultWalkSpeed;
+	}
 
 	if(GEngine)
      GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Stop Sprint!"));
@@ -103,7 +124,13 @@ void AP_PlayerController::StopSprint(const FInputActionValue& Value)
 
 void AP_PlayerController::SlowWalk(const FInputActionValue& Value)
 {
-	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed /= 1.5f;
+	bIsSlowWalking = true;
+	bIsSprinting = false;
+
+	if (PlayerCharacter) 
+	{
+		PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = SlowWalkSpeed;
+	}
 
 	if(GEngine)
      GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Slow Walk!"));
@@ -112,7 +139,12 @@ void AP_PlayerController::SlowWalk(const FInputActionValue& Value)
 
 void AP_PlayerController::StopSlowWalk(const FInputActionValue& Value)
 {
-	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed *= 1.5f;
+	bIsSlowWalking = false;
+
+	if (PlayerCharacter && !bIsSprinting) 
+	{
+		PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = DefaultWalkSpeed;
+	}
 	
 	if(GEngine)
      GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Stop Slow Walk!"));
