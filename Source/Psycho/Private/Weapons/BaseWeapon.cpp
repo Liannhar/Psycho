@@ -2,26 +2,40 @@
 
 
 #include "Weapons/BaseWeapon.h"
+#include "Components/CapsuleComponent.h"
 
-// Sets default values
 ABaseWeapon::ABaseWeapon()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	CollisionComponent = CreateDefaultSubobject<UCapsuleComponent>("Capsule component");
+	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("Skeletal Mesh");
+	CollisionComponent->InitCapsuleSize(15,32);
+	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	CollisionComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
+	CollisionComponent->SetupAttachment(RootComponent);
+	SkeletalMeshComponent->SetupAttachment(RootComponent);
 }
 
-// Called when the game starts or when spawned
 void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
-// Called every frame
-void ABaseWeapon::Tick(float DeltaTime)
+void ABaseWeapon::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	Super::Tick(DeltaTime);
+	Super::NotifyActorBeginOverlap(OtherActor);
+	//нанести урон и проверить, что это enemy
+}
 
+void ABaseWeapon::StartAttack()
+{
+	IsAttacking=true;
+	CollisionComponent->SetCollisionResponseToChannel(ECC_Pawn,ECR_Overlap);
+}
+
+void ABaseWeapon::EndAttack()
+{
+	IsAttacking=false;
+	CollisionComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
 }
 

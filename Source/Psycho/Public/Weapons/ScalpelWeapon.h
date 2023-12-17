@@ -6,9 +6,7 @@
 #include "Weapons/BaseWeapon.h"
 #include "ScalpelWeapon.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class PSYCHO_API AScalpelWeapon : public ABaseWeapon
 {

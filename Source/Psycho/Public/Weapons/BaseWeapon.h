@@ -3,8 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AttackComponent.h"
 #include "GameFramework/Actor.h"
 #include "BaseWeapon.generated.h"
+
+class UCapsuleComponent;
 
 UCLASS()
 class PSYCHO_API ABaseWeapon : public AActor
@@ -12,15 +15,17 @@ class PSYCHO_API ABaseWeapon : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	ABaseWeapon();
-
+	void StartAttack();
+	void EndAttack();
 protected:
-	// Called when the game starts or when spawned
+	
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	UPROPERTY(VisibleAnywhere,Category="Components")
+	UCapsuleComponent* CollisionComponent;
+	UPROPERTY(VisibleAnywhere,Category="Components")
+	USkeletalMeshComponent* SkeletalMeshComponent;
+private:
+	bool IsAttacking = false;
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 };

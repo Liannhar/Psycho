@@ -6,6 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "AttackComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnStartAttack); 
+DECLARE_MULTICAST_DELEGATE(FOnEndAttack); 
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PSYCHO_API UAttackComponent : public UActorComponent
