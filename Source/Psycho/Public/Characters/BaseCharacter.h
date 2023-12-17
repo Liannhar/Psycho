@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+class UAttackComponent;
+
 UCLASS()
 class PSYCHO_API ABaseCharacter : public ACharacter
 {
@@ -13,6 +15,8 @@ class PSYCHO_API ABaseCharacter : public ACharacter
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Health, meta = (AllowPrivateAccess = "true"))
 	class UHealthComponent* HealthComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attack, meta = (AllowPrivateAccess = "true"))
+	UAttackComponent* AttackComponent;
 public:	
 	// Sets default values for this actor's properties
 	ABaseCharacter();

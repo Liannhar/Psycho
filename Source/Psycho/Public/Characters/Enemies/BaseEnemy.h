@@ -6,12 +6,23 @@
 #include "Characters/BaseCharacter.h"
 #include "BaseEnemy.generated.h"
 
+class UBehaviorTree;
 /**
  * 
  */
 UCLASS()
-class PSYCHO_API AEnemy : public ABaseCharacter
+class PSYCHO_API ABaseEnemy : public ABaseCharacter
 {
 	GENERATED_BODY()
-	
+public:
+	ABaseEnemy();
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="AI")
+	UBehaviorTree* BehaviorTreeAsset;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="AI")
+	bool IsAttacking=false;
+	bool IsEnemyAttacking();
+	void Attack();
+	void ChangeMaxSpeed(float NewSpeed);
+	void BlockAttack();
+	void GetDamage();
 };

@@ -2,6 +2,8 @@
 
 
 #include "Characters/BaseCharacter.h"
+
+#include "AttackComponent.h"
 #include "HealthComponent.h"
 
 // Sets default values
@@ -11,6 +13,7 @@ ABaseCharacter::ABaseCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>("Health Component");
+	AttackComponent = CreateDefaultSubobject<UAttackComponent>("Attack Component");
 }
 
 // Called when the game starts or when spawned
