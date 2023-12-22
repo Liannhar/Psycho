@@ -263,22 +263,22 @@ void AP_PlayerController::LockOnTarget(const FInputActionValue& Value)
 
 AActor* AP_PlayerController::FindTargetToChange(const FVector& Direction)
 {
-	// What kind of objects do we want to consider. Currently - Pawns
+	// Specify the types of objects under consideration. Currently limited to Pawns.
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypesArray;
 	ObjectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
 
-	// Containing hit results per Pawn we hit by trace
+	// Store hit results for each Pawn traced by the box.
 	TArray<FHitResult> HitResults;
 
-	// List of actors to ignore when traicing. Currently - Player and LockedOnTarget
+	// List of actors to be ignored during tracing. Currently excludes Player and LockedOnTarget.
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(LockedOnTarget);
 	ActorsToIgnore.Add(PlayerCharacter);
 
-	// Size of the box that hits Pawns
+	// Define the size of the box used for hitting Pawns.
 	FVector BoxSize = FVector();
 
-	// In BoxTraceStart pushing forward BoxTrace to not check Pawns that are behind Player
+	// Move the BoxTraceStart forward to avoid checking Pawns behind the Player during the trace.
 	FVector BoxTraceStart = PlayerCharacter->GetActorLocation() + PlayerCharacter->GetActorForwardVector() * BoxTraceWidth;
 	FVector BoxTraceEnd =  BoxTraceStart + Direction * BoxTraceLength;
 
@@ -296,25 +296,25 @@ AActor* AP_PlayerController::FindTargetToChange(const FVector& Direction)
 		true
 		);
 
-	// Variable to determine the minimal Angle between PlayerForwardVector and Pawn
-	// Since maximum angle is 360 then in radian it will be 2𝝿 wich is 6,28319
+	// Variable to determine the minimum angle between PlayerForwardVector and Pawns.
+	// Since the maximum angle is 360 degrees, in radians it is 2𝝿, which is approximately 6.28319.
 	float MinAngle = 10;
 	AActor* NewTarget = nullptr;
 
-	// Going through all Pawn (Enemies) that were hited to find new target
+	// Iterate through all the Pawns (Enemies) that were hit to find a new target.
 	for (FHitResult Hit : HitResults)
 	{
 		// To normalize Pawn (Enemy) location we should firstly use GetSafeNormal funciton and then Normalize
 		FVector NormalizedEnemyLocation = (Hit.GetActor()->GetActorLocation() - PlayerCharacter->GetActorLocation()).GetSafeNormal();
 		NormalizedEnemyLocation.Normalize();
 
-		// Angle in radians between Pawn (Enemy) and Player
+		// Calculate the angle in radians between Pawn (Enemy) and Player.
 		float PlayerEnemyAngle = FMath::Acos(FVector::DotProduct(PlayerCharacter->GetActorForwardVector(), NormalizedEnemyLocation));
 
-		// Drawing spheres on Pawns that were hited by BoxTrace
+		// Draw spheres on Pawns that were hit by the BoxTrace for visualization.
 		UKismetSystemLibrary::DrawDebugSphere(GetWorld(), Hit.GetActor()->GetActorLocation(), 100.f, 12, FLinearColor::White, 5, 1.f);
 
-		// Updating NewTarget and MinAngle when found lower angle between Player and Pawn
+		// Update NewTarget and MinAngle when finding a lower angle between Player and Pawn.
 		if (PlayerEnemyAngle < MinAngle)
 		{
 			NewTarget = Hit.GetActor();
@@ -328,16 +328,16 @@ AActor* AP_PlayerController::FindTargetToChange(const FVector& Direction)
 
 void AP_PlayerController::ChangeTargetOn(const FInputActionValue& Value)
 {
-	// Getting X input of a mouse to know at what direction Player is trying to change target
+	// Get the X input of the mouse to determine the direction in which the Player is trying to change the target.
 	float MouseInputX = Value.Get<FVector>().X;
 
-	// Checking if Player trying to change target thats on the right. X input is positive when moving right
+	// Check if the Player is attempting to change the target on the right (X input is positive when moving right).
 	bool bRight = MouseInputX > 0;
 
 	if(GEngine)
      GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("MouseInputX: %f"), MouseInputX));
 	
-	// if absolute value of X input is greater than speed treshhold then change target
+	// If the absolute value of X input is greater than the speed threshold, then change the target.
 	if (fabs(MouseInputX) >= ChangeTargetAtMouseSpeed)
 	{
 		AActor* NewTarget = FindTargetToChange(PlayerCharacter->GetActorRightVector() * (bRight ? 1 : -1));
