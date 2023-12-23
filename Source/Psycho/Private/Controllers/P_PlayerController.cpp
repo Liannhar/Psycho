@@ -275,9 +275,6 @@ AActor* AP_PlayerController::FindTargetToChange(const FVector& Direction)
 	ActorsToIgnore.Add(LockedOnTarget);
 	ActorsToIgnore.Add(PlayerCharacter);
 
-	// Define the size of the box used for hitting Pawns.
-	FVector BoxSize = FVector();
-
 	// Move the BoxTraceStart forward to avoid checking Pawns behind the Player during the trace.
 	FVector BoxTraceStart = PlayerCharacter->GetActorLocation() + PlayerCharacter->GetActorForwardVector() * BoxTraceWidth;
 	FVector BoxTraceEnd =  BoxTraceStart + Direction * BoxTraceLength;
