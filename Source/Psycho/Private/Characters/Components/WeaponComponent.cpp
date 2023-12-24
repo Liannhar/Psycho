@@ -17,8 +17,30 @@ UWeaponComponent::UWeaponComponent()
 void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	OnStartAttack.AddUObject(this,&UWeaponComponent::StartAttack);
-	OnEndAttack.AddUObject(this,&UWeaponComponent::EndAttack);
+	if(WeaponClasses.Num()==0) return;
+	for(auto WeaponClass : WeaponClasses)
+	{
+		auto Weapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass);
+		if(!Weapon) continue;
+		const auto Actor = GetOwner();
+		if(!Actor) return;
+
+		const auto BaseCharacter = Cast<ABaseCharacter>(Actor);
+		if(!BaseCharacter) return;
+		
+		Weapon->SetOwner(BaseCharacter);
+		Weapons.Add(Weapon);
+		AttachWeaponToSocket(Weapon,BaseCharacter,WeaponSocketName);
+	}
+	CurrentWeapon = Weapons[CurrentWeaponIndex];
+}
+
+void UWeaponComponent::AttachWeaponToSocket(ABaseWeapon *Weapon, ABaseCharacter *Character, const FName& SocketName)
+{
+	if (!Weapon) return;
+
+	const FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget,false);
+	Weapon->AttachToComponent(Character->GetMesh(),AttachmentRules,SocketName);
 }
 
 
@@ -31,17 +53,9 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 void UWeaponComponent::StartAttack()
 {
 	CurrentWeapon->StartAttack();
-	const auto Actor = GetOwner();
-	if(!Actor) return;
-
-	const auto BaseCharacter = Cast<ABaseCharacter>(Actor);
-	if(!BaseCharacter) return;
-
-	const auto AttackComponent = BaseCharacter->GetComponentByClass(UAttackComponent::StaticClass());
-	if(!AttackComponent) return;
 }
 
-void UWeaponComponent::EndAttack()
+void UWeaponComponent::EndAttack() const
 {
 	CurrentWeapon->EndAttack();
 }

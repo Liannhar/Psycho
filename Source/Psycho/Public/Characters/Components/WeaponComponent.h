@@ -17,17 +17,24 @@ class PSYCHO_API UWeaponComponent : public UActorComponent
 
 public:	
 	UWeaponComponent();
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Weapon")
-	ABaseWeapon* CurrentWeapon;
+	
+	ABaseWeapon* GetCurrentWeapon() {return CurrentWeapon;}
+	TSubclassOf<ABaseWeapon> GetCurrentWeaponClass() {return WeaponClasses[CurrentWeaponIndex];}
+	void StartAttack();
+	void EndAttack() const;
 protected:
 	virtual void BeginPlay() override;
-
+	void AttachWeaponToSocket(ABaseWeapon* Weapon, ABaseCharacter* Character, const FName& SocketName);
+	UPROPERTY(EditDefaultsOnly,Category="Weapon")
+	TArray<TSubclassOf<ABaseWeapon>> WeaponClasses;
+	UPROPERTY(EditAnywhere,Category="Weapon")
+	FName WeaponSocketName="WeaponSocket";
+private:
+	int32 CurrentWeaponIndex=0;
+	UPROPERTY()
+	ABaseWeapon* CurrentWeapon = nullptr;
+	UPROPERTY()
+	TArray<ABaseWeapon*> Weapons;
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-private:
-	FOnStartAttack OnStartAttack;
-	FOnEndAttack OnEndAttack;
-	void StartAttack();
-	void EndAttack();
-		
 };

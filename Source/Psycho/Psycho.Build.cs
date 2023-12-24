@@ -8,7 +8,7 @@ public class Psycho : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput","GameplayTasks","NavigationSystem" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput","GameplayTasks","NavigationSystem" ,"MotionWarping"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 		
@@ -24,6 +24,7 @@ public class Psycho : ModuleRules
 			"Psycho/Public/Weapons",
 			"Psycho/Public/Pills",
 			"Psycho/Public/Controllers",
+			"Psycho/Public/AnimNotifies",
 		});
 
 		// Uncomment if you are using Slate UI

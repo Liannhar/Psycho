@@ -8,6 +8,7 @@
 
 class UAttackComponent;
 class UWeaponComponent;
+class UMotionWarpingComponent;
 
 UCLASS()
 class PSYCHO_API ABaseCharacter : public ACharacter
@@ -20,6 +21,8 @@ class PSYCHO_API ABaseCharacter : public ACharacter
 	UAttackComponent* AttackComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
 	UWeaponComponent* WeaponComponent;
+	UPROPERTY(EditAnywhere,Category="Component")
+	UMotionWarpingComponent* MotionWarpingComponent;
 
 public:	
 	// Sets default values for this actor's properties

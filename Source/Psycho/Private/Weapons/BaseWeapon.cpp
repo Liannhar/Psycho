@@ -12,8 +12,8 @@ ABaseWeapon::ABaseWeapon()
 	CollisionComponent->InitCapsuleSize(15,32);
 	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CollisionComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
+	SetRootComponent(SkeletalMeshComponent);
 	CollisionComponent->SetupAttachment(RootComponent);
-	SkeletalMeshComponent->SetupAttachment(RootComponent);
 }
 
 void ABaseWeapon::BeginPlay()

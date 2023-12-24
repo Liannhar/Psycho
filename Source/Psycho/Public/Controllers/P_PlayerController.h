@@ -7,7 +7,7 @@
 #include "InputActionValue.h"
 #include "P_PlayerController.generated.h"
 
-/**
+class UAttackComponent;/**
  * 
  */
 UCLASS()
@@ -22,6 +22,7 @@ class PSYCHO_API AP_PlayerController : public APlayerController
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UPlayerInputActions* InputActions;
 
+	UPROPERTY()
 	class APlayerCharacter* PlayerCharacter;
 	
 protected:
@@ -37,5 +38,7 @@ protected:
 	void LightAttack(const FInputActionValue& Value);
 	void HeavyAttack(const FInputActionValue& Value);
 	void TakePill(const FInputActionValue& Value);
+
+	UAttackComponent* GetAttackComponent() const;
 };
 

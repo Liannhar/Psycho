@@ -2,12 +2,15 @@
 
 
 #include "Controllers/P_PlayerController.h"
+
+#include "AttackComponent.h"
 #include "Components/InputComponent.h"
 #include "Characters/Player/PlayerCharacter.h"
 #include "DataAssets\PlayerInputActions.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Psycho/CoreTypes.h"
 
 void AP_PlayerController::BeginPlay()
 {
@@ -121,16 +124,23 @@ void AP_PlayerController::StopSlowWalk(const FInputActionValue& Value)
 
 void AP_PlayerController::LightAttack(const FInputActionValue& Value)
 {
-	// TODO: LightAttack Logic
-	if(GEngine)
-     GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Light Attack!"));	
+	if(const auto AttackComponent = GetAttackComponent())
+	{
+		AttackComponent->StartAttack(EComboInput::LightAttack);
+		if(GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Light Attack!"));	
+	}
+	
 }
 
 void AP_PlayerController::HeavyAttack(const FInputActionValue& Value)
 {
-	// TODO: HeavyAttack Logic
-	if(GEngine)
-     GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Heavy Attack!"));	
+	if(const auto AttackComponent = GetAttackComponent())
+	{
+		AttackComponent->StartAttack(EComboInput::HeavyAttack);
+		if(GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Heavy Attack!"));
+	}
 }
 
 void AP_PlayerController::TakePill(const FInputActionValue& Value)
@@ -138,4 +148,12 @@ void AP_PlayerController::TakePill(const FInputActionValue& Value)
 	// TODO: TakePill Logic
 	if(GEngine)
      GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Taking a Pill!"));	
+}
+
+UAttackComponent* AP_PlayerController::GetAttackComponent() const
+{
+	const auto Component = PlayerCharacter->GetComponentByClass(UAttackComponent::StaticClass());
+	if(!Component) return nullptr;
+
+	return Cast<UAttackComponent>(Component);
 }
