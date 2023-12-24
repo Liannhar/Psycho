@@ -83,7 +83,7 @@ protected:
 	void ChangeTargetOn(const FInputActionValue& Value);
 	AActor* FindTargetToChange(const FVector& Direction); 
 
-	//Interct
+	//Interact
 	void Interact(const FInputActionValue& Value);
 
 public:
