@@ -83,6 +83,9 @@ protected:
 	void ChangeTargetOn(const FInputActionValue& Value);
 	AActor* FindTargetToChange(const FVector& Direction); 
 
+	//Interct
+	void Interact(const FInputActionValue& Value);
+
 public:
 	AP_PlayerController();
 };

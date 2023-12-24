@@ -79,6 +79,9 @@ void AP_PlayerController::SetupInputComponent()
 		// Lock On Target
 		EnhancedInputComponent->BindAction(InputActions->LockOnTargetAction, ETriggerEvent::Triggered, this, &AP_PlayerController::LockOnTarget);
 		EnhancedInputComponent->BindAction(InputActions->ChangeTargetOnAction, ETriggerEvent::Triggered, this, &AP_PlayerController::ChangeTargetOn);
+
+		// Interact
+		EnhancedInputComponent->BindAction(InputActions->Interact, ETriggerEvent::Triggered, this, &AP_PlayerController::Interact);
 	}
 }
 
@@ -341,4 +344,12 @@ void AP_PlayerController::ChangeTargetOn(const FInputActionValue& Value)
 		
 		LockedOnTarget = NewTarget ? NewTarget : LockedOnTarget;
 	}
+}
+
+
+void AP_PlayerController::Interact(const FInputActionValue& Value)
+{
+	// TODO: Interact
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Interacted"));
 }
