@@ -34,4 +34,10 @@ public:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     UInputAction* TakePillAction;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    UInputAction* LockOnTargetAction;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    UInputAction* ChangeTargetOnAction;
 };
