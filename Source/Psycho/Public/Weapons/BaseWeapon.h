@@ -21,10 +21,15 @@ public:
 	ABaseWeapon();
 	void StartAttack();
 	void EndAttack();
+	float GetLightAttackDamage() const {return LightAttackDamage;}
+	float GetHeavyAttackDamage() const {return HeavyAttackDamage;}
 	UPROPERTY(EditAnywhere,Category="Combo")
 	TArray<FCombination> DifferentCombos;
 protected:
-	
+	UPROPERTY(EditAnywhere,Category="Damage")
+	float LightAttackDamage;
+	UPROPERTY(EditAnywhere,Category="Damage")
+	float HeavyAttackDamage;
 	virtual void BeginPlay() override;
 	UPROPERTY(VisibleAnywhere,Category="Components")
 	UCapsuleComponent* CollisionComponent;

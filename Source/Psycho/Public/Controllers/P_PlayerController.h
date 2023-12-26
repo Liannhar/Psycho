@@ -7,7 +7,10 @@
 #include "InputActionValue.h"
 #include "P_PlayerController.generated.h"
 
-class UAttackComponent;/**
+class UAttackComponent;
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnMoveSignature,FVector2d); 
+
+/**
  * 
  */
 UCLASS()

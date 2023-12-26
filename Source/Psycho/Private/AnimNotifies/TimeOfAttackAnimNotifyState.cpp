@@ -29,6 +29,13 @@ void UTimeOfAttackAnimNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp, U
 	}
 }
 
+void UTimeOfAttackAnimNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	float FrameDeltaTime)
+{
+	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
+	
+}
+
 UAttackComponent* UTimeOfAttackAnimNotifyState::GetAttackComponent(USkeletalMeshComponent* MeshComp)
 {
 	const auto Actor = MeshComp->GetOwner();

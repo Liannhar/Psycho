@@ -24,13 +24,13 @@ public:
 	UAttackComponent();
 	void StartAttack(EComboInput Input);
 	void EndAttack();
-	void SetNextAttack(bool CanAttack)
-	{
-		CanAttackNext=CanAttack;
-		UE_LOG(LogTemp,Display,TEXT("AAAAAAAAAAAAA%d"),CanAttackNext?1:0);
-	}
+	void SetNextAttack(bool CanAttack){CanAttackNext=CanAttack;}
 	void SetTimeAttack(bool CanAttack){CantAttackInTime=CanAttack;}
 	void SetCombo();
+	void SetAttackDirection(const FVector2D& NewVector){AttackDirection=NewVector;}
+	void SetForwardDirection(const FVector& NewVector){ForwardDirection=NewVector;}
+	void SetRightDirection(const FVector& NewVector){RightDirection=NewVector;}
+	void Damage();
 
 	FOnStartAttackSignature OnStartAttack;
 	FOnEndAttackSignature OnEndAttack;
@@ -39,16 +39,30 @@ protected:
 	virtual void BeginPlay() override;
 	TArray<FCombination> Combos;
 
+	UPROPERTY()
+	float RotationSpeed = 50.0f;
+
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 private:
 	ABaseCharacter* GetCharacter() const;
+	ABaseWeapon* GetWeapon() const;
+	
 	int32 AttackIndex = 0;
 	int32 CurrentComboAttack = 0;
 	bool CanAttackNext = false;
 	bool CantAttackInTime = true;
 	FTimerHandle TimerEndAnimMontage;
-	ABaseWeapon* GetWeapon() const;
+	
 	void ActiveAttack(FCombination Attack);
-	void AttackTarget();
+	void AttackTarget() const;
+
+	FVector2D AttackDirection=FVector2d(0.0f,0.0f);
+	FVector ForwardDirection;
+	FVector RightDirection;
+	
+	float LengthLineAttack=50.0f;
+	EComboInput CurrentComboInput= None;
+
+	float RotationAngle(const ABaseCharacter* BaseCharacter) const;
 };

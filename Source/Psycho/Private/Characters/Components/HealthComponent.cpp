@@ -63,7 +63,6 @@ void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDa
 {
 	CurrentHP = FMath::Clamp(CurrentHP - Damage, 0, MaxHP);
 	CalculatePercentHP();
-
 	if (CurrentHP == 0)
 	{ 
 		OnDied();

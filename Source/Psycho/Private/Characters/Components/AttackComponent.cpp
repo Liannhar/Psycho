@@ -7,6 +7,7 @@
 #include "BaseWeapon.h"
 #include "WeaponComponent.h"
 #include "CoreTypes.h"
+#include "MotionWarpingComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 UAttackComponent::UAttackComponent()
@@ -22,6 +23,14 @@ void UAttackComponent::StartAttack(EComboInput Input)
 	{
 		if(AttackIndex==0 || AttackIndex<Combos[i].TypeAttack.Num() && Combos[i].TypeAttack[AttackIndex]==Input && ( !CantAttackInTime|| CanAttackNext ))
 		{
+			if(AttackIndex==0)
+			{
+				AttackDirection=FVector2d(0.0f,0.0f);
+				ForwardDirection=FVector(0.0f,0.0f,0.0f);
+				RightDirection=FVector(0.0f,0.0f,0.0f);
+			}
+
+			CurrentComboInput=Combos[i].TypeAttack[AttackIndex];
 			if(Combos[i].Attack[AttackIndex].PreviosAttackNeedTiming)
 			{
 				if( CanAttackNext )
@@ -32,6 +41,7 @@ void UAttackComponent::StartAttack(EComboInput Input)
 				}
 				continue;
 			}
+
 			CurrentComboAttack=i;
 			ActiveAttack(Combos[i]);
 			break;
@@ -51,6 +61,7 @@ void UAttackComponent::EndAttack()
 	WeaponComponent->EndAttack();
 	AttackIndex=0;
 	CurrentComboAttack=0;
+	CurrentComboInput=EComboInput::None;
 	GetWorld()->GetTimerManager().ClearTimer(TimerEndAnimMontage);
 }
 
@@ -59,20 +70,48 @@ void UAttackComponent::SetCombo()
 	if (const auto Weapon =GetWeapon())
 	{
 		Combos = Weapon->DifferentCombos;
-		for(auto Combo:Combos)
+	}
+}
+
+//Используется в AnimNotifyDamage
+void UAttackComponent::Damage()
+{
+	const auto BaseCharacter = GetCharacter();
+	if(!BaseCharacter) return;
+	FHitResult HitResult;
+	FCollisionQueryParams Params;
+	FVector Start = BaseCharacter->GetActorLocation();
+	FVector End = BaseCharacter->GetActorLocation()+BaseCharacter->GetActorForwardVector()*LengthLineAttack;
+	Params.AddIgnoredActor(BaseCharacter);
+	
+	if(GetWorld()->LineTraceSingleByChannel(HitResult,Start,End,ECC_Visibility,Params,FCollisionResponseParams()))
+	{
+		const auto HitActor = HitResult.GetActor();
+		if(const auto Enemy = Cast<ABaseEnemy>(HitActor))
 		{
-			if(Combo.TypeAttack.Num()!=Combo.Attack.Num())
+			const auto Weapon = GetWeapon();
+			switch (CurrentComboInput)
 			{
-				break;
+				case None:
+					break;
+			    case LightAttack:
+					UGameplayStatics::ApplyDamage(Enemy,Weapon->GetLightAttackDamage(),BaseCharacter->GetController(),BaseCharacter,UDamageType::StaticClass());
+					break;
+			    case HeavyAttack:
+					UGameplayStatics::ApplyDamage(Enemy,Weapon->GetHeavyAttackDamage(),BaseCharacter->GetController(),BaseCharacter,UDamageType::StaticClass());
+					break;
 			}
+			
 		}
 	}
+	DrawDebugLine(GetWorld(),Start,End,FColor::Red,false,5.0f,0,5.0f);
 }
 
 void UAttackComponent::ActiveAttack(FCombination Combo)
 {
 	const auto BaseCharacter = GetCharacter();
 	if(!BaseCharacter) return;
+	AttackTarget();
 	const auto TimeToEndAnimMontage = BaseCharacter->PlayAnimMontage(Combo.Attack[AttackIndex].AttackMontage,1);
 	if(!GetWorld()) return;
 	GetWorld()->GetTimerManager().SetTimer(TimerEndAnimMontage,this,&UAttackComponent::EndAttack,TimeToEndAnimMontage,false);
@@ -81,35 +120,38 @@ void UAttackComponent::ActiveAttack(FCombination Combo)
 
 /* проверить что forward vector сонаправлен с motionwarping
 */
-void UAttackComponent::AttackTarget()
+void UAttackComponent::AttackTarget() const
 {
-	/*if (const auto Enemy = ActionEnemy())
-	{
-		const auto Component = BaseCharacter->GetComponentByClass(UMotionWarpingComponent::StaticClass());
-		if(!Component) return;
-		const auto MotionWarpingComponent = Cast<UMotionWarpingComponent>(Component);
-		if(!MotionWarpingComponent) return;
-		
-		const auto AttackLocation = Enemy->GetActorLocation();
-		if (AttackLocation.IsZero()) return;
-		
-		const auto ForwardVector = BaseCharacter->GetActorForwardVector();
+	const auto BaseCharacter = GetCharacter();
+	if(!BaseCharacter) return;
+	const auto Component = BaseCharacter->GetComponentByClass(UMotionWarpingComponent::StaticClass());
+	if(!Component) return;
+	
+	const auto MotionWarpingComponent = Cast<UMotionWarpingComponent>(Component);
+	if(!MotionWarpingComponent) return;
 
-		UE_LOG(LogTemp,Display,TEXT("K%d"),FVector::Coincident(AttackLocation,ForwardVector)?1:0);
-		UE_LOG(LogTemp,Display,TEXT("Z%d"),ForwardVector == AttackLocation ?1:0);
-		UE_LOG(LogTemp,Display,TEXT("M%d"),ForwardVector.Equals(AttackLocation, 0.1f) ?1:0);
-		//if(FVector::Coincident(AttackLocation.GetSafeNormal(),ForwardVector.GetSafeNormal()))
-		//if(ForwardVector == AttackLocation)
-		//if(ForwardVector.Equals(AttackLocation, 0.1f))
-		//{
-		FTransform AttackTransform;
-		AttackTransform.SetLocation(AttackLocation);
-		auto NewRotation = AttackLocation.Rotation();
-		NewRotation.Pitch = 0.0f;
-		AttackTransform.SetRotation(NewRotation.Quaternion());
-		MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform("Attack",AttackTransform);	
-		//}
-	}*/
+	FTransform AttackTransform;
+	AttackTransform.SetLocation(BaseCharacter->GetActorLocation());
+	auto NewRotation = BaseCharacter->GetActorRotation();
+	NewRotation	+=FRotator(0.0f,RotationAngle(BaseCharacter),0.0f);
+	AttackTransform.SetRotation(NewRotation.Quaternion());
+	MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform("Attack",AttackTransform);
+}
+
+
+float UAttackComponent::RotationAngle(const ABaseCharacter* BaseCharacter) const
+{
+	const FVector CurrentDirection = FVector(FVector2D(BaseCharacter->GetActorForwardVector()), 0.0f).GetSafeNormal2D();
+
+	const FVector2D TargetForwardVector = FVector2D(ForwardDirection).GetSafeNormal();
+	const FVector2D TargetRightVector = FVector2D(RightDirection).GetSafeNormal();
+
+	const FVector WorldTargetDirection = FVector(
+		TargetForwardVector * AttackDirection.Y + TargetRightVector * AttackDirection.X, 0.0f).GetSafeNormal2D();
+
+	const float Sign = FMath::Sign(FVector::CrossProduct(CurrentDirection, WorldTargetDirection).Z);
+	const float DeltaAngle = Sign * FMath::Acos(FVector::DotProduct(WorldTargetDirection, CurrentDirection));
+	return DeltaAngle;
 }
 
 

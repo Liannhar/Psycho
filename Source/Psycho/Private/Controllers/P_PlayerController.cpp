@@ -70,10 +70,16 @@ void AP_PlayerController::Move(const FInputActionValue& Value)
 
 	// get right vector 
 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
+	if(const auto AttackComponent = Cast<UAttackComponent>(PlayerCharacter->GetComponentByClass(UAttackComponent::StaticClass())))
+	{
+		AttackComponent->SetAttackDirection(MovementVector);
+		AttackComponent->SetForwardDirection(ForwardDirection);
+		AttackComponent->SetRightDirection(RightDirection);
+	}
 	// add movement 
 	PlayerCharacter->AddMovementInput(ForwardDirection, MovementVector.Y);
 	PlayerCharacter->AddMovementInput(RightDirection, MovementVector.X);
+	
 }
 
 void AP_PlayerController::Look(const FInputActionValue& Value)

@@ -17,8 +17,6 @@ void UNextAttackAnimNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, U
 	if(const auto AttackComponent = GetAttackComponent(MeshComp))
 	{
 		AttackComponent->SetNextAttack(true);
-		if(GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Attack!"));
 	}
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
 }
@@ -28,10 +26,14 @@ void UNextAttackAnimNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAn
 	if(const auto AttackComponent = GetAttackComponent(MeshComp))
 	{
 		AttackComponent->SetNextAttack(false);
-		if(GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("NotAttack!"));
 	}
 	Super::NotifyEnd(MeshComp, Animation);
+}
+
+void UNextAttackAnimNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	float FrameDeltaTime)
+{
+	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
 }
 
 UAttackComponent* UNextAttackAnimNotifyState::GetAttackComponent(USkeletalMeshComponent* MeshComp)
