@@ -33,8 +33,6 @@ void ABaseEnemy::Attack()
 	{
 		
 		const auto AttackIndex = AttackComponentt->GetAttackIndex();
-		UE_LOG(LogTemp,Display,TEXT("ac%d"),AttacksCount);
-		UE_LOG(LogTemp,Display,TEXT("ai%d"),AttackIndex);
 		if(AttackIndex<=AttacksCount && !IsTakenDamage)
 		{
 			AttackComponentt->StartAttack(LightAttack);

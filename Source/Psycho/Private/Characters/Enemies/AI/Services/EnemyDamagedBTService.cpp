@@ -30,7 +30,6 @@ void UEnemyDamagedBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
 	if (!Enemy) return;
 	if(!ProbabilityTimerHandle.IsValid())
 	{
-		//засунуть все в enemy
 		if(Enemy->GetIsTakenDamage())
 		{
 			const float RandomNumber = FMath::FRandRange(0.0f, 1.0f);

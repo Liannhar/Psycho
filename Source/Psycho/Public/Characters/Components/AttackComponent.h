@@ -36,7 +36,7 @@ protected:
 	TArray<FCombination> Combos;
 
 	UPROPERTY(EditAnywhere,Category="Attack")
-	float RotationSpeed = 50.0f;
+	float RotationSpeed = 60.0f;
 	UPROPERTY(EditAnywhere,Category="Attack")
 	float LengthLineAttack=100.0f;
 	UPROPERTY(EditAnywhere,Category="Attack")
