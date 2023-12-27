@@ -21,8 +21,23 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="AI")
 	bool IsAttacking=false;
 	bool IsEnemyAttacking();
+	UAttackComponent* GetAttackComponent();
 	void Attack();
-	void ChangeMaxSpeed(float NewSpeed);
+	void ChangeCountCombo();
+	void ChangeMaxSpeed(float NewSpeed) const;
 	void BlockAttack();
 	void GetDamage();
+	virtual void BeginPlay() override;
+	bool GetIsTakenDamage() const {return IsTakenDamage;}
+private:
+	bool IsTakenDamage = false;
+	FTimerHandle TimerDamage;
+	void TakingDamage();
+	void DontTakeDamage();
+
+	void EndWait();
+	float TimeForWaitDamage=3.0f;
+	int32 AttacksCount=0;
+	FTimerHandle WaitNextAttemptAttack;
+	
 };

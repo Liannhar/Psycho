@@ -15,12 +15,13 @@ class PSYCHO_API UEnemyDamagedBTService : public UBTService
 	GENERATED_BODY()
 public:
 	UEnemyDamagedBTService();
+	
 protected:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="AI")
 	FBlackboardKeySelector EnemyIsDamagedKey;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="AI",meta=(ClampMin=0.0f,ClampMax=1.0f))
-	float Probability=0.0f;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="AI",meta=(ClampMin=0.0f,ClampMax=1.0f))
+	float Probability=0.8f;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="AI")
 	float TimePerBlock=5.0f;
 	FTimerHandle ProbabilityTimerHandle;
 	void CanBeDamaged();

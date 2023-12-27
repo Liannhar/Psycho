@@ -62,12 +62,13 @@ float UHealthComponent::GetPercentHP()
 void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	CurrentHP = FMath::Clamp(CurrentHP - Damage, 0, MaxHP);
+	OnTakeDamage.Broadcast();
 	CalculatePercentHP();
 	if (CurrentHP == 0)
 	{ 
 		OnDied();
 	}
-
+	
 	if(GEngine)
      GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(
 		TEXT("%s was attacked! %s has %f HP"), *(GetOwner()->GetName()), *(GetOwner()->GetName()), CurrentHP));
@@ -83,4 +84,5 @@ void UHealthComponent::OnDied()
 {
 	if(GEngine)
      GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s died!"), *(GetOwner()->GetName())));
+	OnDeath.Broadcast();
 }

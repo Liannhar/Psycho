@@ -11,8 +11,6 @@
 class ABaseCharacter;
 struct FCombination;
 class ABaseWeapon;
-DECLARE_MULTICAST_DELEGATE(FOnStartAttackSignature); 
-DECLARE_MULTICAST_DELEGATE(FOnEndAttackSignature); 
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -30,17 +28,19 @@ public:
 	void SetAttackDirection(const FVector2D& NewVector){AttackDirection=NewVector;}
 	void SetForwardDirection(const FVector& NewVector){ForwardDirection=NewVector;}
 	void SetRightDirection(const FVector& NewVector){RightDirection=NewVector;}
-	void Damage();
-
-	FOnStartAttackSignature OnStartAttack;
-	FOnEndAttackSignature OnEndAttack;
+	void Damage() const;
+	int32 GetAttackIndex() const {return AttackIndex;}
 
 protected:
 	virtual void BeginPlay() override;
 	TArray<FCombination> Combos;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere,Category="Attack")
 	float RotationSpeed = 50.0f;
+	UPROPERTY(EditAnywhere,Category="Attack")
+	float LengthLineAttack=100.0f;
+	UPROPERTY(EditAnywhere,Category="Attack")
+	float SphereDamageRadius=30.0f;
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -61,7 +61,7 @@ private:
 	FVector ForwardDirection;
 	FVector RightDirection;
 	
-	float LengthLineAttack=50.0f;
+	
 	EComboInput CurrentComboInput= None;
 
 	float RotationAngle(const ABaseCharacter* BaseCharacter) const;

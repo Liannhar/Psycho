@@ -32,6 +32,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void Death();
+
+	UPROPERTY(EditAnywhere,Category="Health")
+	float LifeSpan = 5.0f;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

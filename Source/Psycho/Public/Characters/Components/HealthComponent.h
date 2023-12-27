@@ -7,6 +7,9 @@
 #include "HealthComponent.generated.h"
 
 
+DECLARE_MULTICAST_DELEGATE(FOnDeathSignature)
+DECLARE_MULTICAST_DELEGATE(FOnTakeDamageStartSignature)
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PSYCHO_API UHealthComponent : public UActorComponent
 {
@@ -43,6 +46,9 @@ public:
 	float GetMaxHP();
 	float GetCurrentHP();
 	float GetPercentHP();
+
+	FOnDeathSignature OnDeath;
+	FOnTakeDamageStartSignature OnTakeDamage;
 
 	UFUNCTION(BlueprintCallable)
 	void RestoreHP(float RestoreAmount);

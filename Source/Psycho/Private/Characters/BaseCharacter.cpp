@@ -7,6 +7,8 @@
 #include "AttackComponent.h"
 #include "HealthComponent.h"
 #include "WeaponComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -25,6 +27,18 @@ void ABaseCharacter::BeginPlay()
 	check(AttackComponent);
 	check(WeaponComponent);
 	AttackComponent->SetCombo();
+	HealthComponent->OnDeath.AddUObject(this,&ABaseCharacter::Death);
+}
+
+void ABaseCharacter::Death()
+{
+	//PlayAnimMontage();// Анимация смерти
+	GetCharacterMovement()->DisableMovement();
+	SetLifeSpan(LifeSpan);
+	if(const auto Collision = GetCapsuleComponent())
+	{
+		Collision->SetCollisionResponseToAllChannels(ECR_Ignore);
+	}
 }
 
 void ABaseCharacter::Tick(float DeltaTime)

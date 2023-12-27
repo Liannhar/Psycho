@@ -15,6 +15,7 @@ UEnemyDamagedBTService::UEnemyDamagedBTService()
 
 void UEnemyDamagedBTService::CanBeDamaged()
 {
+	UE_LOG(LogTemp,Display,TEXT("RRRRR"));
 	GetWorld()->GetTimerManager().ClearTimer(ProbabilityTimerHandle);
 }
 
@@ -27,12 +28,36 @@ void UEnemyDamagedBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
 	const auto Controller = OwnerComp.GetAIOwner();
 	const auto Enemy = Cast<ABaseEnemy>(Controller->GetPawn());
 	if (!Enemy) return;
+	if(!ProbabilityTimerHandle.IsValid())
+	{
+		//засунуть все в enemy
+		if(Enemy->GetIsTakenDamage())
+		{
+			const float RandomNumber = FMath::FRandRange(0.0f, 1.0f);
+			if(RandomNumber>Probability)
+			{
+				GetWorld()->GetTimerManager().SetTimer(ProbabilityTimerHandle,this,&UEnemyDamagedBTService::CanBeDamaged,TimePerBlock);
+				Enemy->BlockAttack(); 
+				BlackBoard->SetValueAsBool(EnemyIsDamagedKey.SelectedKeyName,true);	
+			}
+			else
+			{
+				GetWorld()->GetTimerManager().SetTimer(ProbabilityTimerHandle,this,&UEnemyDamagedBTService::CanBeDamaged,TimePerBlock);
+				BlackBoard->SetValueAsBool(EnemyIsDamagedKey.SelectedKeyName,false);
+			}
+		}
+		else
+		{
+			BlackBoard->SetValueAsBool(EnemyIsDamagedKey.SelectedKeyName,true);
+		}
+	}
 	
-	const auto PerceptionComponentClass = Controller->GetComponentByClass(UEnemyAIPerceptionComponent::StaticClass());
+	
+	/*Логика через PerceptionComponent но он не работает)
+	 *const auto PerceptionComponentClass = Controller->GetComponentByClass(UEnemyAIPerceptionComponent::StaticClass());
 	if(const auto PerceptionComponent = Cast<UEnemyAIPerceptionComponent>(PerceptionComponentClass))
 	{
-		const auto EnemyIsNotDamaged = PerceptionComponent->GetEnemyIsNotDamaged();
-		if(EnemyIsNotDamaged)
+		if(const auto EnemyIsNotDamaged = PerceptionComponent->GetEnemyIsNotDamaged())
 		{
 			BlackBoard->SetValueAsBool(EnemyIsDamagedKey.SelectedKeyName,true);
 		}
@@ -54,6 +79,6 @@ void UEnemyDamagedBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
 				}	
 			}
 		}
-	}
+	}*/
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 }

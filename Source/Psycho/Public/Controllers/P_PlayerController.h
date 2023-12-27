@@ -19,24 +19,24 @@ class PSYCHO_API AP_PlayerController : public APlayerController
 	GENERATED_BODY()
 private:
 	/** MappingContext */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* DefaultMappingContext;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* TargetOnMappingContext;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	class UPlayerInputActions* InputActions;
 
 	UPROPERTY()
 	class APlayerCharacter* PlayerCharacter;
 
 	// Movement system
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
 	float DefaultWalkSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
 	float SprintSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
 	float SlowWalkSpeed;
 
 	bool bIsSprinting;
@@ -59,7 +59,9 @@ private:
 	AActor* LockedOnTarget;
 	bool bIsLockedOnTarget;
 	FVector CameraDefaultLocation;
-	
+public:
+	bool GetLockOnTarget() const {return bIsLockedOnTarget;}
+	AActor* GetLockedOnTarget() const {return LockedOnTarget;}
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;

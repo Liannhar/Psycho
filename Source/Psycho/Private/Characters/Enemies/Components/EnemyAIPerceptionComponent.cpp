@@ -57,12 +57,13 @@ bool UEnemyAIPerceptionComponent::GetEnemyIsNotDamaged()
 
 	const auto CurrentEnemy =Cast<ABaseEnemy>(Pawn);
 	if(!CurrentEnemy) return true;
-
 	GetCurrentlyPerceivedActors(UAISense_Damage::StaticClass(),FoundActors);
+	//GetCurrentlyPerceivedActors(UAISense_Damage::StaticClass(),FoundActors);
+	//GetKnownPerceivedActors(UAISense_Damage::StaticClass(),FoundActors);
 	if(FoundActors.Num()==0) return true;
-
 	for(auto const Actor:FoundActors)
 	{
+		UE_LOG(LogTemp,Display,TEXT("%s"),*Actor->GetName());
 		if(Actor->IsA(ABaseEnemy::StaticClass()))
 		{
 			return false;
