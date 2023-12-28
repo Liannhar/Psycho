@@ -22,15 +22,30 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
 	}
 }
 
+bool ABaseEnemyAIController::GetCanFocus() const
+{
+	if(const auto BaseEnemy = Cast<ABaseEnemy>(GetOwner()))
+	{
+		return BaseEnemy->GetNotIsAttackingNow();
+	}
+	return false;
+}
+
 void ABaseEnemyAIController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	const auto FocusActor = GetFocusOnActor();
-	SetFocus(FocusActor);
+	UE_LOG(LogTemp,Display,TEXT("A%d"),GetCanFocus()?1:0);
+	if(GetCanFocus())
+	{
+		SetFocus(FocusActor);
+	}
+	
 }
 
 AActor* ABaseEnemyAIController::GetFocusOnActor() const
 {
 	if(!GetBlackboardComponent()) return nullptr;
 	return Cast<AActor>(GetBlackboardComponent()->GetValueAsObject(FocusOnKeyName));
+	
 }

@@ -23,6 +23,7 @@ public:
 	bool IsEnemyAttacking();
 	UAttackComponent* GetAttackComponent();
 	void Attack();
+	bool GetNotIsAttackingNow() const {return NotIsAttackingNow;}
 	void ChangeCountCombo();
 	void ChangeMaxSpeed(float NewSpeed) const;
 	void BlockAttack();
@@ -39,5 +40,7 @@ private:
 	float TimeForWaitDamage=3.0f;
 	int32 AttacksCount=0;
 	FTimerHandle WaitNextAttemptAttack;
+
+	bool NotIsAttackingNow=true;
 	
 };

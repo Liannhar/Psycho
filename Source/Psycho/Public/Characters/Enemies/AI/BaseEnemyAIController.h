@@ -24,6 +24,7 @@ protected:
 	FName FocusOnKeyName = "Player";
 	
 	virtual void OnPossess(APawn* InPawn) override;
+	bool GetCanFocus() const;
 	virtual void Tick(float DeltaSeconds) override;
 private:
 	AActor* GetFocusOnActor() const;

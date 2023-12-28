@@ -14,35 +14,57 @@ UWeaponComponent::UWeaponComponent()
 }
 
 
+void UWeaponComponent::ChangeWeapon(ABaseWeapon* NewWeapon,TSubclassOf<ABaseWeapon> NewClassOfWeapon)
+{
+	if(const auto BaseCharacter = GetCharacter())
+	{
+		DetachWeaponOfSocket(CurrentWeapon,BaseCharacter,WeaponSocketName);
+		CurrentWeapon=NewWeapon;
+		CurrentClassOfWeapon = NewClassOfWeapon;
+		AttachWeaponToSocket(CurrentWeapon,BaseCharacter,WeaponSocketName);
+	}
+}
+
 void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	if(WeaponClasses.Num()==0) return;
-	for(auto WeaponClass : WeaponClasses)
+	const auto Weapon = GetWorld()->SpawnActor<ABaseWeapon>(CurrentClassOfWeapon);
+	if(!Weapon) return;;
+	
+	if(const auto BaseCharacter = GetCharacter())
 	{
-		auto Weapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass);
-		if(!Weapon) continue;
-		const auto Actor = GetOwner();
-		if(!Actor) return;
-
-		const auto BaseCharacter = Cast<ABaseCharacter>(Actor);
-		if(!BaseCharacter) return;
-		
 		Weapon->SetOwner(BaseCharacter);
-		Weapons.Add(Weapon);
 		AttachWeaponToSocket(Weapon,BaseCharacter,WeaponSocketName);
+		CurrentWeapon = Weapon;	
 	}
-	CurrentWeapon = Weapons[CurrentWeaponIndex];
+	
 }
 
-void UWeaponComponent::AttachWeaponToSocket(ABaseWeapon *Weapon, ABaseCharacter *Character, const FName& SocketName)
+void UWeaponComponent::AttachWeaponToSocket(ABaseWeapon *Weapon, const ABaseCharacter *Character, const FName& SocketName)
 {
 	if (!Weapon) return;
-
 	const FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget,false);
 	Weapon->AttachToComponent(Character->GetMesh(),AttachmentRules,SocketName);
 }
 
+void UWeaponComponent::DetachWeaponOfSocket(ABaseWeapon* Weapon, const ABaseCharacter* Character,
+	const FName& SocketName)
+{
+	if(!Weapon) return;
+	const FDetachmentTransformRules DettachmentRules(EDetachmentRule::KeepRelative,false);
+	Weapon->DetachFromActor(DettachmentRules);
+}
+
+
+ABaseCharacter* UWeaponComponent::GetCharacter()
+{
+	const auto Actor = GetOwner();
+	if(!Actor) return nullptr;
+
+	const auto BaseCharacter = Cast<ABaseCharacter>(Actor);
+	if(!BaseCharacter) return nullptr;
+	return BaseCharacter;
+}
 
 void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {

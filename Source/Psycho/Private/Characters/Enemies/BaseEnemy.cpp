@@ -31,14 +31,20 @@ void ABaseEnemy::Attack()
 {
 	if(const auto AttackComponentt = GetAttackComponent())
 	{
-		
 		const auto AttackIndex = AttackComponentt->GetAttackIndex();
 		if(AttackIndex<=AttacksCount && !IsTakenDamage)
 		{
+			NotIsAttackingNow=false;		
 			AttackComponentt->StartAttack(LightAttack);
 			GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndWait,0.5f);	
 		}
 	}
+}
+
+void ABaseEnemy::EndWait()
+{
+	NotIsAttackingNow=true;
+	Attack();
 }
 
 void ABaseEnemy::ChangeCountCombo()
@@ -76,10 +82,7 @@ void ABaseEnemy::DontTakeDamage()
 	IsTakenDamage=false;
 }
 
-void ABaseEnemy::EndWait()
-{
-	Attack();
-}
+
 
 
 void ABaseEnemy::ChangeMaxSpeed(float NewSpeed) const

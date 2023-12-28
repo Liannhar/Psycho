@@ -18,21 +18,25 @@ class PSYCHO_API UWeaponComponent : public UActorComponent
 public:	
 	UWeaponComponent();
 	
-	ABaseWeapon* GetCurrentWeapon() {return CurrentWeapon;}
-	TSubclassOf<ABaseWeapon> GetCurrentWeaponClass() {return WeaponClasses[CurrentWeaponIndex];}
+	ABaseWeapon* GetCurrentWeapon() const {return CurrentWeapon;}
+	
+	UFUNCTION(BlueprintCallable)
+	void ChangeWeapon(ABaseWeapon* NewWeapon,TSubclassOf<ABaseWeapon> NewClassOfWeapon);
 protected:
 	virtual void BeginPlay() override;
-	void AttachWeaponToSocket(ABaseWeapon* Weapon, ABaseCharacter* Character, const FName& SocketName);
+	static void AttachWeaponToSocket(ABaseWeapon* Weapon, const ABaseCharacter* Character, const FName& SocketName);
+	static void DetachWeaponOfSocket(ABaseWeapon* Weapon, const ABaseCharacter* Character, const FName& SocketName);
+
 	UPROPERTY(EditDefaultsOnly,Category="Weapon")
-	TArray<TSubclassOf<ABaseWeapon>> WeaponClasses;
+	TSubclassOf<ABaseWeapon> CurrentClassOfWeapon;
+	
 	UPROPERTY(EditAnywhere,Category="Weapon")
 	FName WeaponSocketName="WeaponSocket";
 private:
-	int32 CurrentWeaponIndex=0;
 	UPROPERTY()
-	ABaseWeapon* CurrentWeapon = nullptr;
-	UPROPERTY()
-	TArray<ABaseWeapon*> Weapons;
+	ABaseWeapon* CurrentWeapon=nullptr;
+
+	ABaseCharacter* GetCharacter();
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 };
