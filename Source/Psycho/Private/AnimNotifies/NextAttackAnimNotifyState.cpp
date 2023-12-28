@@ -10,7 +10,7 @@ UNextAttackAnimNotifyState::UNextAttackAnimNotifyState()
 {
 	
 }
-
+//при прохождение начальной точки NotifyState выставляем bool в true, что теперь можно попасть в тайминг атаки
 void UNextAttackAnimNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                              float TotalDuration)
 {
@@ -20,7 +20,7 @@ void UNextAttackAnimNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, U
 	}
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
 }
-
+//при прохождение конечной точки NotifyState выставляем bool в false, что  тайминг атаки закончился
 void UNextAttackAnimNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
 	if(const auto AttackComponent = GetAttackComponent(MeshComp))
@@ -35,7 +35,7 @@ void UNextAttackAnimNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UA
 {
 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
 }
-
+//получаем AttackComponent
 UAttackComponent* UNextAttackAnimNotifyState::GetAttackComponent(USkeletalMeshComponent* MeshComp)
 {
 	const auto Actor = MeshComp->GetOwner();

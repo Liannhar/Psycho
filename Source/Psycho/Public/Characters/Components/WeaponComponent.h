@@ -20,8 +20,6 @@ public:
 	
 	ABaseWeapon* GetCurrentWeapon() {return CurrentWeapon;}
 	TSubclassOf<ABaseWeapon> GetCurrentWeaponClass() {return WeaponClasses[CurrentWeaponIndex];}
-	void StartAttack();
-	void EndAttack() const;
 protected:
 	virtual void BeginPlay() override;
 	void AttachWeaponToSocket(ABaseWeapon* Weapon, ABaseCharacter* Character, const FName& SocketName);

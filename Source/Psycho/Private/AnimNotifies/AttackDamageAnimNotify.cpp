@@ -7,6 +7,7 @@
 
 class UAttackComponent;
 
+//При вызове Notify вызываем функцию Damage владельца MeshComp
 void UAttackDamageAnimNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
 	Super::Notify(MeshComp, Animation);
@@ -15,6 +16,7 @@ void UAttackDamageAnimNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequ
 		AttackComponent->Damage();
 	}
 }
+//получаем AttackComponent с персонажа, вызвавшего DamageNotify
 UAttackComponent* UAttackDamageAnimNotify::GetAttackComponent(USkeletalMeshComponent* MeshComp)
 {
 	const auto Actor = MeshComp->GetOwner();

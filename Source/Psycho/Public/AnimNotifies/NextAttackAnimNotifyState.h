@@ -8,7 +8,7 @@
 
 class UAttackComponent;
 /**
- * NextAttack Anim Notify
+ * NextAttack Anim Notify отвечает за продвинуту. кобинацию атаки комбинацию атаки
  */
 UCLASS()
 class PSYCHO_API UNextAttackAnimNotifyState : public UAnimNotifyState

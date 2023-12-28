@@ -21,21 +21,3 @@ void ABaseWeapon::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ABaseWeapon::NotifyActorBeginOverlap(AActor* OtherActor)
-{
-	Super::NotifyActorBeginOverlap(OtherActor);
-	//нанести урон и проверить, что это enemy
-}
-
-void ABaseWeapon::StartAttack()
-{
-	IsAttacking=true;
-	CollisionComponent->SetCollisionResponseToChannel(ECC_Pawn,ECR_Overlap);
-}
-
-void ABaseWeapon::EndAttack()
-{
-	IsAttacking=false;
-	CollisionComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
-}
-

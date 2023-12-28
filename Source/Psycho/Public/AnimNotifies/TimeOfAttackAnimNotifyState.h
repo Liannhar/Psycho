@@ -8,7 +8,7 @@
 
 class UAttackComponent;
 /**
- * 
+ *  TimeOfAttack Anim Notify State отвечает за тайминг обысной кобинации атак
  */
 UCLASS()
 class PSYCHO_API UTimeOfAttackAnimNotifyState : public UAnimNotifyState

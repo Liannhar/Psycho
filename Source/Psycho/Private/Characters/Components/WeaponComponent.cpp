@@ -50,13 +50,3 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 }
 
-void UWeaponComponent::StartAttack()
-{
-	CurrentWeapon->StartAttack();
-}
-
-void UWeaponComponent::EndAttack() const
-{
-	CurrentWeapon->EndAttack();
-}
-

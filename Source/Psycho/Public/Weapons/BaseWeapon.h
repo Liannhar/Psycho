@@ -19,8 +19,6 @@ class PSYCHO_API ABaseWeapon : public AActor
 	
 public:	
 	ABaseWeapon();
-	void StartAttack();
-	void EndAttack();
 	float GetLightAttackDamage() const {return LightAttackDamage;}
 	float GetHeavyAttackDamage() const {return HeavyAttackDamage;}
 	UPROPERTY(EditAnywhere,Category="Combo")
@@ -35,8 +33,4 @@ protected:
 	UCapsuleComponent* CollisionComponent;
 	UPROPERTY(VisibleAnywhere,Category="Components")
 	USkeletalMeshComponent* SkeletalMeshComponent;
-		
-private:
-	bool IsAttacking = false;
-	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 };

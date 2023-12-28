@@ -19,12 +19,12 @@ UAttackComponent::UAttackComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 }
-
+//начинает атаку
 void UAttackComponent::StartAttack(EComboInput Input)
 {
 	for (int32 i=CurrentComboAttack; i < Combos.Num();i++ )
 	{
-		if(AttackIndex<Combos[i].TypeAttack.Num() && Combos[i].TypeAttack[AttackIndex]==Input && (AttackIndex==0  || !CantAttackInTime|| CanAttackNext ))
+		if(AttackIndex<Combos[i].Attack.Num() && Combos[i].Attack[AttackIndex].TypeAttack==Input && (AttackIndex==0  || !CantAttackInTime|| CanAttackNext ))
 		{
 			
 			if(AttackIndex==0)
@@ -34,7 +34,7 @@ void UAttackComponent::StartAttack(EComboInput Input)
 				RightDirection=FVector(0.0f,0.0f,0.0f);
 			}
 
-			CurrentComboInput=Combos[i].TypeAttack[AttackIndex];
+			CurrentComboInput=Combos[i].Attack[AttackIndex].TypeAttack;
 			if(Combos[i].Attack[AttackIndex].PreviosAttackNeedTiming)
 			{
 				if( CanAttackNext )
@@ -62,7 +62,6 @@ void UAttackComponent::EndAttack()
 	const auto WeaponComponent = Cast<UWeaponComponent>(Component);
 	if(!WeaponComponent) return;
 	
-	WeaponComponent->EndAttack();
 	AttackIndex=0;
 	CurrentComboAttack=0;
 	CurrentComboInput=None;
@@ -77,7 +76,7 @@ void UAttackComponent::SetCombo()
 	}
 }
 
-//Используется в AnimNotifyDamage
+//Используется в AnimNotifyDamage для нанесения урона
 void UAttackComponent::Damage() const
 {
 	const auto BaseCharacter = GetCharacter();
@@ -114,7 +113,9 @@ void UAttackComponent::Damage() const
 		}
 	}
 }
-
+/*
+ * использует AnimMontage и ставит таймер по истечению которого закончит атаку.
+ */
 void UAttackComponent::ActiveAttack(FCombination Combo)
 {
 	const auto BaseCharacter = GetCharacter();
@@ -127,6 +128,7 @@ void UAttackComponent::ActiveAttack(FCombination Combo)
 }
 
 /*
+ *использует motion warping чтобы передать в него новую позицию и поворот для атаки
 */
 void UAttackComponent::AttackTarget() const
 {

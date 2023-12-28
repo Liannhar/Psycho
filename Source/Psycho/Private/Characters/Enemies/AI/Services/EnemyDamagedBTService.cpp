@@ -15,7 +15,6 @@ UEnemyDamagedBTService::UEnemyDamagedBTService()
 
 void UEnemyDamagedBTService::CanBeDamaged()
 {
-	UE_LOG(LogTemp,Display,TEXT("RRRRR"));
 	GetWorld()->GetTimerManager().ClearTimer(ProbabilityTimerHandle);
 }
 

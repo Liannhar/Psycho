@@ -8,7 +8,7 @@
 #include "AttackDamageAnimNotify.generated.h"
 
 /**
- * 
+ * Notify который отвечает за момент нанесения урона.
  */
 UCLASS()
 class PSYCHO_API UAttackDamageAnimNotify : public UAnimNotify
