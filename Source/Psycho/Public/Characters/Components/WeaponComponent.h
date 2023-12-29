@@ -25,7 +25,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	static void AttachWeaponToSocket(ABaseWeapon* Weapon, const ABaseCharacter* Character, const FName& SocketName);
-	static void DetachWeaponOfSocket(ABaseWeapon* Weapon, const ABaseCharacter* Character, const FName& SocketName);
+	static void DetachWeaponOfSocket(ABaseWeapon* Weapon, FVector NewLocation);
 
 	UPROPERTY(EditDefaultsOnly,Category="Weapon")
 	TSubclassOf<ABaseWeapon> CurrentClassOfWeapon;

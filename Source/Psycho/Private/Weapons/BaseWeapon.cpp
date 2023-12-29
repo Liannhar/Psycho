@@ -2,18 +2,29 @@
 
 
 #include "Weapons/BaseWeapon.h"
+
+#include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 
 ABaseWeapon::ABaseWeapon()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	CollisionComponent = CreateDefaultSubobject<UCapsuleComponent>("Capsule component");
+	CollisionComponent = CreateDefaultSubobject<UBoxComponent>("Capsule component");
 	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("Skeletal Mesh");
-	CollisionComponent->InitCapsuleSize(15,32);
 	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CollisionComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
 	SetRootComponent(SkeletalMeshComponent);
 	CollisionComponent->SetupAttachment(RootComponent);
+}
+
+void ABaseWeapon::EnablePhysics()
+{
+	//SkeletalMeshComponent->SetSimulatePhysics(true);
+}
+
+void ABaseWeapon::DisablePhysics()
+{
+	//SkeletalMeshComponent->SetSimulatePhysics(false);
 }
 
 void ABaseWeapon::BeginPlay()

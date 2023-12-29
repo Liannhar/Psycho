@@ -2,6 +2,9 @@
 
 
 #include "Characters/Components/HealthComponent.h"
+
+#include "BaseCharacter.h"
+#include "DamageType/HeavyAttackDamageType.h"
 #include "Math/UnrealMathUtility.h"
 
 // Sets default values for this component's properties
@@ -64,6 +67,20 @@ void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDa
 	CurrentHP = FMath::Clamp(CurrentHP - Damage, 0, MaxHP);
 	OnTakeDamage.Broadcast();
 	CalculatePercentHP();
+
+	if(Cast<UHeavyAttackDamageType>(DamageType))
+	{
+		LastAttackIsHeavy=true;
+	}
+	else
+	{
+		LastAttackIsHeavy=false;
+	}
+	
+	if(	const auto BaseCharacter = Cast<ABaseCharacter>(DamagedActor))
+	{
+		BaseCharacter->GetDamage(DamageCauser);
+	}
 	if (CurrentHP == 0)
 	{ 
 		OnDied();

@@ -27,7 +27,7 @@ class PSYCHO_API ABaseCharacter : public ACharacter
 public:	
 	// Sets default values for this actor's properties
 	ABaseCharacter();
-
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -36,8 +36,11 @@ protected:
 
 	UPROPERTY(EditAnywhere,Category="Health")
 	float LifeSpan = 5.0f;
+	UPROPERTY(EditAnywhere,Category="Health")
+	float DistanceOfRepulsion= 50.0f;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	void GetDamage(AActor* Actor);
 };

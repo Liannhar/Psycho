@@ -10,6 +10,7 @@
 #include "CoreTypes.h"
 #include "MotionWarpingComponent.h"
 #include "P_PlayerController.h"
+#include "DamageType/HeavyAttackDamageType.h"
 #include "Kismet/GameplayStatics.h"
 #include "Perception/AISense_Damage.h"
 
@@ -17,7 +18,6 @@ UAttackComponent::UAttackComponent()
 {
 
 	PrimaryComponentTick.bCanEverTick = true;
-
 }
 //начинает атаку
 void UAttackComponent::StartAttack(EComboInput Input)
@@ -27,12 +27,12 @@ void UAttackComponent::StartAttack(EComboInput Input)
 		if(AttackIndex<Combos[i].Attack.Num() && Combos[i].Attack[AttackIndex].TypeAttack==Input && (AttackIndex==0  || !CantAttackInTime|| CanAttackNext ))
 		{
 			
-			if(AttackIndex==0)
+			/*if(AttackIndex==0)
 			{
 				AttackDirection=FVector2d(0.0f,0.0f);
 				ForwardDirection=FVector(0.0f,0.0f,0.0f);
 				RightDirection=FVector(0.0f,0.0f,0.0f);
-			}
+			}*/
 
 			CurrentComboInput=Combos[i].Attack[AttackIndex].TypeAttack;
 			if(Combos[i].Attack[AttackIndex].PreviosAttackNeedTiming)
@@ -103,10 +103,18 @@ void UAttackComponent::Damage() const
 				case None:
 					break;
 			    case LightAttack:
-					UGameplayStatics::ApplyDamage(Enemy,Weapon->GetLightAttackDamage(),BaseCharacter->GetController(),BaseCharacter,UDamageType::StaticClass());
+					UGameplayStatics::ApplyDamage(Enemy,
+						Weapon->GetLightAttackDamage(),
+						BaseCharacter->GetController(),
+						BaseCharacter,
+						UDamageType::StaticClass());
 					break;
-			    case HeavyAttack:
-					UGameplayStatics::ApplyDamage(Enemy,Weapon->GetHeavyAttackDamage(),BaseCharacter->GetController(),BaseCharacter,UDamageType::StaticClass());
+			case HeavyAttack:
+					UGameplayStatics::ApplyDamage(Enemy,
+						Weapon->GetHeavyAttackDamage(),
+						BaseCharacter->GetController(),
+						BaseCharacter,
+						UHeavyAttackDamageType::StaticClass());
 					break;
 			}
 			
@@ -156,8 +164,8 @@ void UAttackComponent::AttackTarget() const
 	{
 		AttackTransform.SetLocation(BaseCharacter->GetActorLocation());
 		auto NewRotation = BaseCharacter->GetActorRotation();
-		//добавить плавность поворота
 		NewRotation	+=FRotator(0.0f,RotationAngle(BaseCharacter)*RotationSpeed,0.0f);
+		
 		AttackTransform.SetRotation(NewRotation.Quaternion());
 		MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform("Attack",AttackTransform);
 	}
@@ -180,7 +188,6 @@ float UAttackComponent::RotationAngle(const ABaseCharacter* BaseCharacter) const
 
 	const float Sign = FMath::Sign(FVector::CrossProduct(CurrentDirection, WorldTargetDirection).Z);
 	const float DeltaAngle = Sign * FMath::Acos(FVector::DotProduct(WorldTargetDirection, CurrentDirection));
-	
 	return DeltaAngle;
 }
 

@@ -27,7 +27,7 @@ void UEnemyDamagedBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
 	const auto Controller = OwnerComp.GetAIOwner();
 	const auto Enemy = Cast<ABaseEnemy>(Controller->GetPawn());
 	if (!Enemy) return;
-	if(!ProbabilityTimerHandle.IsValid())
+	if(!ProbabilityTimerHandle.IsValid() || Enemy->GetLastAttackIsHeavy())
 	{
 		if(Enemy->GetIsTakenDamage())
 		{

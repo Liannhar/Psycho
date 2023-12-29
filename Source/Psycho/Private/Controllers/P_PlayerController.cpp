@@ -50,6 +50,22 @@ void AP_PlayerController::BeginPlay()
 	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = DefaultWalkSpeed;
 	CameraDefaultLocation = PlayerCharacter->GetCameraBoom()->GetRelativeLocation();
 	CameraLockedOnOffset += CameraDefaultLocation;
+    
+	/*// find out which way is forward
+	const FRotator Rotation = GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+	// get forward vector
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+	// get right vector 
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	if(const auto AttackComponent = Cast<UAttackComponent>(PlayerCharacter->GetComponentByClass(UAttackComponent::StaticClass())))
+	{
+		AttackComponent->SetAttackDirection(FVector2d(1.0f,0.0f));
+		AttackComponent->SetForwardDirection(ForwardDirection);
+		AttackComponent->SetRightDirection(RightDirection);
+	}*/
 }
 
 void AP_PlayerController::SetupInputComponent() 

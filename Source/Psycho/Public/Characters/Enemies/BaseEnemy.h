@@ -21,13 +21,12 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="AI")
 	bool IsAttacking=false;
 	bool IsEnemyAttacking();
-	UAttackComponent* GetAttackComponent();
 	void Attack();
 	bool GetNotIsAttackingNow() const {return NotIsAttackingNow;}
+	bool GetLastAttackIsHeavy() const;
 	void ChangeCountCombo();
 	void ChangeMaxSpeed(float NewSpeed) const;
 	void BlockAttack();
-	void GetDamage();
 	virtual void BeginPlay() override;
 	bool GetIsTakenDamage() const {return IsTakenDamage;}
 private:
@@ -42,5 +41,8 @@ private:
 	FTimerHandle WaitNextAttemptAttack;
 
 	bool NotIsAttackingNow=true;
+
+	UAttackComponent* GetAttackComponent() const;
+	UHealthComponent* GetHealthComponent() const;
 	
 };

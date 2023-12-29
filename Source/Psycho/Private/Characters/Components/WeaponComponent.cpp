@@ -18,9 +18,10 @@ void UWeaponComponent::ChangeWeapon(ABaseWeapon* NewWeapon,TSubclassOf<ABaseWeap
 {
 	if(const auto BaseCharacter = GetCharacter())
 	{
-		DetachWeaponOfSocket(CurrentWeapon,BaseCharacter,WeaponSocketName);
+		DetachWeaponOfSocket(CurrentWeapon,NewWeapon->GetActorLocation());
 		CurrentWeapon=NewWeapon;
 		CurrentClassOfWeapon = NewClassOfWeapon;
+		NewWeapon->DisablePhysics();
 		AttachWeaponToSocket(CurrentWeapon,BaseCharacter,WeaponSocketName);
 	}
 }
@@ -47,12 +48,13 @@ void UWeaponComponent::AttachWeaponToSocket(ABaseWeapon *Weapon, const ABaseChar
 	Weapon->AttachToComponent(Character->GetMesh(),AttachmentRules,SocketName);
 }
 
-void UWeaponComponent::DetachWeaponOfSocket(ABaseWeapon* Weapon, const ABaseCharacter* Character,
-	const FName& SocketName)
+void UWeaponComponent::DetachWeaponOfSocket(ABaseWeapon* Weapon, FVector NewLocation)
 {
 	if(!Weapon) return;
-	const FDetachmentTransformRules DettachmentRules(EDetachmentRule::KeepRelative,false);
+	const FDetachmentTransformRules DettachmentRules(EDetachmentRule::KeepWorld,false);
+	Weapon->SetActorLocation(NewLocation);
 	Weapon->DetachFromActor(DettachmentRules);
+	Weapon->EnablePhysics();
 }
 
 

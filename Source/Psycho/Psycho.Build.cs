@@ -22,6 +22,7 @@ public class Psycho : ModuleRules
 			"Psycho/Public/Characters/Enemies/AI/Nodes",
 			"Psycho/Public/Characters/Components",
 			"Psycho/Public/Weapons",
+			"Psycho/Public/Weapons/DamageTypes",
 			"Psycho/Public/Pills",
 			"Psycho/Public/Controllers",
 			"Psycho/Public/AnimNotifies",

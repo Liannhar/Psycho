@@ -15,7 +15,6 @@ class PSYCHO_API UHealthComponent : public UActorComponent
 {
 	GENERATED_BODY()
 private:
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Values, meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
 	float MaxHP;
 
@@ -29,6 +28,7 @@ private:
 
 	void OnDied();
 
+	bool LastAttackIsHeavy=false;
 public:	
 	// Sets default values for this component's properties
 	UHealthComponent();
@@ -46,6 +46,8 @@ public:
 	float GetMaxHP();
 	float GetCurrentHP();
 	float GetPercentHP();
+	bool GetLastAttackIsHeavy(){return LastAttackIsHeavy;}
+
 
 	FOnDeathSignature OnDeath;
 	FOnTakeDamageStartSignature OnTakeDamage;

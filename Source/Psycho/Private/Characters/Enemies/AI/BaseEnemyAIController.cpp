@@ -35,7 +35,6 @@ void ABaseEnemyAIController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	const auto FocusActor = GetFocusOnActor();
-	UE_LOG(LogTemp,Display,TEXT("A%d"),GetCanFocus()?1:0);
 	if(GetCanFocus())
 	{
 		SetFocus(FocusActor);
