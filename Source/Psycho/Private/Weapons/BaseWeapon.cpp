@@ -17,7 +17,7 @@ ABaseWeapon::ABaseWeapon()
 	CollisionComponent->SetupAttachment(RootComponent);
 }
 
-void ABaseWeapon::EnablePhysics()
+void ABaseWeapon::EnablePhysics(FVector NewLocation)
 {
 	//SkeletalMeshComponent->SetSimulatePhysics(true);
 }

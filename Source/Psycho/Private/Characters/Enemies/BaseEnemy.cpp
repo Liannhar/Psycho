@@ -12,13 +12,9 @@ ABaseEnemy::ABaseEnemy()
 	
 }
 
-bool ABaseEnemy::IsEnemyAttacking()
-{
-	return IsAttacking;
-}
-
 void ABaseEnemy::Attack()
 {
+	UE_LOG(LogTemp,Display,TEXT("A%d"),NotIsAttackingNow?1:0);
 	if(const auto AttackkComponent = GetAttackComponent())
 	{
 		const auto AttackIndex = AttackkComponent->GetAttackIndex();
@@ -26,18 +22,22 @@ void ABaseEnemy::Attack()
 		{
 			NotIsAttackingNow=false;		
 			AttackkComponent->StartAttack(LightAttack);
-			GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndWait,0.5f);	
+			GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndWait,1.0f);	
+			return;
 		}
+		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,3.0f);	
 	}
 }
 
 void ABaseEnemy::EndWait()
 {
-	NotIsAttackingNow=true;
 	Attack();
 }
 
-
+void ABaseEnemy::EndEnemyAttack()
+{
+	NotIsAttackingNow=true;
+}
 
 void ABaseEnemy::ChangeCountCombo()
 {

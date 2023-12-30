@@ -51,10 +51,9 @@ void UWeaponComponent::AttachWeaponToSocket(ABaseWeapon *Weapon, const ABaseChar
 void UWeaponComponent::DetachWeaponOfSocket(ABaseWeapon* Weapon, FVector NewLocation)
 {
 	if(!Weapon) return;
-	const FDetachmentTransformRules DettachmentRules(EDetachmentRule::KeepWorld,false);
-	Weapon->SetActorLocation(NewLocation);
+	const FDetachmentTransformRules DettachmentRules(EDetachmentRule::KeepWorld,EDetachmentRule::KeepWorld,EDetachmentRule::KeepWorld,false);
+	Weapon->EnablePhysics(NewLocation);
 	Weapon->DetachFromActor(DettachmentRules);
-	Weapon->EnablePhysics();
 }
 
 

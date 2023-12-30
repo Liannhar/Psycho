@@ -18,23 +18,27 @@ public:
 	ABaseEnemy();
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="AI")
 	UBehaviorTree* BehaviorTreeAsset;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="AI")
-	bool IsAttacking=false;
-	bool IsEnemyAttacking();
+	
+	void EndEnemyAttack();
 	void Attack();
+	
 	bool GetNotIsAttackingNow() const {return NotIsAttackingNow;}
+	bool GetIsTakenDamage() const {return IsTakenDamage;}
 	bool GetLastAttackIsHeavy() const;
+
 	void ChangeCountCombo();
 	void ChangeMaxSpeed(float NewSpeed) const;
 	void BlockAttack();
+
 	virtual void BeginPlay() override;
-	bool GetIsTakenDamage() const {return IsTakenDamage;}
-private:
+
+protected:
 	bool IsTakenDamage = false;
 	FTimerHandle TimerDamage;
 	void TakingDamage();
 	void DontTakeDamage();
-
+	
+	
 	void EndWait();
 	float TimeForWaitDamage=3.0f;
 	int32 AttacksCount=0;

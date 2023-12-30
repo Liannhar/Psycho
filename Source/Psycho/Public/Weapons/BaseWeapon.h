@@ -23,7 +23,7 @@ public:
 	float GetHeavyAttackDamage() const {return HeavyAttackDamage;}
 	UPROPERTY(EditAnywhere,Category="Combo")
 	TArray<FCombination> DifferentCombos;
-	virtual void EnablePhysics();
+	virtual void EnablePhysics(FVector NewLocation);
 	virtual void DisablePhysics();
 protected:
 	UPROPERTY(EditAnywhere,Category="Damage")
