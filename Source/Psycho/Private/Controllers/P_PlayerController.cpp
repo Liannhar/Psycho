@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Controllers/P_PlayerController.h"
+#include "Controllers\P_PlayerController.h"
 #include "Components/InputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Characters/Player/PlayerCharacter.h"
@@ -92,9 +92,9 @@ void AP_PlayerController::Tick(float DeltaSeconds)
 		FVector InterCameraBoomLocation = FMath::VInterpTo(PlayerCharacter->GetCameraBoom()->GetRelativeLocation(), CameraLockedOnOffset, DeltaSeconds, 5.f);
 		PlayerCharacter->GetCameraBoom()->SetRelativeLocation(InterCameraBoomLocation);
 
-		FRotator LookAtTarget = UKismetMathLibrary::FindLookAtRotation(PlayerCharacter->GetActorLocation(), LockedOnTarget->GetActorLocation());
+		FRotator LookAtTarget = UKismetMathLibrary::FindLookAtRotation(PlayerCharacter->GetFollowCamera()->GetComponentLocation(), LockedOnTarget->GetActorLocation());
 		FRotator Interpolation = FMath::RInterpTo(GetControlRotation(), LookAtTarget, DeltaSeconds, 5);
-		SetControlRotation(Interpolation/* FRotator(Interpolation.Pitch, Interpolation.Yaw, GetControlRotation().Roll) */);
+		SetControlRotation(Interpolation);
 	} else {
 		FVector InterCameraBoomLocation = FMath::VInterpTo(PlayerCharacter->GetCameraBoom()->GetRelativeLocation(), CameraDefaultLocation, DeltaSeconds, 15.f);
 		PlayerCharacter->GetCameraBoom()->SetRelativeLocation(InterCameraBoomLocation);
@@ -227,7 +227,10 @@ void AP_PlayerController::LockOnTarget(const FInputActionValue& Value)
 	if (bIsLockedOnTarget)
 	{
 		bIsLockedOnTarget = false;
-		PlayerCharacter->bUseControllerRotationYaw = false;
+		//PlayerCharacter->bUseControllerRotationYaw = false;
+		PlayerCharacter->GetCharacterMovement()->bOrientRotationToMovement = true;
+		PlayerCharacter->GetCharacterMovement()->bUseControllerDesiredRotation = false;
+
 
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 		{
@@ -251,8 +254,10 @@ void AP_PlayerController::LockOnTarget(const FInputActionValue& Value)
 	if (!Hit) return;
 
 	bIsLockedOnTarget = true;
-	PlayerCharacter->bUseControllerRotationYaw = true;
+	//PlayerCharacter->bUseControllerRotationYaw = true;
 	LockedOnTarget = HitResult.GetActor();
+	PlayerCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
+	PlayerCharacter->GetCharacterMovement()->bUseControllerDesiredRotation = true;
 
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{

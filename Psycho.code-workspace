@@ -6,14 +6,11 @@
 		},
 		{
 			"name": "UE5",
-			"path": "E:\\Programs\\UE_5.0"
+			"path": "D:\\Programs\\UE_5.0"
 		}
 	],
 	"settings": {
-		"typescript.tsc.autoDetect": "off",
-		"files.associations": {
-			"*.ipp": "cpp"
-		}
+		"typescript.tsc.autoDetect": "off"
 	},
 	"extensions": {
 		"recommendations": [
