@@ -3,25 +3,33 @@
 
 #include "Weapons/BaseWeapon.h"
 
-// Sets default values
+#include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
+
 ABaseWeapon::ABaseWeapon()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	CollisionComponent = CreateDefaultSubobject<UBoxComponent>("Capsule component");
+	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("Skeletal Mesh");
+	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	CollisionComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
+	SetRootComponent(SkeletalMeshComponent);
+	CollisionComponent->SetupAttachment(RootComponent);
 }
 
-// Called when the game starts or when spawned
+void ABaseWeapon::EnablePhysics(FVector NewLocation)
+{
+	//SkeletalMeshComponent->SetSimulatePhysics(true);
+}
+
+void ABaseWeapon::DisablePhysics()
+{
+	//SkeletalMeshComponent->SetSimulatePhysics(false);
+}
+
 void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void ABaseWeapon::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
 }
 

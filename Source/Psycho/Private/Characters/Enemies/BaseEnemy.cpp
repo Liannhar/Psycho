@@ -3,3 +3,106 @@
 
 #include "..\..\..\Public\Characters\Enemies\BaseEnemy.h"
 
+#include "AttackComponent.h"
+#include "HealthComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
+ABaseEnemy::ABaseEnemy()
+{
+	
+}
+
+void ABaseEnemy::Attack()
+{
+	UE_LOG(LogTemp,Display,TEXT("A%d"),NotIsAttackingNow?1:0);
+	if(const auto AttackkComponent = GetAttackComponent())
+	{
+		const auto AttackIndex = AttackkComponent->GetAttackIndex();
+		if(AttackIndex<=AttacksCount && !IsTakenDamage)
+		{
+			NotIsAttackingNow=false;		
+			AttackkComponent->StartAttack(LightAttack);
+			GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndWait,1.0f);	
+			return;
+		}
+		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,3.0f);	
+	}
+}
+
+void ABaseEnemy::EndWait()
+{
+	Attack();
+}
+
+void ABaseEnemy::EndEnemyAttack()
+{
+	NotIsAttackingNow=true;
+}
+
+void ABaseEnemy::ChangeCountCombo()
+{
+	AttacksCount = FMath::RandRange(0, 2);
+}
+
+void ABaseEnemy::BlockAttack()
+{
+	//Heres Block
+}
+
+
+
+void ABaseEnemy::BeginPlay()
+{
+	Super::BeginPlay();
+	const auto HealthhComponent = GetHealthComponent();
+	HealthhComponent->OnTakeDamage.AddUObject(this,&ABaseEnemy::TakingDamage);
+}
+
+void ABaseEnemy::TakingDamage()
+{
+	IsTakenDamage=true;
+	GetWorldTimerManager().SetTimer(TimerDamage,this,&ABaseEnemy::DontTakeDamage,TimeForWaitDamage);
+}
+
+void ABaseEnemy::DontTakeDamage()
+{
+	IsTakenDamage=false;
+}
+
+
+
+
+void ABaseEnemy::ChangeMaxSpeed(float NewSpeed) const
+{
+	const auto CharacterMovementComponent =Cast<UCharacterMovementComponent>(GetMovementComponent());
+	if(!CharacterMovementComponent) return;
+
+	CharacterMovementComponent->MaxWalkSpeed=NewSpeed;
+}
+
+UAttackComponent* ABaseEnemy::GetAttackComponent() const
+{
+	const auto Component = GetComponentByClass(UAttackComponent::StaticClass());
+	if(!Component) return nullptr;
+
+	if(const auto AttackkComponent = Cast<UAttackComponent>(Component)) return AttackkComponent;
+	return nullptr;
+}
+
+UHealthComponent* ABaseEnemy::GetHealthComponent() const
+{
+	const auto Component = GetComponentByClass(UHealthComponent::StaticClass());
+	if(!Component) return nullptr;
+
+	if(const auto HealthhComponent = Cast<UHealthComponent>(Component)) return HealthhComponent;
+	return nullptr;
+}
+
+bool ABaseEnemy::GetLastAttackIsHeavy() const
+{
+	if(const auto HealthhComponent = GetHealthComponent())
+	{
+		return HealthhComponent->GetLastAttackIsHeavy();
+	}
+	return false;
+}

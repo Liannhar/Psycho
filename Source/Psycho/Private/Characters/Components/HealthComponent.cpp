@@ -2,6 +2,9 @@
 
 
 #include "Characters/Components/HealthComponent.h"
+
+#include "BaseCharacter.h"
+#include "DamageType/HeavyAttackDamageType.h"
 #include "Math/UnrealMathUtility.h"
 
 // Sets default values for this component's properties
@@ -62,13 +65,27 @@ float UHealthComponent::GetPercentHP()
 void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	CurrentHP = FMath::Clamp(CurrentHP - Damage, 0, MaxHP);
+	OnTakeDamage.Broadcast();
 	CalculatePercentHP();
 
+	if(Cast<UHeavyAttackDamageType>(DamageType))
+	{
+		LastAttackIsHeavy=true;
+	}
+	else
+	{
+		LastAttackIsHeavy=false;
+	}
+	
+	if(	const auto BaseCharacter = Cast<ABaseCharacter>(DamagedActor))
+	{
+		BaseCharacter->GetDamage(DamageCauser);
+	}
 	if (CurrentHP == 0)
 	{ 
 		OnDied();
 	}
-
+	
 	if(GEngine)
      GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(
 		TEXT("%s was attacked! %s has %f HP"), *(GetOwner()->GetName()), *(GetOwner()->GetName()), CurrentHP));
@@ -84,4 +101,5 @@ void UHealthComponent::OnDied()
 {
 	if(GEngine)
      GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s died!"), *(GetOwner()->GetName())));
+	OnDeath.Broadcast();
 }

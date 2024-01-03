@@ -40,4 +40,7 @@ public:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     UInputAction* ChangeTargetOnAction;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+        UInputAction* Interact;
 };

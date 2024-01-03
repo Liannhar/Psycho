@@ -1,13 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Controllers\P_PlayerController.h"
+#include "Controllers/P_PlayerController.h"
+
+#include "AttackComponent.h"
 #include "Components/InputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Characters/Player/PlayerCharacter.h"
 #include "DataAssets\PlayerInputActions.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Psycho/CoreTypes.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -47,6 +50,22 @@ void AP_PlayerController::BeginPlay()
 	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = DefaultWalkSpeed;
 	CameraDefaultLocation = PlayerCharacter->GetCameraBoom()->GetRelativeLocation();
 	CameraLockedOnOffset += CameraDefaultLocation;
+    
+	/*// find out which way is forward
+	const FRotator Rotation = GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+	// get forward vector
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+	// get right vector 
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	if(const auto AttackComponent = Cast<UAttackComponent>(PlayerCharacter->GetComponentByClass(UAttackComponent::StaticClass())))
+	{
+		AttackComponent->SetAttackDirection(FVector2d(1.0f,0.0f));
+		AttackComponent->SetForwardDirection(ForwardDirection);
+		AttackComponent->SetRightDirection(RightDirection);
+	}*/
 }
 
 void AP_PlayerController::SetupInputComponent() 
@@ -79,6 +98,9 @@ void AP_PlayerController::SetupInputComponent()
 		// Lock On Target
 		EnhancedInputComponent->BindAction(InputActions->LockOnTargetAction, ETriggerEvent::Triggered, this, &AP_PlayerController::LockOnTarget);
 		EnhancedInputComponent->BindAction(InputActions->ChangeTargetOnAction, ETriggerEvent::Triggered, this, &AP_PlayerController::ChangeTargetOn);
+
+		// Interact
+		EnhancedInputComponent->BindAction(InputActions->Interact, ETriggerEvent::Triggered, this, &AP_PlayerController::Interact);
 	}
 }
 
@@ -116,13 +138,19 @@ void AP_PlayerController::Move(const FInputActionValue& Value)
 
 	// get right vector 
 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
+	if(const auto AttackComponent = Cast<UAttackComponent>(PlayerCharacter->GetComponentByClass(UAttackComponent::StaticClass())))
+	{
+		AttackComponent->SetAttackDirection(MovementVector);
+		AttackComponent->SetForwardDirection(ForwardDirection);
+		AttackComponent->SetRightDirection(RightDirection);
+	}
 	// add movement 
 	if (PlayerCharacter) 
 	{
 		PlayerCharacter->AddMovementInput(ForwardDirection, MovementVector.Y);
 		PlayerCharacter->AddMovementInput(RightDirection, MovementVector.X);
 	}
+	
 }
 
 void AP_PlayerController::Look(const FInputActionValue& Value)
@@ -200,16 +228,23 @@ void AP_PlayerController::StopSlowWalk(const FInputActionValue& Value)
 
 void AP_PlayerController::LightAttack(const FInputActionValue& Value)
 {
-	// TODO: LightAttack Logic
-	if(GEngine)
-     GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Light Attack!"));	
+	if(const auto AttackComponent = GetAttackComponent())
+	{
+		AttackComponent->StartAttack(EComboInput::LightAttack);
+		if(GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Light Attack!"));	
+	}
+	
 }
 
 void AP_PlayerController::HeavyAttack(const FInputActionValue& Value)
 {
-	// TODO: HeavyAttack Logic
-	if(GEngine)
-     GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Heavy Attack!"));	
+	if(const auto AttackComponent = GetAttackComponent())
+	{
+		AttackComponent->StartAttack(EComboInput::HeavyAttack);
+		if(GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Heavy Attack!"));
+	}
 }
 
 void AP_PlayerController::TakePill(const FInputActionValue& Value)
@@ -217,6 +252,14 @@ void AP_PlayerController::TakePill(const FInputActionValue& Value)
 	// TODO: TakePill Logic
 	if(GEngine)
      GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Taking a Pill!"));	
+}
+
+UAttackComponent* AP_PlayerController::GetAttackComponent() const
+{
+	const auto Component = PlayerCharacter->GetComponentByClass(UAttackComponent::StaticClass());
+	if(!Component) return nullptr;
+
+	return Cast<UAttackComponent>(Component);
 }
 
 
@@ -346,4 +389,12 @@ void AP_PlayerController::ChangeTargetOn(const FInputActionValue& Value)
 		
 		LockedOnTarget = NewTarget ? NewTarget : LockedOnTarget;
 	}
+}
+
+
+void AP_PlayerController::Interact(const FInputActionValue& Value)
+{
+	// TODO: Interact
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Interacted"));
 }

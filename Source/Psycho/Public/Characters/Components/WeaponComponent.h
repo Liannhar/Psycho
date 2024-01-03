@@ -3,9 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AttackComponent.h"
 #include "Components/ActorComponent.h"
 #include "WeaponComponent.generated.h"
 
+
+class ABaseWeapon;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PSYCHO_API UWeaponComponent : public UActorComponent
@@ -13,16 +16,27 @@ class PSYCHO_API UWeaponComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UWeaponComponent();
-
+	
+	ABaseWeapon* GetCurrentWeapon() const {return CurrentWeapon;}
+	
+	UFUNCTION(BlueprintCallable)
+	void ChangeWeapon(ABaseWeapon* NewWeapon,TSubclassOf<ABaseWeapon> NewClassOfWeapon);
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
+	static void AttachWeaponToSocket(ABaseWeapon* Weapon, const ABaseCharacter* Character, const FName& SocketName);
+	static void DetachWeaponOfSocket(ABaseWeapon* Weapon, FVector NewLocation);
 
+	UPROPERTY(EditDefaultsOnly,Category="Weapon")
+	TSubclassOf<ABaseWeapon> CurrentClassOfWeapon;
+	
+	UPROPERTY(EditAnywhere,Category="Weapon")
+	FName WeaponSocketName="WeaponSocket";
+private:
+	UPROPERTY()
+	ABaseWeapon* CurrentWeapon=nullptr;
+
+	ABaseCharacter* GetCharacter();
 public:	
-	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
 };

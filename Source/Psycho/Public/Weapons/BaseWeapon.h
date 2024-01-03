@@ -3,8 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AttackComponent.h"
 #include "GameFramework/Actor.h"
+#include "Psycho/CoreTypes.h"
 #include "BaseWeapon.generated.h"
+
+class UBoxComponent;
+
+
 
 UCLASS()
 class PSYCHO_API ABaseWeapon : public AActor
@@ -12,15 +18,21 @@ class PSYCHO_API ABaseWeapon : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	ABaseWeapon();
-
+	float GetLightAttackDamage() const {return LightAttackDamage;}
+	float GetHeavyAttackDamage() const {return HeavyAttackDamage;}
+	UPROPERTY(EditAnywhere,Category="Combo")
+	TArray<FCombination> DifferentCombos;
+	virtual void EnablePhysics(FVector NewLocation);
+	virtual void DisablePhysics();
 protected:
-	// Called when the game starts or when spawned
+	UPROPERTY(EditAnywhere,Category="Damage")
+	float LightAttackDamage;
+	UPROPERTY(EditAnywhere,Category="Damage")
+	float HeavyAttackDamage;
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	UPROPERTY(EditAnywhere,Category="Components")
+	UBoxComponent* CollisionComponent;
+	UPROPERTY(EditAnywhere,Category="Components")
+	USkeletalMeshComponent* SkeletalMeshComponent;
 };
