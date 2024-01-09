@@ -32,6 +32,8 @@ public:
 
 	virtual void BeginPlay() override;
 
+	void SetStartAttack();
+
 protected:
 	bool IsTakenDamage = false;
 	FTimerHandle TimerDamage;
@@ -45,8 +47,6 @@ protected:
 	FTimerHandle WaitNextAttemptAttack;
 
 	bool NotIsAttackingNow=true;
-
-	UAttackComponent* GetAttackComponent() const;
-	UHealthComponent* GetHealthComponent() const;
+	virtual void Death() override;
 	
 };

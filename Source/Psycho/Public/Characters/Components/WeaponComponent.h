@@ -4,11 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "AttackComponent.h"
+#include "PsychoSaveGame.h"
 #include "Components/ActorComponent.h"
 #include "WeaponComponent.generated.h"
 
 
 class ABaseWeapon;
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PSYCHO_API UWeaponComponent : public UActorComponent
@@ -17,11 +19,6 @@ class PSYCHO_API UWeaponComponent : public UActorComponent
 
 public:	
 	UWeaponComponent();
-	
-	ABaseWeapon* GetCurrentWeapon() const {return CurrentWeapon;}
-	
-	UFUNCTION(BlueprintCallable)
-	void ChangeWeapon(ABaseWeapon* NewWeapon,TSubclassOf<ABaseWeapon> NewClassOfWeapon);
 protected:
 	virtual void BeginPlay() override;
 	static void AttachWeaponToSocket(ABaseWeapon* Weapon, const ABaseCharacter* Character, const FName& SocketName);
@@ -29,14 +26,22 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly,Category="Weapon")
 	TSubclassOf<ABaseWeapon> CurrentClassOfWeapon;
+
+	UPROPERTY()
+	ABaseWeapon* CurrentWeapon=nullptr;
 	
 	UPROPERTY(EditAnywhere,Category="Weapon")
 	FName WeaponSocketName="WeaponSocket";
 private:
-	UPROPERTY()
-	ABaseWeapon* CurrentWeapon=nullptr;
-
 	ABaseCharacter* GetCharacter();
-public:	
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+public:
+
+	ABaseWeapon* GetCurrentWeapon() const {return CurrentWeapon;}
+	TSubclassOf<ABaseWeapon> GetCurrentClassOfWeapon() const {return CurrentClassOfWeapon;}
+	
+	UFUNCTION(BlueprintCallable)
+	void ChangeWeapon(ABaseWeapon* NewWeapon,TSubclassOf<ABaseWeapon> NewClassOfWeapon);
+	ABaseCharacter* GetCharacter() const;
+	UAttackComponent* GetAttackComponent() const;
+	void SetNewWeapon(TSubclassOf<ABaseWeapon> NewClassOfWeapon);
 };

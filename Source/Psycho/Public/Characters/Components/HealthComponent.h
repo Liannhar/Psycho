@@ -14,21 +14,7 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PSYCHO_API UHealthComponent : public UActorComponent
 {
 	GENERATED_BODY()
-private:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Values, meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
-	float MaxHP;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Values, meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
-	float CurrentHP;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Values, meta = (AllowPrivateAccess = "true"))
-	float PercentHP;
-
-	void CalculatePercentHP();
-
-	void OnDied();
-
-	bool LastAttackIsHeavy=false;
 public:	
 	// Sets default values for this component's properties
 	UHealthComponent();
@@ -39,14 +25,33 @@ protected:
 	
 	UFUNCTION()
 	void ApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Values, meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
+	float MaxHP=100.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Values, meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
+	float CurrentHP=100.0f;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Values, meta = (AllowPrivateAccess = "true"))
+	float PercentHP;
+
+	void CalculatePercentHP();
+
+	void OnDied();
+
+	bool LastAttackIsHeavy=false;
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	float GetMaxHP();
+	void SetMaxHP(float NewMaxHP){MaxHP=NewMaxHP;}
 	float GetCurrentHP();
+	void SetCurrentHP(float NewCurrentHP){CurrentHP=NewCurrentHP;}
 	float GetPercentHP();
-	bool GetLastAttackIsHeavy(){return LastAttackIsHeavy;}
+	bool GetLastAttackIsHeavy() const {return LastAttackIsHeavy;}
 
 
 	FOnDeathSignature OnDeath;

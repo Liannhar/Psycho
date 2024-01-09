@@ -4,23 +4,25 @@
 #include "..\..\..\Public\Characters\Enemies\BaseEnemy.h"
 
 #include "AttackComponent.h"
+#include "BaseEnemyAIController.h"
+#include "EnemyAIPerceptionComponent.h"
 #include "HealthComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Psycho/PsychoGameModeBase.h"
 
 ABaseEnemy::ABaseEnemy()
 {
 	
 }
 
+
 void ABaseEnemy::Attack()
 {
-	UE_LOG(LogTemp,Display,TEXT("A%d"),NotIsAttackingNow?1:0);
 	if(const auto AttackkComponent = GetAttackComponent())
 	{
 		const auto AttackIndex = AttackkComponent->GetAttackIndex();
 		if(AttackIndex<=AttacksCount && !IsTakenDamage)
 		{
-			NotIsAttackingNow=false;		
 			AttackkComponent->StartAttack(LightAttack);
 			GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndWait,1.0f);	
 			return;
@@ -58,6 +60,12 @@ void ABaseEnemy::BeginPlay()
 	HealthhComponent->OnTakeDamage.AddUObject(this,&ABaseEnemy::TakingDamage);
 }
 
+void ABaseEnemy::SetStartAttack()
+{
+	UE_LOG(LogTemp,Display,TEXT("AAAAAA,%s"),*this->GetName());
+	NotIsAttackingNow=false;
+}
+
 void ABaseEnemy::TakingDamage()
 {
 	IsTakenDamage=true;
@@ -80,22 +88,29 @@ void ABaseEnemy::ChangeMaxSpeed(float NewSpeed) const
 	CharacterMovementComponent->MaxWalkSpeed=NewSpeed;
 }
 
-UAttackComponent* ABaseEnemy::GetAttackComponent() const
+void ABaseEnemy::Death()
 {
-	const auto Component = GetComponentByClass(UAttackComponent::StaticClass());
-	if(!Component) return nullptr;
+	Super::Death();
 
-	if(const auto AttackkComponent = Cast<UAttackComponent>(Component)) return AttackkComponent;
-	return nullptr;
-}
+	const auto AIController = Cast<ABaseEnemyAIController>(GetController());
+	if(!AIController) return;
 
-UHealthComponent* ABaseEnemy::GetHealthComponent() const
-{
-	const auto Component = GetComponentByClass(UHealthComponent::StaticClass());
-	if(!Component) return nullptr;
+	const auto Component = AIController->GetComponentByClass(UEnemyAIPerceptionComponent::StaticClass());
+	const auto PerceptionComponent = Cast<UEnemyAIPerceptionComponent>(Component);
+	if(!PerceptionComponent) return;
 
-	if(const auto HealthhComponent = Cast<UHealthComponent>(Component)) return HealthhComponent;
-	return nullptr;
+	const auto Enemies = PerceptionComponent->GetVisibleEnemies();
+
+	const auto World = GetWorld();
+	if(!World) return;
+	const auto GameMode =  World->GetAuthGameMode();
+	const auto PsychoGameMode = Cast<APsychoGameModeBase>(GameMode);
+
+	UE_LOG(LogTemp,Display,TEXT("%d"),Enemies.Num());
+	if(Enemies.Num()==0 && PsychoGameMode )
+	{
+		PsychoGameMode->SetFightStatus(false);
+	}
 }
 
 bool ABaseEnemy::GetLastAttackIsHeavy() const

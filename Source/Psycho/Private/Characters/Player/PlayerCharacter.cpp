@@ -2,6 +2,12 @@
 
 
 #include "Characters/Player/PlayerCharacter.h"
+
+#include "BaseWeapon.h"
+#include "DialogComponent.h"
+#include "HealthComponent.h"
+#include "PsychoSaveGame.h"
+#include "WeaponComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -9,6 +15,8 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Psycho/PsychoGameModeBase.h"
+
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -56,4 +64,27 @@ APlayerCharacter::APlayerCharacter()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
+}
+
+void APlayerCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	LoadGame();
+}
+
+void APlayerCharacter::LoadGame()
+{
+	const auto GameMode = Cast<APsychoGameModeBase>(GetWorld()->GetAuthGameMode());
+	if(GameMode)
+	{
+		const auto SaveGame = GameMode->GetCurrentSaveGame();
+		if(SaveGame)
+		{
+			const auto PlayerSave = SaveGame->GetPlayerSave();
+			SetActorLocation(PlayerSave.PlayerLocation);
+			HealthComponent->SetMaxHP(PlayerSave.CurrentPlayerMaxHP);
+			HealthComponent->SetCurrentHP(PlayerSave.CurrentPlayerHP);
+			WeaponComponent->SetNewWeapon(PlayerSave.CurrentPlayerClassOfWeapon);
+		}
+	}
 }

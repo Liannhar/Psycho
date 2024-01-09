@@ -22,10 +22,17 @@ protected:
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="AI")
 	FName FocusOnKeyName = "Player";
-	
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="AI")
+	FName FightStatusKeyName = "FightStatus";
 	virtual void OnPossess(APawn* InPawn) override;
 	bool GetCanFocus() const;
 	virtual void Tick(float DeltaSeconds) override;
 private:
 	AActor* GetFocusOnActor() const;
+	
+	void ChangeFightStatus(bool FightStatus);
+
+	bool FightStatus = false;
 };
+
+

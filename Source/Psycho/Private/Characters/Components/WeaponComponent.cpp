@@ -9,7 +9,7 @@
 UWeaponComponent::UWeaponComponent()
 {
 
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 }
 
@@ -23,14 +23,56 @@ void UWeaponComponent::ChangeWeapon(ABaseWeapon* NewWeapon,TSubclassOf<ABaseWeap
 		CurrentClassOfWeapon = NewClassOfWeapon;
 		NewWeapon->DisablePhysics();
 		AttachWeaponToSocket(CurrentWeapon,BaseCharacter,WeaponSocketName);
+		const auto AttackComponent = GetAttackComponent();
+		AttackComponent->SetCombo();
 	}
 }
+
+void UWeaponComponent::SetNewWeapon(TSubclassOf<ABaseWeapon> NewClassOfWeapon)
+{
+	if(const auto BaseCharacter = GetCharacter())
+	{
+		CurrentClassOfWeapon = NewClassOfWeapon;
+		const auto NewWeapon = GetWorld()->SpawnActor<ABaseWeapon>(CurrentClassOfWeapon);
+		if(!NewWeapon) return;
+		CurrentWeapon=NewWeapon;
+		NewWeapon->DisablePhysics();
+		AttachWeaponToSocket(CurrentWeapon,BaseCharacter,WeaponSocketName);
+		const auto AttackComponent = GetAttackComponent();
+		AttackComponent->SetCombo();
+	}
+}
+
+ABaseCharacter* UWeaponComponent::GetCharacter() const
+{
+	const auto Actor = GetOwner();
+	if(!Actor) return nullptr;
+
+	const auto BaseCharacter = Cast<ABaseCharacter>(Actor);
+	if(!BaseCharacter) return nullptr;
+
+	return BaseCharacter;
+}
+
+UAttackComponent* UWeaponComponent::GetAttackComponent() const
+{
+	const auto BaseCharacter = GetCharacter();
+	const auto Component = BaseCharacter->GetComponentByClass(UAttackComponent::StaticClass());
+	if(!Component) return nullptr;
+
+	const auto AttackComponent = Cast<UAttackComponent>(Component);
+	if(!AttackComponent) return nullptr;
+
+	return AttackComponent;
+}
+
+
 
 void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	const auto Weapon = GetWorld()->SpawnActor<ABaseWeapon>(CurrentClassOfWeapon);
-	if(!Weapon) return;;
+	if(!Weapon) return;
 	
 	if(const auto BaseCharacter = GetCharacter())
 	{
@@ -65,11 +107,5 @@ ABaseCharacter* UWeaponComponent::GetCharacter()
 	const auto BaseCharacter = Cast<ABaseCharacter>(Actor);
 	if(!BaseCharacter) return nullptr;
 	return BaseCharacter;
-}
-
-void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 }
 

@@ -8,6 +8,7 @@
 #include "Psycho/CoreTypes.h"
 #include "AttackComponent.generated.h"
 
+class UWeaponComponent;
 class ABaseCharacter;
 struct FCombination;
 class ABaseWeapon;
@@ -54,14 +55,11 @@ protected:
 	//радиус сферы урона
 	UPROPERTY(EditAnywhere,Category="Attack")
 	float SphereDamageRadius=30.0f;
-
-public:	
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 private:
 	//получаем владельца AttackComponent
 	ABaseCharacter* GetCharacter() const;
 	// получаем текущее оружие персонажа
-	ABaseWeapon* GetWeapon() const;
+	UWeaponComponent* GetWeaponComponent() const;
 	//Номер текущей атаки в комбо
 	int32 AttackIndex = 0;
 	//Номер текущего комбо
@@ -83,4 +81,6 @@ private:
 	EComboInput CurrentComboInput= None;
 	//Вычисление угла поворота атаки персонажа между ударами
 	float RotationAngle(const ABaseCharacter* BaseCharacter) const;
+
+	
 };

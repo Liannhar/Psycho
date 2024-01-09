@@ -24,7 +24,7 @@ AActor* UEnemyAIPerceptionComponent::GetVisiblePlayer() const
 	return nullptr;
 }
 
-TArray<ABaseEnemy*> UEnemyAIPerceptionComponent::GetVisibleEnemies()
+TArray<ABaseEnemy*> UEnemyAIPerceptionComponent::GetVisibleEnemies() const
 {
 	TArray<AActor*> FoundActors;
 	TArray<ABaseEnemy*> Enemies;
@@ -32,9 +32,8 @@ TArray<ABaseEnemy*> UEnemyAIPerceptionComponent::GetVisibleEnemies()
 	if(FoundActors.Num()==0) return Enemies;
 	for (const auto Actor:FoundActors)
 	{
-		//Проверка жив ли Actor 
-		const auto Enemy = Cast<ABaseEnemy>(Actor);
-		if(Enemy)
+		//TODO Проверка жив ли Actor 
+		if(const auto Enemy = Cast<ABaseEnemy>(Actor))
 		{
 			Enemies.Add(Enemy);
 		}

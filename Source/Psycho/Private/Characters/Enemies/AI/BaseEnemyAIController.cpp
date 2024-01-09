@@ -5,7 +5,9 @@
 
 #include "BaseEnemy.h"
 #include "EnemyAIPerceptionComponent.h"
+#include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Psycho/PsychoGameModeBase.h"
 
 ABaseEnemyAIController::ABaseEnemyAIController()
 {
@@ -16,9 +18,25 @@ ABaseEnemyAIController::ABaseEnemyAIController()
 void ABaseEnemyAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	if(const auto AICharacter = Cast<ABaseEnemy>(InPawn))
+	const auto World = GetWorld();
+	const auto AICharacter = Cast<ABaseEnemy>(InPawn);
+	if(AICharacter && World)
 	{
-		RunBehaviorTree(AICharacter->BehaviorTreeAsset);
+		RunBehaviorTree( AICharacter->BehaviorTreeAsset);
+		const auto GameModeBase = World->GetAuthGameMode();
+		if(const auto PsychoGameModeBase = Cast<APsychoGameModeBase>(GameModeBase))
+		{
+			PsychoGameModeBase->OnChangeFightStatus.AddUObject(this,&ABaseEnemyAIController::ChangeFightStatus);
+		}
+	}
+}
+
+void ABaseEnemyAIController::ChangeFightStatus(bool NewFightStatus)
+{
+	if(const auto BlackBoard = GetBlackboardComponent())
+	{
+		FightStatus=NewFightStatus;
+		BlackBoard->SetValueAsBool(FightStatusKeyName,FightStatus);
 	}
 }
 
@@ -26,7 +44,6 @@ bool ABaseEnemyAIController::GetCanFocus() const
 {
 	if(const auto BaseEnemy = Cast<ABaseEnemy>(GetPawn()))
 	{
-		UE_LOG(LogTemp,Display,TEXT("B%d"),BaseEnemy->GetNotIsAttackingNow()?1:0);
 		return BaseEnemy->GetNotIsAttackingNow();
 	}
 	return false;
@@ -42,7 +59,7 @@ void ABaseEnemyAIController::Tick(float DeltaSeconds)
 AActor* ABaseEnemyAIController::GetFocusOnActor() const
 {
 	if(!GetBlackboardComponent()) return nullptr;
-	if(GetCanFocus())
+	if(GetCanFocus() && FightStatus)
 	{
 		return Cast<AActor>(GetBlackboardComponent()->GetValueAsObject(FocusOnKeyName));
 	}

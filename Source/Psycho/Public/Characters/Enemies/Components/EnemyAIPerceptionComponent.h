@@ -16,6 +16,6 @@ class PSYCHO_API UEnemyAIPerceptionComponent : public UAIPerceptionComponent
 	GENERATED_BODY()
 public:
 	AActor* GetVisiblePlayer() const;
-	TArray<ABaseEnemy*> GetVisibleEnemies();
+	TArray<ABaseEnemy*> GetVisibleEnemies() const;
 	bool GetEnemyIsNotDamaged();
 };

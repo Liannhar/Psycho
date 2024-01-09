@@ -24,8 +24,10 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
+	
 protected:
-
+	void LoadGame();
+	virtual void BeginPlay() override;
 public:
 	APlayerCharacter();
 	/** Returns CameraBoom subobject **/

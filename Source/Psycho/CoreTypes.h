@@ -1,5 +1,8 @@
 ﻿#pragma once
 #include "CoreTypes.generated.h"
+
+class ABaseWeapon;
+
 //Типы атак
 UENUM(BlueprintType)
 enum EComboInput
@@ -34,4 +37,36 @@ struct FCombination
 	UPROPERTY(EditAnywhere)
 	TArray<FBlueprintMontageAttack> Attack;
 	
+};
+
+//Структура из полей сохранения игрока
+USTRUCT(BlueprintType)
+struct FPlayerSave
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere,Category="Save Player")
+	FVector PlayerLocation=FVector(0.0f,0.0f,0.0f);
+	UPROPERTY(EditAnywhere,Category="Save Player")
+	float CurrentPlayerHP=100.0f;
+	UPROPERTY(EditAnywhere,Category="Save Player")
+	float CurrentPlayerMaxHP=100.0f;
+	UPROPERTY(EditAnywhere,Category="Save Player")
+	TSubclassOf<ABaseWeapon> CurrentPlayerClassOfWeapon=nullptr;
+	//Тут таблеточки будут)
+	//UPROPERTY(EditAnywhere,Category="Save")
+	//TArray<UBasePills*> Pills;
+	
+};
+
+//Структура из полей сохранения игрока
+USTRUCT(BlueprintType)
+struct FCheckPointSave
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere,Category="Save CheckPoint")
+	FVector CheckPointLocation=FVector(0.0f,0.0f,0.0f);
+	UPROPERTY(EditAnywhere,Category="Save CheckPoint")
+	bool CheckPointNotUsed=false;
 };

@@ -5,6 +5,7 @@
 #include "Characters/BaseCharacter.h"
 #include "MotionWarpingComponent.h"
 #include "AttackComponent.h"
+#include "DialogComponent.h"
 #include "HealthComponent.h"
 #include "WeaponComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -18,6 +19,7 @@ ABaseCharacter::ABaseCharacter()
 	AttackComponent = CreateDefaultSubobject<UAttackComponent>("Attack Component");
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("Weapon Component");
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>("MotionWarping Component");
+	DialogComponent = CreateDefaultSubobject<UDialogComponent>(TEXT("Dialog Component"));
 }
 
 void ABaseCharacter::BeginPlay()
@@ -44,7 +46,6 @@ void ABaseCharacter::Death()
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 //здесь персонаж реагирует на урон
 void ABaseCharacter::GetDamage(AActor* Actor)

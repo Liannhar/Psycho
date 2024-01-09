@@ -17,7 +17,7 @@
 UAttackComponent::UAttackComponent()
 {
 
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 //начинает атаку
 void UAttackComponent::StartAttack(EComboInput Input)
@@ -26,13 +26,6 @@ void UAttackComponent::StartAttack(EComboInput Input)
 	{
 		if(AttackIndex<Combos[i].Attack.Num() && Combos[i].Attack[AttackIndex].TypeAttack==Input && (AttackIndex==0  || !CantAttackInTime|| CanAttackNext ))
 		{
-			
-			/*if(AttackIndex==0)
-			{
-				AttackDirection=FVector2d(0.0f,0.0f);
-				ForwardDirection=FVector(0.0f,0.0f,0.0f);
-				RightDirection=FVector(0.0f,0.0f,0.0f);
-			}*/
 
 			CurrentComboInput=Combos[i].Attack[AttackIndex].TypeAttack;
 			if(Combos[i].Attack[AttackIndex].PreviosAttackNeedTiming)
@@ -70,7 +63,9 @@ void UAttackComponent::EndAttack()
 
 void UAttackComponent::SetCombo()
 {
-	if (const auto Weapon =GetWeapon())
+	const UWeaponComponent* WeaponComponent = GetWeaponComponent();
+	const auto Weapon = WeaponComponent->GetCurrentWeapon();
+	if (Weapon)
 	{
 		Combos = Weapon->DifferentCombos;
 	}
@@ -87,6 +82,8 @@ void UAttackComponent::Damage() const
 	FVector End = BaseCharacter->GetActorLocation()+BaseCharacter->GetActorForwardVector()*LengthLineAttack;
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(BaseCharacter);
+	bool IsEnemy = false;
+	if(Cast<ABaseEnemy>(BaseCharacter)) IsEnemy=true;
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypesArray;
 	ObjectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
 	
@@ -96,8 +93,12 @@ void UAttackComponent::Damage() const
 		
 		if(const auto Enemy = Cast<ABaseCharacter>(HitActor))
 		{
-			const auto Weapon = GetWeapon();
-			UAISense_Damage::ReportDamageEvent(GetWorld(),Enemy,BaseCharacter,10.0f,HitResult.TraceStart,HitResult.Location,NAME_None);
+			if(IsEnemy && Cast<ABaseEnemy>(Enemy))
+			{
+				return;
+			}
+			const UWeaponComponent* WeaponComponent = GetWeaponComponent();
+			const auto Weapon = WeaponComponent->GetCurrentWeapon();
 			switch (CurrentComboInput)
 			{
 				case None:
@@ -109,7 +110,7 @@ void UAttackComponent::Damage() const
 						BaseCharacter,
 						UDamageType::StaticClass());
 					break;
-			case HeavyAttack:
+				case HeavyAttack:
 					UGameplayStatics::ApplyDamage(Enemy,
 						Weapon->GetHeavyAttackDamage(),
 						BaseCharacter->GetController(),
@@ -197,12 +198,6 @@ void UAttackComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
-
-void UAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-}
-
 ABaseCharacter* UAttackComponent::GetCharacter() const
 {
 	const auto Actor = GetOwner();
@@ -214,7 +209,7 @@ ABaseCharacter* UAttackComponent::GetCharacter() const
 	return BaseCharacter;
 }
 
-ABaseWeapon* UAttackComponent::GetWeapon() const
+UWeaponComponent* UAttackComponent::GetWeaponComponent() const
 {
 	const auto BaseCharacter = GetCharacter();
 	const auto Component = BaseCharacter->GetComponentByClass(UWeaponComponent::StaticClass());
@@ -223,6 +218,6 @@ ABaseWeapon* UAttackComponent::GetWeapon() const
 	const auto WeaponComponent = Cast<UWeaponComponent>(Component);
 	if(!WeaponComponent) return nullptr;
 
-	return WeaponComponent->GetCurrentWeapon();
+	return WeaponComponent;
 }
 

@@ -23,6 +23,10 @@ void UFindPlayerBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* No
 	{
 		const auto Player = PerceptionComponent->GetVisiblePlayer();
 		BlackBoard->SetValueAsObject(PlayerActorKey.SelectedKeyName,Player);
+		if(Player)
+		{
+			BlackBoard->SetValueAsVector(PlayerLastLocationKey.SelectedKeyName,Player->GetActorLocation());
+		}
 	}
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 }
