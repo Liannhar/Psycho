@@ -8,7 +8,7 @@ public class Psycho : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput","GameplayTasks","NavigationSystem" ,"MotionWarping"});
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput","GameplayTasks","NavigationSystem" ,"MotionWarping", "UMG"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 		

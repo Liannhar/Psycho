@@ -6,6 +6,10 @@
 #include "Components/ActorComponent.h"
 #include "PillsComponent.generated.h"
 
+class UBasePills;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPillAddedDelegate, UBasePills*, AddedPill);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPillUsedDelegate, UBasePills*, UsedPill);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PSYCHO_API UPillsComponent : public UActorComponent
@@ -23,6 +27,16 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
+	
+	UPROPERTY(BlueprintAssignable)
+	FPillAddedDelegate OnPillAdded;
+	UPROPERTY(BlueprintAssignable)
+	FPillUsedDelegate OnPillUsed;
 
-		
+	void AddPill(class UPillsDataStructure* PillData);
+	void TakePill();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pills)
+	TArray<UBasePills*> PillsStack;		
 };

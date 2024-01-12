@@ -7,9 +7,6 @@
 #include "InputActionValue.h"
 #include "PlayerCharacter.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class PSYCHO_API APlayerCharacter : public ABaseCharacter
 {
@@ -24,6 +21,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pills, meta = (AllowPrivateAccess = "true"))
+	class UPillsComponent* PillsComponent;
+
 protected:
 
 public:
@@ -32,4 +32,7 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	FORCEINLINE class UPillsComponent* GetPillsComponent() const { return PillsComponent; }
+
 };

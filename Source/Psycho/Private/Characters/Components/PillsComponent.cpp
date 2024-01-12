@@ -2,6 +2,7 @@
 
 
 #include "Characters/Components/PillsComponent.h"
+#include "Pills/BasePills.h"
 
 // Sets default values for this component's properties
 UPillsComponent::UPillsComponent()
@@ -19,7 +20,11 @@ void UPillsComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	// // For testing purpose
+	// UBasePills* NewPill = NewObject<UBasePills>();
+	// AddPill(NewPill);
+	// NewPill = NewObject<UBasePills>();
+	// AddPill(NewPill);
 	
 }
 
@@ -32,3 +37,30 @@ void UPillsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	// ...
 }
 
+
+void UPillsComponent::AddPill(UPillsDataStructure* PillData)
+{
+	UBasePills* NewPill = NewObject<UBasePills>(); // TODO: Get info from PillData to create needed Pill type
+	NewPill->Init(PillData);
+	PillsStack.Add(NewPill);
+	OnPillAdded.Broadcast(NewPill);
+}
+
+void UPillsComponent::TakePill()
+{
+	if (PillsStack.IsEmpty()) 
+	{
+		if(GEngine)
+     		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("No pills"));
+		return;
+	}
+
+	UBasePills* PillToTake = PillsStack.Last();
+
+	if (PillToTake)
+	{
+		PillToTake->UsePill();
+		OnPillUsed.Broadcast(PillToTake);
+		PillsStack.Remove(PillToTake);
+	}
+}

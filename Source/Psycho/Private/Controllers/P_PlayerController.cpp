@@ -2,15 +2,16 @@
 
 
 #include "Controllers/P_PlayerController.h"
-
 #include "AttackComponent.h"
 #include "Components/InputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Characters/Player/PlayerCharacter.h"
+#include "Characters/Components/PillsComponent.h"
 #include "DataAssets\PlayerInputActions.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Psycho/CoreTypes.h"
+#include "Pills/BasePills.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -249,9 +250,7 @@ void AP_PlayerController::HeavyAttack(const FInputActionValue& Value)
 
 void AP_PlayerController::TakePill(const FInputActionValue& Value)
 {
-	// TODO: TakePill Logic
-	if(GEngine)
-     GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Taking a Pill!"));	
+	PlayerCharacter->GetPillsComponent()->TakePill();
 }
 
 UAttackComponent* AP_PlayerController::GetAttackComponent() const

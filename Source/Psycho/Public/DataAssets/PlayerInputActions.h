@@ -42,5 +42,5 @@ public:
     UInputAction* ChangeTargetOnAction;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-        UInputAction* Interact;
+    UInputAction* Interact;
 };
