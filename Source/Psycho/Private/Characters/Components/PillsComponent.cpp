@@ -3,6 +3,7 @@
 
 #include "Characters/Components/PillsComponent.h"
 #include "Pills/BasePills.h"
+#include "Structures/PillsDataStructure.h"
 
 // Sets default values for this component's properties
 UPillsComponent::UPillsComponent()
@@ -40,7 +41,11 @@ void UPillsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 void UPillsComponent::AddPill(UPillsDataStructure* PillData)
 {
-	UBasePills* NewPill = NewObject<UBasePills>(); // TODO: Get info from PillData to create needed Pill type
+	UClass* PillType = PillData->GetPillType();
+	UBasePills* NewPill = NewObject<UBasePills>(this, PillType);
+	
+	if (!NewPill) return;
+
 	NewPill->Init(PillData);
 	PillsStack.Add(NewPill);
 	OnPillAdded.Broadcast(NewPill);
