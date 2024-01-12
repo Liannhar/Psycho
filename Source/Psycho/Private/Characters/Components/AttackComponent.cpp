@@ -26,7 +26,7 @@ void UAttackComponent::StartAttack(EComboInput Input)
 	{
 		if(AttackIndex<Combos[i].Attack.Num() && Combos[i].Attack[AttackIndex].TypeAttack==Input && (AttackIndex==0  || !CantAttackInTime|| CanAttackNext ))
 		{
-
+			
 			CurrentComboInput=Combos[i].Attack[AttackIndex].TypeAttack;
 			if(Combos[i].Attack[AttackIndex].PreviosAttackNeedTiming)
 			{
@@ -170,15 +170,12 @@ void UAttackComponent::AttackTarget() const
 		AttackTransform.SetRotation(NewRotation.Quaternion());
 		MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform("Attack",AttackTransform);
 	}
-	
-	
-	
-	
 }
 
 
 float UAttackComponent::RotationAngle(const ABaseCharacter* BaseCharacter) const
 {
+	
 	const FVector CurrentDirection = FVector(FVector2D(BaseCharacter->GetActorForwardVector()), 0.0f).GetSafeNormal2D();
 
 	const FVector2D TargetForwardVector = FVector2D(ForwardDirection).GetSafeNormal();

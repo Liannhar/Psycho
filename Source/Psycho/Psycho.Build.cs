@@ -28,6 +28,7 @@ public class Psycho : ModuleRules
 			"Psycho/Public/SaveGame",
 			"Psycho/Public/Controllers",
 			"Psycho/Public/AnimNotifies",
+			"Psycho/Public/GameInstance",
 		});
 
 		// Uncomment if you are using Slate UI
