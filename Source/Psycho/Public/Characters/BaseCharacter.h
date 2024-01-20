@@ -19,7 +19,7 @@ class PSYCHO_API ABaseCharacter : public ACharacter
 
 public:	
 	// Sets default values for this actor's properties
-	ABaseCharacter();
+	ABaseCharacter();   
 	
 protected:
 	// Called when the game starts or when spawned
@@ -41,11 +41,8 @@ protected:
 	UWeaponComponent* WeaponComponent;
 	UPROPERTY(EditAnywhere,Category="Component")
 	UMotionWarpingComponent* MotionWarpingComponent;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UDialogComponent* DialogComponent;
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void GetDamage(AActor* Actor);
 	

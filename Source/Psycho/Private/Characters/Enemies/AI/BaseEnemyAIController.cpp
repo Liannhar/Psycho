@@ -59,12 +59,10 @@ void ABaseEnemyAIController::Tick(float DeltaSeconds)
 AActor* ABaseEnemyAIController::GetFocusOnActor() const
 {
 	if(!GetBlackboardComponent()) return nullptr;
+	
 	if(GetCanFocus() && FightStatus)
 	{
 		return Cast<AActor>(GetBlackboardComponent()->GetValueAsObject(FocusOnKeyName));
 	}
-	else
-	{
-		return nullptr;
-	}
+	return nullptr;
 }

@@ -5,6 +5,7 @@
 
 #include "CheckPointActor.h"
 #include "PsychoSaveGame.h"
+#include "StartFightActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/PlayerCharacter.h"
 
@@ -43,4 +44,34 @@ void APsychoGameModeBase::BeginPlay()
 	Super::BeginPlay();
 	CurrentSaveGame = Cast<UPsychoSaveGame>(UGameplayStatics::CreateSaveGameObject(UPsychoSaveGame::StaticClass()));
 	CurrentSaveGame = CurrentSaveGame->Load();
+}
+
+void APsychoGameModeBase::CheckEnemySpawners() const
+{
+	if(CurrentStartFightActor)
+	{
+		CurrentStartFightActor->CheckEnemySpawners();
+	}
+}
+
+void APsychoGameModeBase::ChangeEnemiesCount(ABaseEnemy* Enemy, const bool Add)
+{
+	UE_LOG(LogTemp,Display,TEXT("AAAAA%d"),EnemiesInBattle.Num());
+	if(Add)
+	{
+		UE_LOG(LogTemp,Display,TEXT("BBBB"));
+		EnemiesInBattle.Add(Enemy);
+		return;
+	}
+	
+	if(EnemiesInBattle.Contains(Enemy))
+	{
+		UE_LOG(LogTemp,Display,TEXT("CCCC"));
+		EnemiesInBattle.Remove(Enemy);
+		if(EnemiesInBattle.Num()==0)
+		{
+			UE_LOG(LogTemp,Display,TEXT("DDDD"));
+			CheckEnemySpawners();
+		}
+	}
 }

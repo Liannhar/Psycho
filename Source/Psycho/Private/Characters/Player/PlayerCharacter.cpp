@@ -69,7 +69,7 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	LoadGame();
+	//LoadGame();
 }
 
 void APlayerCharacter::LoadGame()

@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "PsychoGameModeBase.generated.h"
 
+class ABaseEnemy;
+class AStartFightActor;
 class UPsychoSaveGame;
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnChangeFightStatus, bool)
 
@@ -29,9 +31,21 @@ public:
 	void SaveAll(UPsychoSaveGame* Save) const ;
 	virtual void BeginPlay() override;
 
+	void SetCurrentStartFightActor(AStartFightActor* NewStartFightActor){CurrentStartFightActor=NewStartFightActor;}
+
+	void CheckEnemySpawners() const;
+
+	void SetStartEnemies(const TArray<ABaseEnemy*>& Enemies){EnemiesInBattle = Enemies;}
+
+	void ChangeEnemiesCount(ABaseEnemy* Enemy,bool Add=false);
 protected:
 	UPROPERTY(EditAnywhere,Category="FightStatus")
 	bool FightStatus=false;
 	UPROPERTY()
 	UPsychoSaveGame* CurrentSaveGame;
+	UPROPERTY()
+	AStartFightActor* CurrentStartFightActor;
+
+	UPROPERTY()
+	TArray<ABaseEnemy*> EnemiesInBattle;
 };

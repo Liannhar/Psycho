@@ -13,6 +13,7 @@ UBoolBTDecorator::UBoolBTDecorator()
 bool UBoolBTDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
 {
 	const auto BlackBoard = OwnerComp.GetBlackboardComponent();
-	if(Inverse) return!BlackBoard->GetValueAsBool(BoolKey.SelectedKeyName);
-	else return BlackBoard->GetValueAsBool(BoolKey.SelectedKeyName);
+	if(Inverse) return !BlackBoard->GetValueAsBool(BoolKey.SelectedKeyName);
+
+	return BlackBoard->GetValueAsBool(BoolKey.SelectedKeyName);
 }

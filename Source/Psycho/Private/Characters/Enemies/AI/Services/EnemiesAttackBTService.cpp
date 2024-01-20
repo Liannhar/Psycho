@@ -27,10 +27,8 @@ void UEnemiesAttackBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 		{
 			for (const auto Enemy:Enemies)
 			{
-				UE_LOG(LogTemp,Display,TEXT("%d"),Enemy->GetNotIsAttackingNow()?1:0);
 				if(!Enemy->GetNotIsAttackingNow())
 				{
-					UE_LOG(LogTemp,Display,TEXT("%s"),*Enemy->GetName());
 					CanAttack=false;
 					break;
 				}

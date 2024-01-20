@@ -19,7 +19,6 @@ ABaseCharacter::ABaseCharacter()
 	AttackComponent = CreateDefaultSubobject<UAttackComponent>("Attack Component");
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("Weapon Component");
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>("MotionWarping Component");
-	DialogComponent = CreateDefaultSubobject<UDialogComponent>(TEXT("Dialog Component"));
 }
 
 void ABaseCharacter::BeginPlay()
@@ -36,7 +35,6 @@ void ABaseCharacter::Death()
 {
 	//PlayAnimMontage();// Анимация смерти
 	GetCharacterMovement()->DisableMovement();
-	SetLifeSpan(LifeSpan);
 	if(const auto Collision = GetCapsuleComponent())
 	{
 		Collision->SetCollisionResponseToAllChannels(ECR_Ignore);

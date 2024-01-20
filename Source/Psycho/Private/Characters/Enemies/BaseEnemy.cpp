@@ -5,8 +5,10 @@
 
 #include "AttackComponent.h"
 #include "BaseEnemyAIController.h"
+#include "BaseWeapon.h"
 #include "EnemyAIPerceptionComponent.h"
 #include "HealthComponent.h"
+#include "WeaponComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Psycho/PsychoGameModeBase.h"
 
@@ -62,7 +64,6 @@ void ABaseEnemy::BeginPlay()
 
 void ABaseEnemy::SetStartAttack()
 {
-	UE_LOG(LogTemp,Display,TEXT("AAAAAA,%s"),*this->GetName());
 	NotIsAttackingNow=false;
 }
 
@@ -98,19 +99,14 @@ void ABaseEnemy::Death()
 	const auto Component = AIController->GetComponentByClass(UEnemyAIPerceptionComponent::StaticClass());
 	const auto PerceptionComponent = Cast<UEnemyAIPerceptionComponent>(Component);
 	if(!PerceptionComponent) return;
-
-	const auto Enemies = PerceptionComponent->GetVisibleEnemies();
-
+	
 	const auto World = GetWorld();
 	if(!World) return;
 	const auto GameMode =  World->GetAuthGameMode();
 	const auto PsychoGameMode = Cast<APsychoGameModeBase>(GameMode);
-
-	UE_LOG(LogTemp,Display,TEXT("%d"),Enemies.Num());
-	if(Enemies.Num()==0 && PsychoGameMode )
-	{
-		PsychoGameMode->SetFightStatus(false);
-	}
+	PsychoGameMode->ChangeEnemiesCount(this);
+	WeaponComponent->GetCurrentWeapon()->Destroy();
+	Destroy();
 }
 
 bool ABaseEnemy::GetLastAttackIsHeavy() const
