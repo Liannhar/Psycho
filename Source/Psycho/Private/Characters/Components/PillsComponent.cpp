@@ -21,12 +21,6 @@ void UPillsComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// // For testing purpose
-	// UBasePills* NewPill = NewObject<UBasePills>();
-	// AddPill(NewPill);
-	// NewPill = NewObject<UBasePills>();
-	// AddPill(NewPill);
-	
 }
 
 

@@ -10,6 +10,8 @@ class UBasePills;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPillAddedDelegate, UBasePills*, AddedPill);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPillUsedDelegate, UBasePills*, UsedPill);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBlurringStartDelegate, const float&, BlurStrength);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBlurringEndDelegate);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PSYCHO_API UPillsComponent : public UActorComponent
@@ -33,10 +35,21 @@ public:
 	FPillAddedDelegate OnPillAdded;
 	UPROPERTY(BlueprintAssignable)
 	FPillUsedDelegate OnPillUsed;
+	UPROPERTY(BlueprintAssignable)
+	FBlurringStartDelegate OnBlurringStart;
+	UPROPERTY(BlueprintAssignable)
+	FBlurringEndDelegate OnBlurringEnd;
 
 	void AddPill(class UPillsDataStructure* PillData);
 	void TakePill();
+	void SetPainkillerEffectsTimer(FTimerHandle& Timer) { PainkillerEffectsTimer = Timer;};
+	void SetFuryEffectsTimer(FTimerHandle& Timer) { FuryEffectsTimer = Timer;};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pills)
-	TArray<UBasePills*> PillsStack;		
+	TArray<UBasePills*> PillsStack;	
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pills)
+	FTimerHandle PainkillerEffectsTimer;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pills)
+	FTimerHandle FuryEffectsTimer;
 };

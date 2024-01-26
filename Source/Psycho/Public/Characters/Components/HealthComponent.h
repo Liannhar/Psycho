@@ -23,6 +23,8 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Values, meta = (AllowPrivateAccess = "true"))
 	float PercentHP;
+	
+	float TakeDamageMultiplier;
 
 	void CalculatePercentHP();
 
@@ -46,11 +48,17 @@ public:
 	float GetMaxHP();
 	float GetCurrentHP();
 	float GetPercentHP();
-	bool GetLastAttackIsHeavy(){return LastAttackIsHeavy;}
+	bool GetLastAttackIsHeavy(){return LastAttackIsHeavy;};
 
+	void SetTakeDamageMultiplier(float Multiplier) { TakeDamageMultiplier = Multiplier; };
+	void ResetTakeDamageMultiplier() { TakeDamageMultiplier = 1.f; };
 
 	FOnDeathSignature OnDeath;
 	FOnTakeDamageStartSignature OnTakeDamage;
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Values)
+	bool isInvulnerable;
 
 	UFUNCTION(BlueprintCallable)
 	void RestoreHP(float RestoreAmount);

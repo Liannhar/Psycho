@@ -94,6 +94,9 @@ protected:
 	//Interact
 	void Interact(const FInputActionValue& Value);
 
+	// Dodge
+	void Dodge(const FInputActionValue& Value);
+
 public:
 	AP_PlayerController();
 };

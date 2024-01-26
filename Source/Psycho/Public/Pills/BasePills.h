@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Player/PlayerCharacter.h"
 #include "BasePills.generated.h"
 
 /**
@@ -15,6 +16,7 @@ class PSYCHO_API UBasePills : public UObject
 	GENERATED_BODY()
 
 public:
+	// Add APlayerCharacter as argument for UsePill()
 	virtual void UsePill();
 	virtual void Init(class UPillsDataStructure* Data);
 

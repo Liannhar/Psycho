@@ -4,31 +4,32 @@
 
 #include "CoreMinimal.h"
 #include "Pills/BasePills.h"
-#include "PainkillerPills.generated.h"
+#include "FuryPills.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PSYCHO_API UPainkillerPills : public UBasePills
+class PSYCHO_API UFuryPills : public UBasePills
 {
 	GENERATED_BODY()
+
 private:
 	FTimerHandle TimerPillEffect;
-
+	FTimerHandle TimerTakeDamageTick;
 public:
 	void UsePill() override;
-	void EndInvulnerability();
-	void EndAddiction();
+	void TakeDamage();
+	void StopTakeDamage();
 
 	struct FTimerHandle& GetTimerHandler() { return TimerPillEffect; };
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effect")
-	float InvulnerabilityTime;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effect")
-	float AddicitonTime;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effect", meta = (ClampMin = "1.0"))
-	float TakeDamageMultiplier;
+	float TakeDamageTime;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effect", meta = (ClampMin = "0", ClampMax = "100"))
+	uint8 TakeDamagePercent;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effect", meta = (ClampMin = "0.1"))
+	float TakeDamageTickTime;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effect", meta = (ClampMin = "0.0"))
 	float SpeedMultiplier;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effect", meta = (ClampMin = "0.0"))

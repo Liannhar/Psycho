@@ -43,4 +43,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void GetDamage(AActor* Actor);
+	class UHealthComponent* GetHealthComponent() { return HealthComponent; };
+	UAttackComponent* GetAttackComponent() { return AttackComponent; };
+	UWeaponComponent* GetWeaponComponent() { return WeaponComponent; };
 };

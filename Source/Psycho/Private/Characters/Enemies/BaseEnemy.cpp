@@ -5,11 +5,16 @@
 
 #include "AttackComponent.h"
 #include "HealthComponent.h"
+#include "WeaponComponent.h"
+#include "Weapons/BaseWeapon.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 ABaseEnemy::ABaseEnemy()
 {
-	
+	EnemyCollision = CreateDefaultSubobject<UBoxComponent>("Enemy Collision");
+	EnemyCollision->SetupAttachment(RootComponent);
 }
 
 void ABaseEnemy::Attack()
@@ -56,6 +61,7 @@ void ABaseEnemy::BeginPlay()
 	Super::BeginPlay();
 	const auto HealthhComponent = GetHealthComponent();
 	HealthhComponent->OnTakeDamage.AddUObject(this,&ABaseEnemy::TakingDamage);
+	OwnController = GetController();
 }
 
 void ABaseEnemy::TakingDamage()
@@ -70,6 +76,38 @@ void ABaseEnemy::DontTakeDamage()
 }
 
 
+void ABaseEnemy::Deactivate()
+{
+	SetActorHiddenInGame(true);
+	GetWeaponComponent()->GetCurrentWeapon()->SetActorHiddenInGame(true);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+	EnemyCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	// Hide all attached actors
+	// TArray<AActor*> AttachedActors;
+	// GetAttachedActors(AttachedActors);
+	// for (AActor* Actor : AttachedActors)
+	// {
+	// 	Actor->SetActorHiddenInGame(true);
+	// }
+	GetMovementComponent()->StopActiveMovement();
+	OwnController->UnPossess();
+}
+
+void ABaseEnemy::Reactivate()
+{
+	SetActorHiddenInGame(false);
+	GetWeaponComponent()->GetCurrentWeapon()->SetActorHiddenInGame(false);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+	EnemyCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	// Unhide all attached actors
+	// TArray<AActor*> AttachedActors;
+	// GetAttachedActors(AttachedActors);
+	// for (AActor* Actor : AttachedActors)
+	// {
+	// 	Actor->SetActorHiddenInGame(false);
+	// }
+	OwnController->Possess(this);
+}
 
 
 void ABaseEnemy::ChangeMaxSpeed(float NewSpeed) const

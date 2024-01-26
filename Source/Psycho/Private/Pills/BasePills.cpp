@@ -12,7 +12,6 @@ void UBasePills::Init(UPillsDataStructure* Data)
     Icon = Data->GetIcon();
 }
 
-
 void UBasePills::UsePill()
 {
     if(GEngine)

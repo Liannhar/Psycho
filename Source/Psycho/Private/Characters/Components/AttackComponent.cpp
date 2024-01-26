@@ -88,7 +88,7 @@ void UAttackComponent::Damage() const
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(BaseCharacter);
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypesArray;
-	ObjectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
+	ObjectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1));
 	
 	if(UKismetSystemLibrary::SphereTraceSingleForObjects(GetWorld(), Start, End, SphereDamageRadius, ObjectTypesArray, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResult, true))
 	{
@@ -104,14 +104,14 @@ void UAttackComponent::Damage() const
 					break;
 			    case LightAttack:
 					UGameplayStatics::ApplyDamage(Enemy,
-						Weapon->GetLightAttackDamage(),
+						Weapon->GetLightAttackDamage() * AttackDamage,
 						BaseCharacter->GetController(),
 						BaseCharacter,
 						UDamageType::StaticClass());
 					break;
 			case HeavyAttack:
 					UGameplayStatics::ApplyDamage(Enemy,
-						Weapon->GetHeavyAttackDamage(),
+						Weapon->GetHeavyAttackDamage() * AttackDamage,
 						BaseCharacter->GetController(),
 						BaseCharacter,
 						UHeavyAttackDamageType::StaticClass());
@@ -129,10 +129,25 @@ void UAttackComponent::ActiveAttack(FCombination Combo)
 	const auto BaseCharacter = GetCharacter();
 	if(!BaseCharacter) return;
 	AttackTarget();
-	const auto TimeToEndAnimMontage = BaseCharacter->PlayAnimMontage(Combo.Attack[AttackIndex].AttackMontage,1);
+	const auto TimeToEndAnimMontage = BaseCharacter->PlayAnimMontage(Combo.Attack[AttackIndex].AttackMontage, AttackSpeed);
+	//BaseCharacter->
 	if(!GetWorld()) return;
 	GetWorld()->GetTimerManager().SetTimer(TimerEndAnimMontage,this,&UAttackComponent::EndAttack,TimeToEndAnimMontage,false);
 	AttackIndex++;
+}
+
+void UAttackComponent::MultiplyAttackSpeed(const float& Multiplier)
+{
+	AttackSpeed *= Multiplier;
+	GetCharacter()->GetMesh()->GetAnimInstance()->Montage_SetPlayRate(Combos[CurrentComboAttack].Attack[AttackIndex].AttackMontage);
+}
+
+
+void UAttackComponent::ResetAttackSpeedToDefault()
+{
+	AttackSpeed = 1.f;
+	if (CurrentComboAttack < Combos.Num() && AttackIndex < Combos[CurrentComboAttack].Attack.Num())
+		GetCharacter()->GetMesh()->GetAnimInstance()->Montage_SetPlayRate(Combos[CurrentComboAttack].Attack[AttackIndex].AttackMontage);
 }
 
 /*

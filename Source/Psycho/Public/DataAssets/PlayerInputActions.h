@@ -43,4 +43,7 @@ public:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     UInputAction* Interact;
+    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    UInputAction* DodgeAction;
 };
