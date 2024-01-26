@@ -11,11 +11,11 @@
 
 void UFuryPills::UsePill()
 {
+    Super::UsePill();
+
     if(GEngine)
         GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Fury pill was taken")));
-
-    APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-    
+   
     if (!Player) return;
 
     Player->GetCharacterMovement()->MaxWalkSpeed *= SpeedMultiplier;
@@ -28,7 +28,7 @@ void UFuryPills::UsePill()
 
 void UFuryPills::TakeDamage()
 {
-    if (APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+    if (Player)
     {
         float Damage = Player->GetHealthComponent()->GetMaxHP() * TakeDamagePercent / 100.f;
         UGameplayStatics::ApplyDamage(Player, Damage, Player->GetController(), Player, UDamageType::StaticClass());
@@ -38,7 +38,7 @@ void UFuryPills::TakeDamage()
 
 void UFuryPills::StopTakeDamage()
 {
-    if (APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+    if (Player)
     {
         GetWorld()->GetTimerManager().ClearTimer(TimerPillEffect);
         GetWorld()->GetTimerManager().ClearTimer(TimerTakeDamageTick);

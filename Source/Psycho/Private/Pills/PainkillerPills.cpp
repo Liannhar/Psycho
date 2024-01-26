@@ -11,11 +11,11 @@
 
 void UPainkillerPills::UsePill()
 {
+    Super::UsePill();
+
     if(GEngine)
      GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Painkiller pill was taken")));
-
-    APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-    
+  
     if (!Player) return;
 
     // Setting invulnerability timer
@@ -29,7 +29,7 @@ void UPainkillerPills::UsePill()
 
 void UPainkillerPills::EndInvulnerability()
 {
-    if (APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+    if (Player)
     {
         Player->GetHealthComponent()->isInvulnerable = false;
         Player->GetHealthComponent()->SetTakeDamageMultiplier(TakeDamageMultiplier);
@@ -44,7 +44,7 @@ void UPainkillerPills::EndInvulnerability()
 
 void UPainkillerPills::EndAddiction()
 {
-    if (APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+    if (Player)
     {
         Player->GetHealthComponent()->ResetTakeDamageMultiplier();
         GetWorld()->GetTimerManager().ClearTimer(TimerPillEffect);

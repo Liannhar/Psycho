@@ -13,8 +13,10 @@
 
 ABaseEnemy::ABaseEnemy()
 {
-	EnemyCollision = CreateDefaultSubobject<UBoxComponent>("Enemy Collision");
-	EnemyCollision->SetupAttachment(RootComponent);
+	EnemyChannelCollision = CreateDefaultSubobject<UBoxComponent>("Enemy Channel Collision");
+	EnemyChannelCollision->SetupAttachment(RootComponent);
+	EnemyChannelCollision->SetBoxExtent(FVector(1,1,1));
+	EnemyChannelCollision->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
 }
 
 void ABaseEnemy::Attack()
@@ -80,8 +82,8 @@ void ABaseEnemy::Deactivate()
 {
 	SetActorHiddenInGame(true);
 	GetWeaponComponent()->GetCurrentWeapon()->SetActorHiddenInGame(true);
+	GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-	EnemyCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	// Hide all attached actors
 	// TArray<AActor*> AttachedActors;
 	// GetAttachedActors(AttachedActors);
@@ -97,8 +99,8 @@ void ABaseEnemy::Reactivate()
 {
 	SetActorHiddenInGame(false);
 	GetWeaponComponent()->GetCurrentWeapon()->SetActorHiddenInGame(false);
+	GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
-	EnemyCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	// Unhide all attached actors
 	// TArray<AActor*> AttachedActors;
 	// GetAttachedActors(AttachedActors);

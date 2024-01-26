@@ -22,4 +22,6 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Icon)
 	class UTexture2D* Icon;
+protected:
+	class APlayerCharacter* Player;
 };

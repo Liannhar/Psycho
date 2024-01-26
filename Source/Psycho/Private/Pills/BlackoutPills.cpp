@@ -12,10 +12,10 @@
 
 void UBlackoutPills::UsePill()
 {
+    Super::UsePill();
+
     if(GEngine)
         GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Blackout pill was taken")));
-
-    APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
     if (!Player) return;
 
@@ -57,7 +57,7 @@ void UBlackoutPills::StopBlurring()
         Enemy->Reactivate();
     }
 
-    if (APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+    if (Player)
     {
         Player->GetPillsComponent()->OnBlurringEnd.Broadcast();
         Player->GetAttackComponent()->MultiplyAttackDamage(AttackDamageMultiplier);
@@ -68,7 +68,7 @@ void UBlackoutPills::StopBlurring()
 
 void UBlackoutPills::StopDamageDecrease()
 {
-    if (APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+    if (Player)
     {
         Player->GetAttackComponent()->ResetAttackDamage();
         GetWorld()->GetTimerManager().ClearTimer(TimerPillEffect);

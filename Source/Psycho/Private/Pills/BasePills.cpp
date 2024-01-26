@@ -2,7 +2,9 @@
 
 
 #include "Pills/BasePills.h"
+#include "Characters/Player/PlayerCharacter.h"
 #include "Structures/PillsDataStructure.h"
+#include "Kismet/GameplayStatics.h"
 
 
 void UBasePills::Init(UPillsDataStructure* Data)
@@ -14,6 +16,5 @@ void UBasePills::Init(UPillsDataStructure* Data)
 
 void UBasePills::UsePill()
 {
-    if(GEngine)
-     GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("%s pill was taken"), *GetName()));
+    Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }

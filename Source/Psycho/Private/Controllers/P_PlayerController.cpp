@@ -119,10 +119,11 @@ void AP_PlayerController::Tick(float DeltaSeconds)
 		PlayerCharacter->GetCameraBoom()->SetRelativeLocation(InterCameraBoomLocation);
 
 		FRotator LookAtTarget = UKismetMathLibrary::FindLookAtRotation(PlayerCharacter->GetFollowCamera()->GetComponentLocation(), LockedOnTarget->GetActorLocation());
-		FRotator Interpolation = FMath::RInterpTo(GetControlRotation(), LookAtTarget, DeltaSeconds, 5);
+		FRotator Interpolation = FMath::RInterpTo(GetControlRotation(), LookAtTarget, DeltaSeconds, RotationSpeed);
+		if (Interpolation.Pitch < -25.f) Interpolation.Pitch = -25.f;
 		SetControlRotation(Interpolation);
 	} else {
-		FVector InterCameraBoomLocation = FMath::VInterpTo(PlayerCharacter->GetCameraBoom()->GetRelativeLocation(), CameraDefaultLocation, DeltaSeconds, 15.f);
+		FVector InterCameraBoomLocation = FMath::VInterpTo(PlayerCharacter->GetCameraBoom()->GetRelativeLocation(), CameraDefaultLocation, DeltaSeconds, 5.f);
 		PlayerCharacter->GetCameraBoom()->SetRelativeLocation(InterCameraBoomLocation);
 	}
 }

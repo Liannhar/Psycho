@@ -16,7 +16,7 @@ class PSYCHO_API ABaseEnemy : public ABaseCharacter
 	GENERATED_BODY()
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Collision", meta = (AllowPrivateAccess = "true"))
-	class UBoxComponent* EnemyCollision;
+	class UBoxComponent* EnemyChannelCollision;
 public:
 	ABaseEnemy();
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="AI")
