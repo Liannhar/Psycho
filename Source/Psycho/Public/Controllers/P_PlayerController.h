@@ -60,6 +60,7 @@ private:
 	bool bIsLockedOnTarget;
 	FVector CameraDefaultLocation;
 public:
+	UFUNCTION(BlueprintCallable)
 	bool GetLockOnTarget() const {return bIsLockedOnTarget;}
 	AActor* GetLockedOnTarget() const {return LockedOnTarget;}
 protected:
