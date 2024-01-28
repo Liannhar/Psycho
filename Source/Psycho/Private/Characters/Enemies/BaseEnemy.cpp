@@ -65,6 +65,7 @@ void ABaseEnemy::BeginPlay()
 void ABaseEnemy::SetStartAttack()
 {
 	NotIsAttackingNow=false;
+	GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,5.0f);	
 }
 
 void ABaseEnemy::TakingDamage()

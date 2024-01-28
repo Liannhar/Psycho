@@ -8,6 +8,7 @@
 #include "Psycho/CoreTypes.h"
 #include "AttackComponent.generated.h"
 
+class ABaseEnemy;
 class UWeaponComponent;
 class ABaseCharacter;
 struct FCombination;
@@ -38,10 +39,11 @@ public:
 	//	новый правый вектор относительно камеры
 	void SetRightDirection(const FVector& NewVector){RightDirection=NewVector;}
 	//нанесение урона
-	void Damage() const;
+	void Damage();
 	// получить текущий номер атаки в комбинации
 	int32 GetAttackIndex() const {return AttackIndex;}
-
+	
+	
 protected:
 	virtual void BeginPlay() override;
 	//массив комбо
@@ -55,6 +57,8 @@ protected:
 	//радиус сферы урона
 	UPROPERTY(EditAnywhere,Category="Attack")
 	float SphereDamageRadius=30.0f;
+
+	
 private:
 	//получаем владельца AttackComponent
 	ABaseCharacter* GetCharacter() const;
@@ -73,6 +77,8 @@ private:
 	void ActiveAttack(FCombination Attack);
 	//Цель для атаки
 	void AttackTarget() const;
+
+	void ChooseNewCurrentTheNearestDamagedCharacter(ABaseCharacter* DamagedCharacter, const ABaseCharacter* ThisCharacter);
 	
 	FVector2D AttackDirection=FVector2d(0.0f,0.0f);
 	FVector ForwardDirection;
@@ -82,5 +88,10 @@ private:
 	//Вычисление угла поворота атаки персонажа между ударами
 	float RotationAngle(const ABaseCharacter* BaseCharacter) const;
 
+	static FRotator CheckRotationWithAttack(ABaseCharacter* DamagedActor,ABaseCharacter* ThisCharacter,FRotator Rotation);
 	
+	UPROPERTY()
+	TArray<ABaseCharacter*> DamagedCharacters;
+	UPROPERTY()
+	ABaseCharacter* CurrentTheNearestDamagedCharacter;
 };

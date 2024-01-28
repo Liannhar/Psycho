@@ -18,5 +18,8 @@ public:
 protected:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="AI")
 	FBlackboardKeySelector EnemyIsAttackingKey;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="AI")
+	float SlowSpeed=200.0f;
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+	
 };

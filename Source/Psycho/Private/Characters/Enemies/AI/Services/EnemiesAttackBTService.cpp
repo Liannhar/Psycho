@@ -18,11 +18,13 @@ void UEnemiesAttackBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 	const auto BlackBoard = OwnerComp.GetBlackboardComponent();
 	if(!BlackBoard) return;
 	const auto Controller = OwnerComp.GetAIOwner();
+	const auto Pawn = Controller->GetPawn();
 	const auto PerceptionComponentClass = Controller->GetComponentByClass(UEnemyAIPerceptionComponent::StaticClass());
 	if(const auto PerceptionComponent = Cast<UEnemyAIPerceptionComponent>(PerceptionComponentClass))
 	{
 		bool CanAttack=true;
 		auto Enemies = PerceptionComponent->GetVisibleEnemies();
+		const auto CurrentEnemy = Cast<ABaseEnemy>(Pawn);
 		if (Enemies.Num()>0)
 		{
 			for (const auto Enemy:Enemies)
@@ -33,6 +35,14 @@ void UEnemiesAttackBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 					break;
 				}
 			}
+		}
+		if(CanAttack || !CurrentEnemy->GetNotIsAttackingNow())
+		{
+			CurrentEnemy->ChangeMaxSpeed(CurrentEnemy->GetBaseSpeed());
+		}
+		else
+		{
+			CurrentEnemy->ChangeMaxSpeed(SlowSpeed);
 		}
 		BlackBoard->SetValueAsBool(EnemyIsAttackingKey.SelectedKeyName,CanAttack);	
 	}

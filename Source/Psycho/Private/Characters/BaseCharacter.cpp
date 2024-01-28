@@ -7,6 +7,7 @@
 #include "AttackComponent.h"
 #include "DialogComponent.h"
 #include "HealthComponent.h"
+#include "P_PlayerController.h"
 #include "WeaponComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -35,6 +36,10 @@ void ABaseCharacter::Death()
 {
 	//PlayAnimMontage();// Анимация смерти
 	GetCharacterMovement()->DisableMovement();
+	if(const auto PlayerController = Cast<AP_PlayerController>(GetController()))
+	{
+		Controller->DisableInput(PlayerController);
+	}
 	if(const auto Collision = GetCapsuleComponent())
 	{
 		Collision->SetCollisionResponseToAllChannels(ECR_Ignore);
@@ -52,6 +57,7 @@ void ABaseCharacter::GetDamage(AActor* Actor)
 	const auto DamageActorForwardVector = Actor->GetActorForwardVector();
 	const auto ActorForwardVector = GetActorForwardVector();
 	const auto DotProduct = FVector::DotProduct(DamageActorForwardVector, ActorForwardVector);
+	UE_LOG(LogTemp,Display,TEXT("DotProduct:%f"),DotProduct);
 	if(DotProduct>0.0f)
 	{
 		SetActorLocation(GetActorLocation()+(ActorForwardVector+DamageActorForwardVector)*DistanceOfRepulsion);

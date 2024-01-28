@@ -34,12 +34,15 @@ public:
 
 	void SetStartAttack();
 
+	float GetBaseSpeed() const {return BaseSpeed;}
+
 protected:
 	bool IsTakenDamage = false;
 	FTimerHandle TimerDamage;
 	void TakingDamage();
 	void DontTakeDamage();
-	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Speed")
+	float BaseSpeed = 400.0f;
 	
 	void EndWait();
 	float TimeForWaitDamage=3.0f;

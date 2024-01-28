@@ -42,6 +42,7 @@ private:
 
 	bool LastAttackIsHeavy=false;
 
+	bool CharacterIsDead=false;
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -53,6 +54,8 @@ public:
 	float GetPercentHP();
 	bool GetLastAttackIsHeavy() const {return LastAttackIsHeavy;}
 
+	UFUNCTION(BlueprintCallable)
+	bool IsDead(){return CharacterIsDead;}	
 
 	FOnDeathSignature OnDeath;
 	FOnTakeDamageStartSignature OnTakeDamage;

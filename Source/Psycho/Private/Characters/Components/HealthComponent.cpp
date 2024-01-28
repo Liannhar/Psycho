@@ -102,4 +102,5 @@ void UHealthComponent::OnDied()
 	if(GEngine)
      GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s died!"), *(GetOwner()->GetName())));
 	OnDeath.Broadcast();
+	CharacterIsDead=true;
 }
