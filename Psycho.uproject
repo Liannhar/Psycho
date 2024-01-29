@@ -38,10 +38,6 @@
 		{
 			"Name": "SkeletalMerging",
 			"Enabled": true
-		},
-		{
-			"Name": "RLPlugin",
-			"Enabled": true
 		}
 	]
 }
