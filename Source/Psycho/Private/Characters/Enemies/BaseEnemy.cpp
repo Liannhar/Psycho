@@ -5,18 +5,22 @@
 
 #include "AttackComponent.h"
 #include "BaseEnemyAIController.h"
-#include "BaseWeapon.h"
 #include "EnemyAIPerceptionComponent.h"
+#include "Psycho/PsychoGameModeBase.h"
 #include "HealthComponent.h"
 #include "WeaponComponent.h"
+#include "Weapons/BaseWeapon.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Psycho/PsychoGameModeBase.h"
 
 ABaseEnemy::ABaseEnemy()
 {
-	
+	EnemyChannelCollision = CreateDefaultSubobject<UBoxComponent>("Enemy Channel Collision");
+	EnemyChannelCollision->SetupAttachment(RootComponent);
+	EnemyChannelCollision->SetBoxExtent(FVector(1,1,1));
+	EnemyChannelCollision->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
 }
-
 
 void ABaseEnemy::Attack()
 {
@@ -60,12 +64,7 @@ void ABaseEnemy::BeginPlay()
 	Super::BeginPlay();
 	const auto HealthhComponent = GetHealthComponent();
 	HealthhComponent->OnTakeDamage.AddUObject(this,&ABaseEnemy::TakingDamage);
-}
-
-void ABaseEnemy::SetStartAttack()
-{
-	NotIsAttackingNow=false;
-	GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,5.0f);	
+	OwnController = GetController();
 }
 
 void ABaseEnemy::TakingDamage()
@@ -74,13 +73,16 @@ void ABaseEnemy::TakingDamage()
 	GetWorldTimerManager().SetTimer(TimerDamage,this,&ABaseEnemy::DontTakeDamage,TimeForWaitDamage);
 }
 
+void ABaseEnemy::SetStartAttack()
+{
+	NotIsAttackingNow=false;
+	GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,5.0f);	
+}
+
 void ABaseEnemy::DontTakeDamage()
 {
 	IsTakenDamage=false;
 }
-
-
-
 
 void ABaseEnemy::ChangeMaxSpeed(float NewSpeed) const
 {
@@ -88,6 +90,15 @@ void ABaseEnemy::ChangeMaxSpeed(float NewSpeed) const
 	if(!CharacterMovementComponent) return;
 
 	CharacterMovementComponent->MaxWalkSpeed=NewSpeed;
+}
+
+bool ABaseEnemy::GetLastAttackIsHeavy() const
+{
+	if(const auto HealthhComponent = GetHealthComponent())
+	{
+		return HealthhComponent->GetLastAttackIsHeavy();
+	}
+	return false;
 }
 
 void ABaseEnemy::Death()
@@ -110,11 +121,36 @@ void ABaseEnemy::Death()
 	Destroy();
 }
 
-bool ABaseEnemy::GetLastAttackIsHeavy() const
+
+void ABaseEnemy::Deactivate()
 {
-	if(const auto HealthhComponent = GetHealthComponent())
-	{
-		return HealthhComponent->GetLastAttackIsHeavy();
-	}
-	return false;
+	SetActorHiddenInGame(true);
+	GetWeaponComponent()->GetCurrentWeapon()->SetActorHiddenInGame(true);
+	GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+	// Hide all attached actors
+	// TArray<AActor*> AttachedActors;
+	// GetAttachedActors(AttachedActors);
+	// for (AActor* Actor : AttachedActors)
+	// {
+	// 	Actor->SetActorHiddenInGame(true);
+	// }
+	GetMovementComponent()->StopActiveMovement();
+	OwnController->UnPossess();
+}
+
+void ABaseEnemy::Reactivate()
+{
+	SetActorHiddenInGame(false);
+	GetWeaponComponent()->GetCurrentWeapon()->SetActorHiddenInGame(false);
+	GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+	// Unhide all attached actors
+	// TArray<AActor*> AttachedActors;
+	// GetAttachedActors(AttachedActors);
+	// for (AActor* Actor : AttachedActors)
+	// {
+	// 	Actor->SetActorHiddenInGame(false);
+	// }
+	OwnController->Possess(this);
 }

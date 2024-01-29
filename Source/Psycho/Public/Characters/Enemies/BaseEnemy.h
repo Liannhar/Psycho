@@ -14,6 +14,9 @@ UCLASS()
 class PSYCHO_API ABaseEnemy : public ABaseCharacter
 {
 	GENERATED_BODY()
+private:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Collision", meta = (AllowPrivateAccess = "true"))
+	class UBoxComponent* EnemyChannelCollision;
 public:
 	ABaseEnemy();
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="AI")
@@ -30,17 +33,22 @@ public:
 	void ChangeMaxSpeed(float NewSpeed) const;
 	void BlockAttack();
 
+	void Deactivate();
+	void Reactivate();
+
 	virtual void BeginPlay() override;
 
 	void SetStartAttack();
 
 	float GetBaseSpeed() const {return BaseSpeed;}
-
 protected:
 	bool IsTakenDamage = false;
 	FTimerHandle TimerDamage;
 	void TakingDamage();
 	void DontTakeDamage();
+	
+	AController* OwnController;
+
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Speed")
 	float BaseSpeed = 400.0f;
 	
@@ -50,6 +58,6 @@ protected:
 	FTimerHandle WaitNextAttemptAttack;
 
 	bool NotIsAttackingNow=true;
-	virtual void Death() override;
 	
+	virtual void Death() override;
 };

@@ -14,6 +14,7 @@ UHealthComponent::UHealthComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 
+	TakeDamageMultiplier = 1.f;
 }
 
 
@@ -64,6 +65,10 @@ float UHealthComponent::GetPercentHP()
 
 void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
+	if (isInvulnerable) return;
+
+	Damage *= TakeDamageMultiplier;
+
 	CurrentHP = FMath::Clamp(CurrentHP - Damage, 0, MaxHP);
 	OnTakeDamage.Broadcast();
 	CalculatePercentHP();
@@ -77,7 +82,9 @@ void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDa
 		LastAttackIsHeavy=false;
 	}
 	
-	if(	const auto BaseCharacter = Cast<ABaseCharacter>(DamagedActor))
+	const auto BaseCharacter = Cast<ABaseCharacter>(DamagedActor);
+
+	if(BaseCharacter && DamageCauser != GetOwner())
 	{
 		BaseCharacter->GetDamage(DamageCauser);
 	}

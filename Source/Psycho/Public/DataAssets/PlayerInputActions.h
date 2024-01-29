@@ -42,5 +42,8 @@ public:
     UInputAction* ChangeTargetOnAction;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-        UInputAction* Interact;
+    UInputAction* Interact;
+    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    UInputAction* DodgeAction;
 };

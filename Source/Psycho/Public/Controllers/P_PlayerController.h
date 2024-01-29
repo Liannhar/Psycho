@@ -55,6 +55,8 @@ private:
 	float BoxTraceWidth;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Target System", meta = (AllowPrivateAccess = "true"))
 	float BoxTraceLength;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Target System", meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
+	float RotationSpeed;
 
 	AActor* LockedOnTarget;
 	bool bIsLockedOnTarget;
@@ -93,6 +95,9 @@ protected:
 
 	//Interact
 	void Interact(const FInputActionValue& Value);
+
+	// Dodge
+	void Dodge(const FInputActionValue& Value);
 
 public:
 	AP_PlayerController();

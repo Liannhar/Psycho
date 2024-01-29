@@ -38,6 +38,14 @@ public:
 	void SetForwardDirection(const FVector& NewVector){ForwardDirection=NewVector;}
 	//	новый правый вектор относительно камеры
 	void SetRightDirection(const FVector& NewVector){RightDirection=NewVector;}
+	//новая скорость атаки
+	void MultiplyAttackSpeed(const float& Multiplier);
+	//восстановление скорости атаки
+	void ResetAttackSpeedToDefault();
+	// новый множитель урона
+	void MultiplyAttackDamage(const float& Multiplier){AttackDamage*=Multiplier;};
+	//восстановление множителя урона
+	void ResetAttackDamage(){AttackSpeed=1.f;};
 	//нанесение урона
 	void Damage();
 	// получить текущий номер атаки в комбинации
@@ -57,7 +65,11 @@ protected:
 	//радиус сферы урона
 	UPROPERTY(EditAnywhere,Category="Attack")
 	float SphereDamageRadius=30.0f;
-
+	//скорость атаки
+	UPROPERTY(EditAnywhere,Category="Attack", meta = (ClampMin = "1.0"))
+	float AttackSpeed = 1.f;
+	UPROPERTY(EditAnywhere,Category="Attack", meta = (ClampMin = "1.0"))
+	float AttackDamage = 1.f;
 	
 private:
 	//получаем владельца AttackComponent

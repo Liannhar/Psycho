@@ -14,7 +14,6 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PSYCHO_API UHealthComponent : public UActorComponent
 {
 	GENERATED_BODY()
-
 public:	
 	// Sets default values for this component's properties
 	UHealthComponent();
@@ -32,6 +31,8 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Values, meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
 	float CurrentHP=100.0f;
+
+	float TakeDamageMultiplier;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Values, meta = (AllowPrivateAccess = "true"))
 	float PercentHP;
@@ -52,8 +53,13 @@ public:
 	float GetCurrentHP();
 	void SetCurrentHP(float NewCurrentHP){CurrentHP=NewCurrentHP;}
 	float GetPercentHP();
-	bool GetLastAttackIsHeavy() const {return LastAttackIsHeavy;}
+	bool GetLastAttackIsHeavy(){return LastAttackIsHeavy;};
 
+	void SetTakeDamageMultiplier(float Multiplier) { TakeDamageMultiplier = Multiplier; };
+	void ResetTakeDamageMultiplier() { TakeDamageMultiplier = 1.f;}
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Values)
+	bool isInvulnerable;
 	UFUNCTION(BlueprintCallable)
 	bool IsDead(){return CharacterIsDead;}	
 

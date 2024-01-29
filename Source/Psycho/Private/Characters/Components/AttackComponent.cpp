@@ -3,7 +3,6 @@
 
 #include "Characters/Components/AttackComponent.h"
 #include "BaseCharacter.h"
-#include "Containers/Array.h"
 #include "Player/PlayerCharacter.h"
 #include "BaseEnemy.h"
 #include "BaseWeapon.h"
@@ -125,14 +124,14 @@ void UAttackComponent::Damage()
 					break;
 				case LightAttack:
 					UGameplayStatics::ApplyDamage(DamagedCharacter,
-						Weapon->GetLightAttackDamage(),
+						Weapon->GetLightAttackDamage()* AttackDamage,
 						ThisCharacter->GetController(),
 						ThisCharacter,
 						UDamageType::StaticClass());
 					break;
 				case HeavyAttack:
 					UGameplayStatics::ApplyDamage(DamagedCharacter,
-						Weapon->GetHeavyAttackDamage(),
+						Weapon->GetHeavyAttackDamage()* AttackDamage,
 						ThisCharacter->GetController(),
 						ThisCharacter,
 						UHeavyAttackDamageType::StaticClass());
@@ -220,6 +219,20 @@ void UAttackComponent::AttackTarget() const
 		}
 		MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform("Attack",AttackTransform);
 	}
+}
+
+void UAttackComponent::MultiplyAttackSpeed(const float& Multiplier)
+{
+	AttackSpeed *= Multiplier;
+	GetCharacter()->GetMesh()->GetAnimInstance()->Montage_SetPlayRate(Combos[CurrentComboAttack].Attack[AttackIndex].AttackMontage);
+}
+
+
+void UAttackComponent::ResetAttackSpeedToDefault()
+{
+	AttackSpeed = 1.f;
+	if (CurrentComboAttack < Combos.Num() && AttackIndex < Combos[CurrentComboAttack].Attack.Num())
+		GetCharacter()->GetMesh()->GetAnimInstance()->Montage_SetPlayRate(Combos[CurrentComboAttack].Attack[AttackIndex].AttackMontage);
 }
 
 FRotator UAttackComponent::CheckRotationWithAttack(ABaseCharacter* DamagedActor,ABaseCharacter* ThisCharacter,FRotator Rotation)

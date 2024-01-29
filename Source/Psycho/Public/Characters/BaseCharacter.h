@@ -45,8 +45,7 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 	void GetDamage(AActor* Actor);
-	
-	UHealthComponent* GetHealthComponent() const {return HealthComponent;}
-	UAttackComponent* GetAttackComponent() const {return AttackComponent;}
-	UWeaponComponent* GetWeaponComponent() const {return WeaponComponent;}
+	UHealthComponent* GetHealthComponent() { return HealthComponent; };
+	UAttackComponent* GetAttackComponent() { return AttackComponent; };
+	UWeaponComponent* GetWeaponComponent() { return WeaponComponent; };
 };

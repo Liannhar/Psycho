@@ -2,15 +2,16 @@
 
 
 #include "Controllers/P_PlayerController.h"
-
 #include "AttackComponent.h"
 #include "Components/InputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Characters/Player/PlayerCharacter.h"
+#include "Characters/Components/PillsComponent.h"
 #include "DataAssets\PlayerInputActions.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Psycho/CoreTypes.h"
+#include "Pills/BasePills.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -50,22 +51,6 @@ void AP_PlayerController::BeginPlay()
 	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = DefaultWalkSpeed;
 	CameraDefaultLocation = PlayerCharacter->GetCameraBoom()->GetRelativeLocation();
 	CameraLockedOnOffset += CameraDefaultLocation;
-    
-	/*// find out which way is forward
-	const FRotator Rotation = GetControlRotation();
-	const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-	// get forward vector
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-	// get right vector 
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-	if(const auto AttackComponent = Cast<UAttackComponent>(PlayerCharacter->GetComponentByClass(UAttackComponent::StaticClass())))
-	{
-		AttackComponent->SetAttackDirection(FVector2d(1.0f,0.0f));
-		AttackComponent->SetForwardDirection(ForwardDirection);
-		AttackComponent->SetRightDirection(RightDirection);
-	}*/
 }
 
 void AP_PlayerController::SetupInputComponent() 
@@ -98,9 +83,12 @@ void AP_PlayerController::SetupInputComponent()
 		// Lock On Target
 		EnhancedInputComponent->BindAction(InputActions->LockOnTargetAction, ETriggerEvent::Triggered, this, &AP_PlayerController::LockOnTarget);
 		EnhancedInputComponent->BindAction(InputActions->ChangeTargetOnAction, ETriggerEvent::Triggered, this, &AP_PlayerController::ChangeTargetOn);
-
+		
 		// Interact
 		EnhancedInputComponent->BindAction(InputActions->Interact, ETriggerEvent::Triggered, this, &AP_PlayerController::Interact);
+		
+		// Dodge
+		EnhancedInputComponent->BindAction(InputActions->DodgeAction, ETriggerEvent::Triggered, this, &AP_PlayerController::Dodge);
 	}
 }
 
@@ -114,15 +102,15 @@ void AP_PlayerController::Tick(float DeltaSeconds)
 		FVector InterCameraBoomLocation = FMath::VInterpTo(PlayerCharacter->GetCameraBoom()->GetRelativeLocation(), CameraLockedOnOffset, DeltaSeconds, 5.f);
 		PlayerCharacter->GetCameraBoom()->SetRelativeLocation(InterCameraBoomLocation);
 
-		FRotator LookAtTarget = UKismetMathLibrary::FindLookAtRotation(PlayerCharacter->GetActorLocation(), LockedOnTarget->GetActorLocation());
-		FRotator Interpolation = FMath::RInterpTo(GetControlRotation(), LookAtTarget, DeltaSeconds, 5);
-		SetControlRotation(Interpolation/* FRotator(Interpolation.Pitch, Interpolation.Yaw, GetControlRotation().Roll) */);
+		FRotator LookAtTarget = UKismetMathLibrary::FindLookAtRotation(PlayerCharacter->GetFollowCamera()->GetComponentLocation(), LockedOnTarget->GetActorLocation());
+		FRotator Interpolation = FMath::RInterpTo(GetControlRotation(), LookAtTarget, DeltaSeconds, RotationSpeed);
+		if (Interpolation.Pitch < -25.f) Interpolation.Pitch = -25.f;
+		SetControlRotation(Interpolation);
 	} else {
-		FVector InterCameraBoomLocation = FMath::VInterpTo(PlayerCharacter->GetCameraBoom()->GetRelativeLocation(), CameraDefaultLocation, DeltaSeconds, 15.f);
+		FVector InterCameraBoomLocation = FMath::VInterpTo(PlayerCharacter->GetCameraBoom()->GetRelativeLocation(), CameraDefaultLocation, DeltaSeconds, 5.f);
 		PlayerCharacter->GetCameraBoom()->SetRelativeLocation(InterCameraBoomLocation);
 	}
 }
-
 
 void AP_PlayerController::Move(const FInputActionValue& Value)
 {
@@ -249,9 +237,15 @@ void AP_PlayerController::HeavyAttack(const FInputActionValue& Value)
 
 void AP_PlayerController::TakePill(const FInputActionValue& Value)
 {
-	// TODO: TakePill Logic
-	if(GEngine)
-     GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Taking a Pill!"));	
+	PlayerCharacter->GetPillsComponent()->TakePill();
+}
+
+UAttackComponent* AP_PlayerController::GetAttackComponent() const
+{
+	const auto Component = PlayerCharacter->GetComponentByClass(UAttackComponent::StaticClass());
+	if(!Component) return nullptr;
+
+	return Cast<UAttackComponent>(Component);
 }
 
 UAttackComponent* AP_PlayerController::GetAttackComponent() const
@@ -270,7 +264,10 @@ void AP_PlayerController::LockOnTarget(const FInputActionValue& Value)
 	if (bIsLockedOnTarget)
 	{
 		bIsLockedOnTarget = false;
-		PlayerCharacter->bUseControllerRotationYaw = false;
+		//PlayerCharacter->bUseControllerRotationYaw = false;
+		PlayerCharacter->GetCharacterMovement()->bOrientRotationToMovement = true;
+		PlayerCharacter->GetCharacterMovement()->bUseControllerDesiredRotation = false;
+
 
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 		{
@@ -294,8 +291,10 @@ void AP_PlayerController::LockOnTarget(const FInputActionValue& Value)
 	if (!Hit) return;
 
 	bIsLockedOnTarget = true;
-	PlayerCharacter->bUseControllerRotationYaw = true;
+	//PlayerCharacter->bUseControllerRotationYaw = true;
 	LockedOnTarget = HitResult.GetActor();
+	PlayerCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
+	PlayerCharacter->GetCharacterMovement()->bUseControllerDesiredRotation = true;
 
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
@@ -392,4 +391,11 @@ void AP_PlayerController::Interact(const FInputActionValue& Value)
 	// TODO: Interact
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Interacted"));
+}
+
+
+void AP_PlayerController::Dodge(const FInputActionValue& Value)
+{
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Dodge!"));
 }

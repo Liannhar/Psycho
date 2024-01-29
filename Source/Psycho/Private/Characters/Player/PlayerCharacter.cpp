@@ -2,6 +2,7 @@
 
 
 #include "Characters/Player/PlayerCharacter.h"
+#include "Characters/Components/PillsComponent.h"
 
 #include "BaseWeapon.h"
 #include "DialogComponent.h"
@@ -64,6 +65,8 @@ APlayerCharacter::APlayerCharacter()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
+
+	PillsComponent = CreateDefaultSubobject<UPillsComponent>(TEXT("Pills Component"));
 }
 
 void APlayerCharacter::BeginPlay()

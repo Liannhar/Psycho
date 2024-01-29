@@ -1,16 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BaseCharacter.h"
 #include "Characters/BaseCharacter.h"
 #include "MotionWarpingComponent.h"
 #include "AttackComponent.h"
-#include "DialogComponent.h"
 #include "HealthComponent.h"
-#include "P_PlayerController.h"
 #include "WeaponComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "P_PlayerController.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -36,6 +34,7 @@ void ABaseCharacter::Death()
 {
 	//PlayAnimMontage();// Анимация смерти
 	GetCharacterMovement()->DisableMovement();
+	SetLifeSpan(LifeSpan);
 	if(const auto PlayerController = Cast<AP_PlayerController>(GetController()))
 	{
 		Controller->DisableInput(PlayerController);
@@ -57,7 +56,6 @@ void ABaseCharacter::GetDamage(AActor* Actor)
 	const auto DamageActorForwardVector = Actor->GetActorForwardVector();
 	const auto ActorForwardVector = GetActorForwardVector();
 	const auto DotProduct = FVector::DotProduct(DamageActorForwardVector, ActorForwardVector);
-	UE_LOG(LogTemp,Display,TEXT("DotProduct:%f"),DotProduct);
 	if(DotProduct>0.0f)
 	{
 		SetActorLocation(GetActorLocation()+(ActorForwardVector+DamageActorForwardVector)*DistanceOfRepulsion);
