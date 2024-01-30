@@ -28,6 +28,8 @@ protected:
 public:
 	UFUNCTION(BlueprintCallable)
 	virtual void OnInteract(class APlayerCharacter* Player);
-
+	
+#if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& E) override;
+#endif
 };

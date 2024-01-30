@@ -31,7 +31,7 @@ void ABasePillActor::OnInteract(APlayerCharacter* Player)
 	Destroy();
 }
 
-
+#if WITH_EDITOR
 void ABasePillActor::PostEditChangeProperty(FPropertyChangedEvent& E)
 {
 	Super::PostEditChangeProperty(E);
@@ -44,3 +44,4 @@ void ABasePillActor::PostEditChangeProperty(FPropertyChangedEvent& E)
 	}
 
 }
+#endif
