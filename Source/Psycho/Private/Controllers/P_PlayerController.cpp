@@ -248,14 +248,6 @@ UAttackComponent* AP_PlayerController::GetAttackComponent() const
 	return Cast<UAttackComponent>(Component);
 }
 
-UAttackComponent* AP_PlayerController::GetAttackComponent() const
-{
-	const auto Component = PlayerCharacter->GetComponentByClass(UAttackComponent::StaticClass());
-	if(!Component) return nullptr;
-
-	return Cast<UAttackComponent>(Component);
-}
-
 
 void AP_PlayerController::LockOnTarget(const FInputActionValue& Value)
 {

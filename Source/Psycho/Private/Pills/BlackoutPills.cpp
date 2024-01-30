@@ -25,7 +25,7 @@ void UBlackoutPills::UsePill()
 	ActorsToIgnore.Add(Player);
 	TArray<FHitResult> HitResults;
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypesArray;
-	ObjectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1));
+	ObjectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
 
 	bool Hit = UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), Start, End, DeactivateRadius, ObjectTypesArray, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResults, true);
 
@@ -52,8 +52,12 @@ void UBlackoutPills::UsePill()
 
 void UBlackoutPills::StopBlurring()
 {
+    if(GEngine)
+        GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Blackout pill end")));
+
     for (ABaseEnemy* Enemy: DeactivatedEnemies)
     {
+        
         Enemy->Reactivate();
     }
 

@@ -53,7 +53,7 @@ protected:
 	float BaseSpeed = 400.0f;
 	
 	void EndWait();
-	float TimeForWaitDamage=3.0f;
+	float TimeForWaitDamage=2.0f;
 	int32 AttacksCount=0;
 	FTimerHandle WaitNextAttemptAttack;
 

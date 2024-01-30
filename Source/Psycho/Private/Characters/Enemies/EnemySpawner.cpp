@@ -28,7 +28,7 @@ void AEnemySpawner::SpawnEnemies()
 	for(const auto Enemy:Enemies)
 	{
 		const auto NewLocation = UKismetMathLibrary::RandomPointInBoundingBox(GetActorLocation(),BoxComponent->GetScaledBoxExtent());
-		const auto NewSpawnedEnemy = World->SpawnActor<ABaseEnemy>(Enemy,NewLocation+FVector(0.0f,0.0f,90.0f),GetActorRotation());
+		const auto NewSpawnedEnemy = World->SpawnActor<ABaseEnemy>(Enemy,NewLocation+FVector(0.0f,0.0f,0.0f),GetActorRotation());
 		const auto GameMode = Cast<APsychoGameModeBase>(World->GetAuthGameMode());
 		GameMode->ChangeEnemiesCount(NewSpawnedEnemy,true);
 	}

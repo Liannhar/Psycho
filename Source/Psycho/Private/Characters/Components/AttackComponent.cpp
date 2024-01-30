@@ -22,6 +22,7 @@ UAttackComponent::UAttackComponent()
 //начинает атаку
 void UAttackComponent::StartAttack(EComboInput Input)
 {
+	DamagedCharacters.Empty();
 	for (int32 i=CurrentComboAttack; i < Combos.Num();i++ )
 	{
 		if(AttackIndex<Combos[i].Attack.Num() && Combos[i].Attack[AttackIndex].TypeAttack==Input && (AttackIndex==0  || !CantAttackInTime|| CanAttackNext ))
@@ -46,7 +47,7 @@ void UAttackComponent::StartAttack(EComboInput Input)
 	}
 }
 
-void UAttackComponent::EndAttack()
+void UAttackComponent::EndAttackCombo()
 {
 	const auto BaseCharacter = GetCharacter();
 	const auto Component = BaseCharacter->GetComponentByClass(UWeaponComponent::StaticClass());
@@ -59,7 +60,6 @@ void UAttackComponent::EndAttack()
 	CurrentComboAttack=0;
 	CurrentComboInput=None;
 	CurrentTheNearestDamagedCharacter=nullptr;
-	DamagedCharacters.Empty();
 	GetWorld()->GetTimerManager().ClearTimer(TimerEndAnimMontage);
 }
 
@@ -86,18 +86,24 @@ void UAttackComponent::Damage()
 	bool IsEnemy = false;
 	if(Cast<ABaseEnemy>(ThisCharacter)) IsEnemy=true;
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypesArray;
-	ObjectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
+	if(IsEnemy)
+	{
+		ObjectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
+	}
+	else
+	{
+		ObjectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECC_GameTraceChannel1));
+	}
 
 	
 	if(UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), Start, End, SphereDamageRadius, ObjectTypesArray, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResults, true))
 	{
 		for(auto HitResult:HitResults)
 		{
-			bool NextHitResult=false;
 			auto HitActor = HitResult.GetActor();
-			
 			if(auto DamagedCharacter = Cast<ABaseCharacter>(HitActor))
 			{
+				bool NextHitResult=false;
 				for(auto DamageChar:DamagedCharacters)
 				{
 					if(DamagedCharacter->GetName()==DamageChar->GetName())
@@ -167,6 +173,7 @@ void UAttackComponent::ChooseNewCurrentTheNearestDamagedCharacter(ABaseCharacter
 			}
 		}	
 	}
+	
 }
 
 /*
@@ -179,7 +186,7 @@ void UAttackComponent::ActiveAttack(FCombination Combo)
 	AttackTarget();
 	const auto TimeToEndAnimMontage = ThisCharacter->PlayAnimMontage(Combo.Attack[AttackIndex].AttackMontage,1);
 	if(!GetWorld()) return;
-	GetWorld()->GetTimerManager().SetTimer(TimerEndAnimMontage,this,&UAttackComponent::EndAttack,TimeToEndAnimMontage,false);
+	GetWorld()->GetTimerManager().SetTimer(TimerEndAnimMontage,this,&UAttackComponent::EndAttackCombo,TimeToEndAnimMontage,false);
 	AttackIndex++;
 }
 
@@ -209,7 +216,7 @@ void UAttackComponent::AttackTarget() const
 		NewRotation	+=FRotator(0.0f,RotationAngle(ThisCharacter)*RotationSpeed,0.0f);
 		if(const auto EnemyRotation = CheckRotationWithAttack(CurrentTheNearestDamagedCharacter,ThisCharacter,NewRotation);!EnemyRotation.IsZero())
 		{
-			AttackTransform.SetLocation(CurrentTheNearestDamagedCharacter->GetActorLocation());
+			AttackTransform.SetLocation(ThisCharacter->GetActorLocation());
 			AttackTransform.SetRotation(EnemyRotation.Quaternion());
 		}
 		else
@@ -235,7 +242,7 @@ void UAttackComponent::ResetAttackSpeedToDefault()
 		GetCharacter()->GetMesh()->GetAnimInstance()->Montage_SetPlayRate(Combos[CurrentComboAttack].Attack[AttackIndex].AttackMontage);
 }
 
-FRotator UAttackComponent::CheckRotationWithAttack(ABaseCharacter* DamagedActor,ABaseCharacter* ThisCharacter,FRotator Rotation)
+FRotator UAttackComponent::CheckRotationWithAttack(const ABaseCharacter* DamagedActor, const ABaseCharacter* ThisCharacter,FRotator Rotation)
 {
 	if(!DamagedActor || DamagedActor->GetHealthComponent()->IsDead())
 	{
@@ -243,10 +250,9 @@ FRotator UAttackComponent::CheckRotationWithAttack(ABaseCharacter* DamagedActor,
 	}
 	FVector Direction1To2 = DamagedActor->GetActorLocation() - ThisCharacter->GetActorLocation();
 	Direction1To2.Normalize();
-
 	FVector Forward1 = FRotationMatrix(Rotation).GetUnitAxis(EAxis::X);
 	float DistanceBetweenActors = FVector::Distance(ThisCharacter->GetActorLocation(),DamagedActor->GetActorLocation());
-	if ((FVector::DotProduct(Forward1, Direction1To2) > 0.0f) && (DistanceBetweenActors<150.0f) )
+	if ((FVector::DotProduct(Forward1, Direction1To2) > 0.0f) && (DistanceBetweenActors<100.0f) )
 	{
 		return Direction1To2.Rotation();
 	}

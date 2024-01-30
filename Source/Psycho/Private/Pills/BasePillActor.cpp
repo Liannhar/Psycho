@@ -10,14 +10,12 @@
 // Sets default values
 ABasePillActor::ABasePillActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 }
 
-// Called when the game starts or when spawned
 void ABasePillActor::BeginPlay()
 {
 	Super::BeginPlay();
@@ -34,14 +32,15 @@ void ABasePillActor::OnInteract(APlayerCharacter* Player)
 }
 
 
-void ABasePillActor::PostEditChangeProperty(struct FPropertyChangedEvent& e)
+void ABasePillActor::PostEditChangeProperty(FPropertyChangedEvent& E)
 {
-	Super::PostEditChangeProperty(e);
+	Super::PostEditChangeProperty(E);
 
-	FName PropertyName = (e.Property != NULL) ? e.Property->GetFName() : NAME_None;
+	FName PropertyName = (E.Property != NULL) ? E.Property->GetFName() : NAME_None;
 
 	if (PropertyName == GET_MEMBER_NAME_CHECKED(ABasePillActor, PillData))
 	{
 		Mesh->SetStaticMesh(PillData ? PillData->GetMesh() : nullptr);
 	}
+
 }

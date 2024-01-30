@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "BasePillActor.generated.h"
 
+struct FPropertyChangedEvent;
+
 UCLASS()
 class PSYCHO_API ABasePillActor : public AActor
 {
@@ -17,16 +19,15 @@ private:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Pill, meta = (AllowPrivateAccess = "true"))
 	class UPillsDataStructure* PillData;
 
-	void PostEditChangeProperty(struct FPropertyChangedEvent& e) override;
 public:	
-	// Sets default values for this actor's properties
 	ABasePillActor();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
 	UFUNCTION(BlueprintCallable)
 	virtual void OnInteract(class APlayerCharacter* Player);
+
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& E) override;
 };

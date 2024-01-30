@@ -25,7 +25,7 @@ public:
 	//начало комбинации атак
 	void StartAttack(EComboInput Input);
 	//конец комбинации атак
-	void EndAttack();
+	void EndAttackCombo();
 	
 	void SetNextAttack(bool CanAttack){CanAttackNext=CanAttack;}
 	void SetTimeAttack(bool CanAttack){CantAttackInTime=CanAttack;}
@@ -100,7 +100,7 @@ private:
 	//Вычисление угла поворота атаки персонажа между ударами
 	float RotationAngle(const ABaseCharacter* BaseCharacter) const;
 
-	static FRotator CheckRotationWithAttack(ABaseCharacter* DamagedActor,ABaseCharacter* ThisCharacter,FRotator Rotation);
+	static FRotator CheckRotationWithAttack(const ABaseCharacter* DamagedActor, const ABaseCharacter* ThisCharacter,FRotator Rotation);
 	
 	UPROPERTY()
 	TArray<ABaseCharacter*> DamagedCharacters;
