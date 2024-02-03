@@ -45,7 +45,8 @@ void UBlackoutPills::UsePill()
         }
     }
 
-    GetWorld()->GetTimerManager().SetTimer(TimerPillEffect,this,&UBlackoutPills::StopBlurring,BlurringTime,false);
+    GetWorld()->GetTimerManager().SetTimer(PillPositiveEffectsTimer,this,&UBlackoutPills::StopBlurring,BlurringTime,false);
+    Player->GetPillsComponent()->SetPillPositiveEffectsTimer(PillPositiveEffectsTimer);
     Player->GetPillsComponent()->OnBlurringStart.Broadcast(BlurringStrength);
 }
 
@@ -61,8 +62,9 @@ void UBlackoutPills::StopBlurring()
     {
         Player->GetPillsComponent()->OnBlurringEnd.Broadcast();
         Player->GetAttackComponent()->MultiplyAttackDamage(AttackDamageMultiplier);
-        GetWorld()->GetTimerManager().ClearTimer(TimerPillEffect);
-        GetWorld()->GetTimerManager().SetTimer(TimerPillEffect,this,&UBlackoutPills::StopDamageDecrease,DamageDecreaseTime,false);
+        GetWorld()->GetTimerManager().ClearTimer(PillPositiveEffectsTimer);
+        GetWorld()->GetTimerManager().SetTimer(PillNegativeEffectsTimer,this,&UBlackoutPills::StopDamageDecrease,DamageDecreaseTime,false);
+        Player->GetPillsComponent()->SetPillNegativeEffectsTimer(PillNegativeEffectsTimer);
     }
 }
 
@@ -71,6 +73,6 @@ void UBlackoutPills::StopDamageDecrease()
     if (Player)
     {
         Player->GetAttackComponent()->ResetAttackDamage();
-        GetWorld()->GetTimerManager().ClearTimer(TimerPillEffect);
+        GetWorld()->GetTimerManager().ClearTimer(PillNegativeEffectsTimer);
     }
 }

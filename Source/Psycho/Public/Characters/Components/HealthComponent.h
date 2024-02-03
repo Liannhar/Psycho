@@ -45,9 +45,13 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UFUNCTION(BlueprintCallable)
 	float GetMaxHP();
+	UFUNCTION(BlueprintCallable)
 	float GetCurrentHP();
+	UFUNCTION(BlueprintCallable)
 	float GetPercentHP();
+	
 	bool GetLastAttackIsHeavy(){return LastAttackIsHeavy;};
 
 	void SetTakeDamageMultiplier(float Multiplier) { TakeDamageMultiplier = Multiplier; };

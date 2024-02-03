@@ -12,10 +12,9 @@ class PSYCHO_API UBlackoutPills : public UBasePills
 	GENERATED_BODY()
 
 private:
-	FTimerHandle TimerPillEffect;
-
 	UPROPERTY()
 	TArray<class ABaseEnemy*> DeactivatedEnemies;
+	
 public:
 	void UsePill() override;
 	void StopBlurring();

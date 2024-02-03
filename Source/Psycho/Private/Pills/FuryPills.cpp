@@ -20,9 +20,9 @@ void UFuryPills::UsePill()
 
     Player->GetCharacterMovement()->MaxWalkSpeed *= SpeedMultiplier;
     Player->GetAttackComponent()->MultiplyAttackSpeed(AttackSpeedMultiplier);
-    GetWorld()->GetTimerManager().SetTimer(TimerPillEffect,this,&UFuryPills::StopTakeDamage,TakeDamageTime,false);
+    GetWorld()->GetTimerManager().SetTimer(PillPositiveEffectsTimer,this,&UFuryPills::StopTakeDamage,TakeDamageTime,false);
     GetWorld()->GetTimerManager().SetTimer(TimerTakeDamageTick,this,&UFuryPills::TakeDamage,TakeDamageTickTime,true);
-    Player->GetPillsComponent()->SetFuryEffectsTimer(TimerPillEffect);
+    Player->GetPillsComponent()->SetPillPositiveEffectsTimer(PillPositiveEffectsTimer);
 }
 
 
@@ -40,7 +40,7 @@ void UFuryPills::StopTakeDamage()
 {
     if (Player)
     {
-        GetWorld()->GetTimerManager().ClearTimer(TimerPillEffect);
+        GetWorld()->GetTimerManager().ClearTimer(PillPositiveEffectsTimer);
         GetWorld()->GetTimerManager().ClearTimer(TimerTakeDamageTick);
         Player->GetCharacterMovement()->MaxWalkSpeed /= SpeedMultiplier;
         Player->GetAttackComponent()->ResetAttackSpeedToDefault();

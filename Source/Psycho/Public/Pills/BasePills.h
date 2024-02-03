@@ -24,4 +24,7 @@ public:
 	class UTexture2D* Icon;
 protected:
 	class APlayerCharacter* Player;
+	
+	FTimerHandle PillPositiveEffectsTimer;
+	FTimerHandle PillNegativeEffectsTimer;
 };

@@ -42,14 +42,14 @@ public:
 
 	void AddPill(class UPillsDataStructure* PillData);
 	void TakePill();
-	void SetPainkillerEffectsTimer(FTimerHandle& Timer) { PainkillerEffectsTimer = Timer;};
-	void SetFuryEffectsTimer(FTimerHandle& Timer) { FuryEffectsTimer = Timer;};
+	void SetPillPositiveEffectsTimer(FTimerHandle& Timer) { PillPositiveEffectsTimer = Timer;};
+	void SetPillNegativeEffectsTimer(FTimerHandle& Timer) { PillNegativeEffectsTimer = Timer;};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pills)
 	TArray<UBasePills*> PillsStack;	
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pills)
-	FTimerHandle PainkillerEffectsTimer;
+	FTimerHandle PillPositiveEffectsTimer;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pills)
-	FTimerHandle FuryEffectsTimer;
+	FTimerHandle PillNegativeEffectsTimer;
 };
