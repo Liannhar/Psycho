@@ -49,34 +49,5 @@ void UEnemyDamagedBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
 			BlackBoard->SetValueAsBool(EnemyIsDamagedKey.SelectedKeyName,true);
 		}
 	}
-	
-	
-	/*Логика через PerceptionComponent но он не работает)
-	 *const auto PerceptionComponentClass = Controller->GetComponentByClass(UEnemyAIPerceptionComponent::StaticClass());
-	if(const auto PerceptionComponent = Cast<UEnemyAIPerceptionComponent>(PerceptionComponentClass))
-	{
-		if(const auto EnemyIsNotDamaged = PerceptionComponent->GetEnemyIsNotDamaged())
-		{
-			BlackBoard->SetValueAsBool(EnemyIsDamagedKey.SelectedKeyName,true);
-		}
-		else
-		{
-			if(!ProbabilityTimerHandle.IsValid())
-			{
-				const float RandomNumber = FMath::FRandRange(0.0f, 1.0f);
-				if(RandomNumber>Probability)
-				{
-					GetWorld()->GetTimerManager().SetTimer(ProbabilityTimerHandle,this,&UEnemyDamagedBTService::CanBeDamaged,TimePerBlock);
-					Enemy->BlockAttack(); 
-					BlackBoard->SetValueAsBool(EnemyIsDamagedKey.SelectedKeyName,true);	
-				}
-				else
-				{
-					Enemy->GetDamage();
-					BlackBoard->SetValueAsBool(EnemyIsDamagedKey.SelectedKeyName,false);
-				}	
-			}
-		}
-	}*/
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 }

@@ -34,7 +34,6 @@ void ABaseCharacter::Death()
 {
 	//PlayAnimMontage();// Анимация смерти
 	GetCharacterMovement()->DisableMovement();
-	SetLifeSpan(LifeSpan);
 	if(const auto PlayerController = Cast<AP_PlayerController>(GetController()))
 	{
 		Controller->DisableInput(PlayerController);

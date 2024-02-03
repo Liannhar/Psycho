@@ -18,7 +18,5 @@ public:
 protected:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="AI")
 	FBlackboardKeySelector PlayerActorKey;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="AI")
-	FBlackboardKeySelector PlayerLastLocationKey;
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 };

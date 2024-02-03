@@ -29,7 +29,7 @@ public:
 	bool GetIsTakenDamage() const {return IsTakenDamage;}
 	bool GetLastAttackIsHeavy() const;
 
-	void ChangeCountCombo();
+	void ChangeCountCombo(int32 NewCombo,int32 NewCount,bool NeedRandomCount=false);
 	void ChangeMaxSpeed(float NewSpeed) const;
 	void BlockAttack();
 
@@ -42,21 +42,30 @@ public:
 
 	float GetBaseSpeed() const {return BaseSpeed;}
 protected:
+	UPROPERTY()
 	bool IsTakenDamage = false;
+	UPROPERTY()
 	FTimerHandle TimerDamage;
+
 	void TakingDamage();
 	void DontTakeDamage();
-	
+
+	UPROPERTY()
 	AController* OwnController;
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Speed")
 	float BaseSpeed = 400.0f;
 	
 	void EndWait();
+	UPROPERTY()
 	float TimeForWaitDamage=2.0f;
+	UPROPERTY()
 	int32 AttacksCount=0;
+	UPROPERTY()
+	int32 ComboIndex = 0;
+	UPROPERTY()
 	FTimerHandle WaitNextAttemptAttack;
-
+	UPROPERTY()
 	bool NotIsAttackingNow=true;
 	
 	virtual void Death() override;

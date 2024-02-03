@@ -5,6 +5,7 @@
 
 #include "BaseEnemy.h"
 #include "BaseEnemyAIController.h"
+#include "HealthComponent.h"
 #include "Perception/AISense_Damage.h"
 #include "Perception/AISense_Sight.h"
 #include "Player/PlayerCharacter.h"
@@ -19,7 +20,7 @@ AActor* UEnemyAIPerceptionComponent::GetVisiblePlayer() const
 	{
 		//Проверка жив ли Actor 
 		const auto Player = Cast<APlayerCharacter>(Actor);
-		if(Player) return Player;
+		if(Player && !Player->GetHealthComponent()->IsDead()) return Player;
 	}
 	return nullptr;
 }

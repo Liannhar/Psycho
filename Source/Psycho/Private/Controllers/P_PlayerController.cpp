@@ -218,7 +218,7 @@ void AP_PlayerController::LightAttack(const FInputActionValue& Value)
 {
 	if(const auto AttackComponent = GetAttackComponent())
 	{
-		AttackComponent->StartAttack(EComboInput::LightAttack);
+		AttackComponent->StartComboAttack(EComboInput::LightAttack);
 		if(GEngine)
 			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Light Attack!"));	
 	}
@@ -229,7 +229,7 @@ void AP_PlayerController::HeavyAttack(const FInputActionValue& Value)
 {
 	if(const auto AttackComponent = GetAttackComponent())
 	{
-		AttackComponent->StartAttack(EComboInput::HeavyAttack);
+		AttackComponent->StartComboAttack(EComboInput::HeavyAttack);
 		if(GEngine)
 			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Heavy Attack!"));
 	}

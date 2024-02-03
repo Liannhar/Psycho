@@ -23,7 +23,7 @@ class PSYCHO_API UAttackComponent : public UActorComponent
 public:	
 	UAttackComponent();
 	//начало комбинации атак
-	void StartAttack(EComboInput Input);
+	virtual void StartComboAttack(EComboInput Input);
 	//конец комбинации атак
 	void EndAttackCombo();
 	
@@ -51,7 +51,8 @@ public:
 	// получить текущий номер атаки в комбинации
 	int32 GetAttackIndex() const {return AttackIndex;}
 	
-	
+	//Номер текущего комбо
+	int32 CurrentComboAttack = 0;
 protected:
 	virtual void BeginPlay() override;
 	//массив комбо
@@ -70,16 +71,14 @@ protected:
 	float AttackSpeed = 1.f;
 	UPROPERTY(EditAnywhere,Category="Attack", meta = (ClampMin = "1.0"))
 	float AttackDamage = 1.f;
-	
-private:
+
+
 	//получаем владельца AttackComponent
 	ABaseCharacter* GetCharacter() const;
 	// получаем текущее оружие персонажа
 	UWeaponComponent* GetWeaponComponent() const;
 	//Номер текущей атаки в комбо
 	int32 AttackIndex = 0;
-	//Номер текущего комбо
-	int32 CurrentComboAttack = 0;
 	//Может ли атаковать продвинутым комбо
 	bool CanAttackNext = false;
 	//Попадает ли в тайминг обычной атаки

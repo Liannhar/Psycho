@@ -17,4 +17,10 @@ class PSYCHO_API UAttackEnemyBTNode : public UBTTaskNode
 public:
 	UAttackEnemyBTNode();
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+
+	UPROPERTY(EditAnywhere,Category="Attacks")
+	int32 AttackCount=0;
+	
+	UPROPERTY(EditAnywhere,Category="Attacks")
+	bool NeedRandom=false;
 };

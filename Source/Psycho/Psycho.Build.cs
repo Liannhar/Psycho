@@ -15,6 +15,7 @@ public class Psycho : ModuleRules
 		PublicIncludePaths.AddRange(new string[] { 
 			"Psycho/Public/Characters",
 			"Psycho/Public/Characters/Enemies",
+			"Psycho/Public/Characters/Enemies/FirstBoss",
 			"Psycho/Public/Characters/Enemies/Components",
 			"Psycho/Public/Characters/Enemies/AI",
 			"Psycho/Public/Characters/Enemies/AI/Services",
@@ -29,6 +30,8 @@ public class Psycho : ModuleRules
 			"Psycho/Public/Controllers",
 			"Psycho/Public/AnimNotifies",
 			"Psycho/Public/GameInstance",
+			"Psycho/Public/Structures",
+			"Psycho/Public/DataAssets",
 		});
 
 		// Uncomment if you are using Slate UI

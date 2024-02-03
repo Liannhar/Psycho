@@ -29,7 +29,8 @@ void ABaseEnemy::Attack()
 		const auto AttackIndex = AttackkComponent->GetAttackIndex();
 		if(AttackIndex<=AttacksCount && !IsTakenDamage)
 		{
-			AttackkComponent->StartAttack(LightAttack);
+			AttackkComponent->CurrentComboAttack=
+			AttackkComponent->StartComboAttack(LightAttack);
 			GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndWait,1.0f);	
 			return;
 		}
@@ -47,17 +48,17 @@ void ABaseEnemy::EndEnemyAttack()
 	NotIsAttackingNow=true;
 }
 
-void ABaseEnemy::ChangeCountCombo()
+void ABaseEnemy::ChangeCountCombo(int32 NewCombo,int32 NewCount,bool NeedRandomCount)
 {
-	AttacksCount = FMath::RandRange(0, 2);
+	ComboIndex=NewCombo;
+	if(NeedRandomCount) AttacksCount = FMath::RandRange(0, NewCount);	
+	else AttacksCount = NewCount;
 }
 
 void ABaseEnemy::BlockAttack()
 {
 	//Heres Block
 }
-
-
 
 void ABaseEnemy::BeginPlay()
 {
@@ -105,12 +106,12 @@ void ABaseEnemy::Death()
 {
 	Super::Death();
 
-	const auto AIController = Cast<ABaseEnemyAIController>(GetController());
+	/*const auto AIController = Cast<ABaseEnemyAIController>(GetController());
 	if(!AIController) return;
 
 	const auto Component = AIController->GetComponentByClass(UEnemyAIPerceptionComponent::StaticClass());
 	const auto PerceptionComponent = Cast<UEnemyAIPerceptionComponent>(Component);
-	if(!PerceptionComponent) return;
+	if(!PerceptionComponent) return;*/
 	
 	const auto World = GetWorld();
 	if(!World) return;
