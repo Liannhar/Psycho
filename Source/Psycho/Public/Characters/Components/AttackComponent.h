@@ -45,7 +45,7 @@ public:
 	// новый множитель урона
 	void MultiplyAttackDamage(const float& Multiplier){AttackDamage*=Multiplier;};
 	//восстановление множителя урона
-	void ResetAttackDamage(){AttackSpeed=1.f;};
+	void ResetAttackDamage(){AttackDamage=1.f;};
 	//нанесение урона
 	void Damage();
 	// получить текущий номер атаки в комбинации

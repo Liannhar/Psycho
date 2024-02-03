@@ -184,7 +184,7 @@ void UAttackComponent::ActiveAttack(FCombination Combo)
 	const auto ThisCharacter = GetCharacter();
 	if(!ThisCharacter) return;
 	AttackTarget();
-	const auto TimeToEndAnimMontage = ThisCharacter->PlayAnimMontage(Combo.Attack[AttackIndex].AttackMontage,1);
+	const auto TimeToEndAnimMontage = ThisCharacter->PlayAnimMontage(Combo.Attack[AttackIndex].AttackMontage,AttackSpeed);
 	if(!GetWorld()) return;
 	GetWorld()->GetTimerManager().SetTimer(TimerEndAnimMontage,this,&UAttackComponent::EndAttackCombo,TimeToEndAnimMontage,false);
 	AttackIndex++;
