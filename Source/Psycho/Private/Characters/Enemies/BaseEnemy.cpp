@@ -29,8 +29,8 @@ void ABaseEnemy::Attack()
 		const auto AttackIndex = AttackkComponent->GetAttackIndex();
 		if(AttackIndex<=AttacksCount && !IsTakenDamage)
 		{
-			AttackkComponent->CurrentComboAttack=
-			AttackkComponent->StartComboAttack(LightAttack);
+			AttackkComponent->CurrentComboAttack=ComboIndex;
+			AttackkComponent->StartComboAttack(AttackType);
 			GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndWait,1.0f);	
 			return;
 		}
@@ -48,9 +48,10 @@ void ABaseEnemy::EndEnemyAttack()
 	NotIsAttackingNow=true;
 }
 
-void ABaseEnemy::ChangeCountCombo(int32 NewCombo,int32 NewCount,bool NeedRandomCount)
+void ABaseEnemy::ChangeCountCombo(const EComboInput Type, const int32 NewCombo, const int32 NewCount, const bool NeedRandomCount)
 {
 	ComboIndex=NewCombo;
+	AttackType = Type;
 	if(NeedRandomCount) AttacksCount = FMath::RandRange(0, NewCount);	
 	else AttacksCount = NewCount;
 }
@@ -90,7 +91,9 @@ void ABaseEnemy::ChangeMaxSpeed(float NewSpeed) const
 	const auto CharacterMovementComponent =Cast<UCharacterMovementComponent>(GetMovementComponent());
 	if(!CharacterMovementComponent) return;
 
+	UE_LOG(LogTemp,Display,TEXT("Speed:%f"),CharacterMovementComponent->MaxWalkSpeed);
 	CharacterMovementComponent->MaxWalkSpeed=NewSpeed;
+	UE_LOG(LogTemp,Display,TEXT("Speed:%f"),CharacterMovementComponent->MaxWalkSpeed);
 }
 
 bool ABaseEnemy::GetLastAttackIsHeavy() const

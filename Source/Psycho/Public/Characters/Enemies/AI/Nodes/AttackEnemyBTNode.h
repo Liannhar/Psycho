@@ -7,6 +7,7 @@
 #include "BehaviorTree/BTTaskNode.h"
 #include "AttackEnemyBTNode.generated.h"
 
+enum EComboInput : int;
 /**
  * 
  */
@@ -20,6 +21,12 @@ public:
 
 	UPROPERTY(EditAnywhere,Category="Attacks")
 	int32 AttackCount=0;
+	
+	UPROPERTY(EditAnywhere,Category="Attacks")
+	int32 ComboIndex=0;
+
+	UPROPERTY(EditAnywhere,Category="Attacks")
+	TEnumAsByte<EComboInput> ComboType;
 	
 	UPROPERTY(EditAnywhere,Category="Attacks")
 	bool NeedRandom=false;

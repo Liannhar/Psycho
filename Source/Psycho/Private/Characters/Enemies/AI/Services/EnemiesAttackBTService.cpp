@@ -36,11 +36,7 @@ void UEnemiesAttackBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 				}
 			}
 		}
-		if(CanAttack || !CurrentEnemy->GetNotIsAttackingNow())
-		{
-			CurrentEnemy->ChangeMaxSpeed(CurrentEnemy->GetBaseSpeed());
-		}
-		else
+		if(!CanAttack)
 		{
 			CurrentEnemy->ChangeMaxSpeed(SlowSpeed);
 		}

@@ -22,6 +22,7 @@ EBTNodeResult::Type UStartAttackBTTaskNode::ExecuteTask(UBehaviorTreeComponent& 
 	if(const auto Enemy = Cast<ABaseEnemy>(Pawn))
 	{
 		Enemy->SetStartAttack();
+		Enemy->ChangeMaxSpeed(Enemy->GetBaseSpeed());
 	}
 	return EBTNodeResult::Succeeded;
 }

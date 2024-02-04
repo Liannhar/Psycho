@@ -48,6 +48,8 @@ void AStartFightActor::NotifyActorBeginOverlap(AActor* OtherActor)
 				CheckEnemySpawners();
 			}
 			GameMode->SetCurrentStartFightActor(this);
+			GameMode->SetFightStatus(true);
+			
 		}	
 	}
 }

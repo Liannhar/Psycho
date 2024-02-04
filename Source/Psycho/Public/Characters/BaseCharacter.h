@@ -26,9 +26,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void Death();
-
-	UPROPERTY(EditAnywhere,Category="Health")
-	float LifeSpan = 5.0f;
+	
 	UPROPERTY(EditAnywhere,Category="Health")
 	float DistanceOfRepulsion= 50.0f;
 

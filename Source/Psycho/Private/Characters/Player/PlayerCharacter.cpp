@@ -8,6 +8,7 @@
 #include "DialogComponent.h"
 #include "HealthComponent.h"
 #include "PsychoSaveGame.h"
+#include "P_PlayerController.h"
 #include "WeaponComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -90,4 +91,26 @@ void APlayerCharacter::LoadGame()
 			WeaponComponent->SetNewWeapon(PlayerSave.CurrentPlayerClassOfWeapon);
 		}
 	}
+}
+
+void APlayerCharacter::StartStunPlayer(float TimeStun)
+{
+	//здесь анимация стана
+
+	const auto PlayerController = Cast<AP_PlayerController>(GetController());
+	if(!PlayerController) return;
+	PlayerController->DisableInput(PlayerController);
+	
+	if(!GetWorld()) return;
+	GetWorld()->GetTimerManager().SetTimer(StunTimerHandle,this,&APlayerCharacter::EndStunPlayer,TimeStun);
+}
+
+void APlayerCharacter::EndStunPlayer()
+{
+	const auto PlayerController = Cast<AP_PlayerController>(GetController());
+	if(!PlayerController) return;
+	PlayerController->EnableInput(PlayerController);
+	//здесь вернуть idle
+	if(!GetWorld()) return;
+	GetWorld()->GetTimerManager().ClearTimer(StunTimerHandle);
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Characters/BaseCharacter.h"
+#include "Psycho/CoreTypes.h"
 #include "BaseEnemy.generated.h"
 
 class UBehaviorTree;
@@ -29,7 +30,7 @@ public:
 	bool GetIsTakenDamage() const {return IsTakenDamage;}
 	bool GetLastAttackIsHeavy() const;
 
-	void ChangeCountCombo(int32 NewCombo,int32 NewCount,bool NeedRandomCount=false);
+	void ChangeCountCombo(EComboInput Type,int32 NewCombo,int32 NewCount,bool NeedRandomCount=false);
 	void ChangeMaxSpeed(float NewSpeed) const;
 	void BlockAttack();
 
@@ -63,6 +64,8 @@ protected:
 	int32 AttacksCount=0;
 	UPROPERTY()
 	int32 ComboIndex = 0;
+	
+	EComboInput AttackType=None;
 	UPROPERTY()
 	FTimerHandle WaitNextAttemptAttack;
 	UPROPERTY()

@@ -24,6 +24,9 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pills, meta = (AllowPrivateAccess = "true"))
 	class UPillsComponent* PillsComponent;
 
+	void EndStunPlayer();
+
+	FTimerHandle StunTimerHandle;
 protected:
 	void LoadGame();
 	virtual void BeginPlay() override;
@@ -36,4 +39,6 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	FORCEINLINE class UPillsComponent* GetPillsComponent() const { return PillsComponent; }
+
+	void StartStunPlayer(float TimeStun);
 };

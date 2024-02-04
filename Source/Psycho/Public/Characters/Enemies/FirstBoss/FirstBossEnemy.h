@@ -6,9 +6,7 @@
 #include "Characters/Enemies/BaseEnemy.h"
 #include "FirstBossEnemy.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class PSYCHO_API AFirstBossEnemy : public ABaseEnemy
 {

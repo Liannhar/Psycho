@@ -24,7 +24,7 @@ protected:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	bool FightWasStarted = false;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Spawners")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Enemies")
 	TArray<AEnemySpawner*> EnemySpawners;
 
 	UPROPERTY(EditAnywhere,Category="Collision")
@@ -32,7 +32,7 @@ protected:
 
 	int32 CurrentIndexEnemySpawner = 0;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Spawners")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Enemies")
 	bool NeedSpawnInStartOfBattle = true;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Enemies")
