@@ -15,15 +15,12 @@ class PSYCHO_API UFuryPills : public UBasePills
 	GENERATED_BODY()
 
 private:
-	FTimerHandle TimerPillEffect;
 	FTimerHandle TimerTakeDamageTick;
 public:
 	void UsePill() override;
 	void TakeDamage();
 	void StopTakeDamage();
-
-	struct FTimerHandle& GetTimerHandler() { return TimerPillEffect; };
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effect")
 	float TakeDamageTime;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effect", meta = (ClampMin = "0", ClampMax = "100"))

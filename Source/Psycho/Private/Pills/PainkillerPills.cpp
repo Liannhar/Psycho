@@ -22,8 +22,8 @@ void UPainkillerPills::UsePill()
     Player->GetHealthComponent()->isInvulnerable = true;
     Player->GetCharacterMovement()->MaxWalkSpeed *= SpeedMultiplier;
     Player->GetAttackComponent()->MultiplyAttackSpeed(AttackSpeedMultiplier);
-    GetWorld()->GetTimerManager().SetTimer(TimerPillEffect,this,&UPainkillerPills::EndInvulnerability,InvulnerabilityTime,false);
-    Player->GetPillsComponent()->SetPainkillerEffectsTimer(TimerPillEffect);
+    GetWorld()->GetTimerManager().SetTimer(PillEffectsTimer,this,&UPainkillerPills::EndInvulnerability,InvulnerabilityTime,false);
+    Player->GetPillsComponent()->SetPillEffectsTimer(PillEffectsTimer);
 }
 
 
@@ -35,9 +35,9 @@ void UPainkillerPills::EndInvulnerability()
         Player->GetHealthComponent()->SetTakeDamageMultiplier(TakeDamageMultiplier);
         Player->GetCharacterMovement()->MaxWalkSpeed /= SpeedMultiplier;
         Player->GetAttackComponent()->ResetAttackSpeedToDefault();
-        GetWorld()->GetTimerManager().ClearTimer(TimerPillEffect);
-        GetWorld()->GetTimerManager().SetTimer(TimerPillEffect,this,&UPainkillerPills::EndAddiction,AddicitonTime,false);
-        Player->GetPillsComponent()->SetPainkillerEffectsTimer(TimerPillEffect);
+        GetWorld()->GetTimerManager().ClearTimer(PillEffectsTimer);
+        GetWorld()->GetTimerManager().SetTimer(PillAfterEffectsTimer,this,&UPainkillerPills::EndAddiction,AddicitonTime,false);
+        Player->GetPillsComponent()->SetPillAfterEffectsTimer(PillAfterEffectsTimer);
     }
 }
 
@@ -47,6 +47,6 @@ void UPainkillerPills::EndAddiction()
     if (Player)
     {
         Player->GetHealthComponent()->ResetTakeDamageMultiplier();
-        GetWorld()->GetTimerManager().ClearTimer(TimerPillEffect);
+        GetWorld()->GetTimerManager().ClearTimer(PillAfterEffectsTimer);
     }
 }

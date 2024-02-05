@@ -8,7 +8,7 @@
 
 class UBasePills;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPillAddedDelegate, UBasePills*, AddedPill);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPillAddedDelegate, TSubclassOf<UBasePills>, AddedPill);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPillUsedDelegate, UBasePills*, UsedPill);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBlurringStartDelegate, const float&, BlurStrength);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBlurringEndDelegate);
@@ -42,14 +42,15 @@ public:
 
 	void AddPill(class UPillsDataStructure* PillData);
 	void TakePill();
-	void SetPainkillerEffectsTimer(FTimerHandle& Timer) { PainkillerEffectsTimer = Timer;};
-	void SetFuryEffectsTimer(FTimerHandle& Timer) { FuryEffectsTimer = Timer;};
+	void SetPillEffectsTimer(FTimerHandle& Timer) { PillPositiveEffectsTimer = Timer;};
+	void SetPillAfterEffectsTimer(FTimerHandle& Timer) { PillNegativeEffectsTimer = Timer;};
+	bool IsPillEffectActive();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pills)
-	TArray<UBasePills*> PillsStack;	
+	TArray<TSubclassOf<UBasePills>> PillStack;	
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pills)
-	FTimerHandle PainkillerEffectsTimer;
+	FTimerHandle PillPositiveEffectsTimer;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pills)
-	FTimerHandle FuryEffectsTimer;
+	FTimerHandle PillNegativeEffectsTimer;
 };

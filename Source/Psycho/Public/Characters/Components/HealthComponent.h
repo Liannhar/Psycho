@@ -48,11 +48,15 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UFUNCTION(BlueprintCallable)
 	float GetMaxHP();
 	void SetMaxHP(float NewMaxHP){MaxHP=NewMaxHP;}
+	UFUNCTION(BlueprintCallable)
 	float GetCurrentHP();
 	void SetCurrentHP(float NewCurrentHP){CurrentHP=NewCurrentHP;}
+	UFUNCTION(BlueprintCallable)
 	float GetPercentHP();
+	
 	bool GetLastAttackIsHeavy(){return LastAttackIsHeavy;};
 
 	void SetTakeDamageMultiplier(float Multiplier) { TakeDamageMultiplier = Multiplier; };
@@ -65,7 +69,7 @@ public:
 
 	FOnDeathSignature OnDeath;
 	FOnTakeDamageStartSignature OnTakeDamage;
-
+	
 	UFUNCTION(BlueprintCallable)
 	void RestoreHP(float RestoreAmount);
 };

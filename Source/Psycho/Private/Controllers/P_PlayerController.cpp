@@ -237,7 +237,8 @@ void AP_PlayerController::HeavyAttack(const FInputActionValue& Value)
 
 void AP_PlayerController::TakePill(const FInputActionValue& Value)
 {
-	PlayerCharacter->GetPillsComponent()->TakePill();
+	if (!PlayerCharacter->GetPillsComponent()->IsPillEffectActive())
+		PlayerCharacter->GetPillsComponent()->TakePill();
 }
 
 UAttackComponent* AP_PlayerController::GetAttackComponent() const

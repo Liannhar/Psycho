@@ -28,31 +28,32 @@ void UPillsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 void UPillsComponent::AddPill(UPillsDataStructure* PillData)
 {
-	UClass* PillType = PillData->GetPillType();
-	UBasePills* NewPill = NewObject<UBasePills>(this, PillType);
-	
-	if (!NewPill) return;
+	TSubclassOf<UBasePills> PillType = PillData->GetPillType();
+	if (!PillType) return;
 
-	NewPill->Init(PillData);
-	PillsStack.Add(NewPill);
-	OnPillAdded.Broadcast(NewPill);
+	PillStack.Add(PillType);
+	OnPillAdded.Broadcast(PillType);
 }
 
 void UPillsComponent::TakePill()
 {
-	if (PillsStack.IsEmpty()) 
+	if (PillStack.IsEmpty())
 	{
 		if(GEngine)
      		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("No pills"));
 		return;
 	}
 
-	UBasePills* PillToTake = PillsStack.Last();
-
-	if (PillToTake)
+	if (UBasePills* PillToTake = NewObject<UBasePills>(this, PillStack.Last()))
 	{
 		PillToTake->UsePill();
+		PillStack.RemoveAt(PillStack.Num() - 1);
 		OnPillUsed.Broadcast(PillToTake);
-		PillsStack.Remove(PillToTake);
 	}
+}
+
+
+bool UPillsComponent::IsPillEffectActive()
+{
+	return GetWorld()->GetTimerManager().IsTimerActive(PillPositiveEffectsTimer) || GetWorld()->GetTimerManager().IsTimerActive(PillNegativeEffectsTimer);
 }

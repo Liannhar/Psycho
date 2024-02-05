@@ -16,12 +16,14 @@ class PSYCHO_API UBasePills : public UObject
 	GENERATED_BODY()
 
 public:
-	// Add APlayerCharacter as argument for UsePill()
 	virtual void UsePill();
-	virtual void Init(class UPillsDataStructure* Data);
+	virtual void Init(UTexture2D* NewIcon);
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Icon)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Icon)
 	class UTexture2D* Icon;
 protected:
 	class APlayerCharacter* Player;
+	
+	FTimerHandle PillEffectsTimer;
+	FTimerHandle PillAfterEffectsTimer;
 };
