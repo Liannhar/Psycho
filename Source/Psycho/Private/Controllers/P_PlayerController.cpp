@@ -184,6 +184,22 @@ void AP_PlayerController::StopSprint(const FInputActionValue& Value)
      GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Stop Sprint!"));
 }
 
+void AP_PlayerController::DodgeSprint(const FInputActionValue& Value)
+{
+	Move(Value);
+	
+	bIsSprinting = true;
+	bIsSlowWalking = false;
+
+	if (PlayerCharacter) 
+	{
+		PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = 2000.0f;
+	}
+
+	if(GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Sprint!"));
+}
+
 
 void AP_PlayerController::SlowWalk(const FInputActionValue& Value)
 {
