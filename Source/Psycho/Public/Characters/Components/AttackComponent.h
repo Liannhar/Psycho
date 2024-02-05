@@ -29,7 +29,10 @@ public:
 	
 	void SetNextAttack(bool CanAttack){CanAttackNext=CanAttack;}
 	void SetTimeAttack(bool CanAttack){CantAttackInTime=CanAttack;}
-
+	
+	//Перекат
+	void Dodge();
+	
 	//Ставим новое комбо в AttackComponent
 	void SetCombo();
 	//новое направление атаки

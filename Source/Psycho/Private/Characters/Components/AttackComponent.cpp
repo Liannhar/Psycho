@@ -62,6 +62,16 @@ void UAttackComponent::EndAttackCombo()
 	GetWorld()->GetTimerManager().ClearTimer(TimerEndAnimMontage);
 }
 
+void UAttackComponent::Dodge()
+{
+	const auto ThisCharacter = GetCharacter();
+	if(!ThisCharacter) return ;
+	const auto BaseCharacter = Cast<ABaseCharacter>(ThisCharacter);
+	if(!BaseCharacter) return;
+	const auto RotationDodge = RotationAngle(BaseCharacter);
+	
+}
+
 void UAttackComponent::SetCombo()
 {
 	const UWeaponComponent* WeaponComponent = GetWeaponComponent();
