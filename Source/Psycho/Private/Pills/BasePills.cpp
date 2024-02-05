@@ -6,12 +6,11 @@
 #include "Structures/PillsDataStructure.h"
 #include "Kismet/GameplayStatics.h"
 
-
-void UBasePills::Init(UPillsDataStructure* Data)
+void UBasePills::Init(UTexture2D* NewIcon)
 {
-    if (!Data && !Data->GetIcon()) return;
+    if (!NewIcon) return;
 
-    Icon = Data->GetIcon();
+    Icon = NewIcon;
 }
 
 void UBasePills::UsePill()

@@ -8,7 +8,7 @@
 
 class UBasePills;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPillAddedDelegate, UBasePills*, AddedPill);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPillAddedDelegate, TSubclassOf<UBasePills>, AddedPill);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPillUsedDelegate, UBasePills*, UsedPill);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBlurringStartDelegate, const float&, BlurStrength);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBlurringEndDelegate);
@@ -47,7 +47,7 @@ public:
 	bool IsPillEffectActive();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pills)
-	TArray<UBasePills*> PillsStack;	
+	TArray<TSubclassOf<UBasePills>> PillStack;	
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pills)
 	FTimerHandle PillPositiveEffectsTimer;
