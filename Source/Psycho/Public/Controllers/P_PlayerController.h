@@ -65,6 +65,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool GetLockOnTarget() const {return bIsLockedOnTarget;}
 	AActor* GetLockedOnTarget() const {return LockedOnTarget;}
+
+	// Movement
+	void Sprint(const FInputActionValue& Value);
+	void StopSprint(const FInputActionValue& Value);
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
@@ -72,8 +76,7 @@ protected:
 
 	// Movement
 	void Move(const FInputActionValue& Value);
-	void Sprint(const FInputActionValue& Value);
-	void StopSprint(const FInputActionValue& Value);
+	
 	void SlowWalk(const FInputActionValue& Value);
 	void StopSlowWalk(const FInputActionValue& Value);
 	

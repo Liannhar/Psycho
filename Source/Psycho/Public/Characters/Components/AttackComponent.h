@@ -5,14 +5,17 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "CoreTypes.h"
+#include "InputActionValue.h"
 #include "Psycho/CoreTypes.h"
 #include "AttackComponent.generated.h"
 
+struct FInputActionValue;
 class ABaseEnemy;
 class UWeaponComponent;
 class ABaseCharacter;
 struct FCombination;
 class ABaseWeapon;
+
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -32,7 +35,6 @@ public:
 	
 	//Перекат
 	void Dodge();
-	
 	//Ставим новое комбо в AttackComponent
 	void SetCombo();
 	//новое направление атаки
@@ -46,7 +48,8 @@ public:
 	//восстановление скорости атаки
 	void ResetAttackSpeedToDefault();
 	// новый множитель урона
-	void MultiplyAttackDamage(const float& Multiplier){AttackDamage*=Multiplier;};
+	void MultiplyAttackDamage(const float& Multiplier){AttackDamage*=Multiplier;}
+	void SprintDodge(const FInputActionValue& Value);
 	//восстановление множителя урона
 	void ResetAttackDamage(){AttackDamage=1.f;};
 	//нанесение урона
@@ -106,4 +109,10 @@ protected:
 	TArray<ABaseCharacter*> DamagedCharacters;
 	UPROPERTY()
 	ABaseCharacter* CurrentTheNearestDamagedCharacter;
+
+	FTimerHandle DodgeTimer;
+	void EndDodge();
+	void EndSprintDodge();
+
+	FInputActionValue Value;
 };

@@ -62,15 +62,7 @@ void UAttackComponent::EndAttackCombo()
 	GetWorld()->GetTimerManager().ClearTimer(TimerEndAnimMontage);
 }
 
-void UAttackComponent::Dodge()
-{
-	const auto ThisCharacter = GetCharacter();
-	if(!ThisCharacter) return ;
-	const auto BaseCharacter = Cast<ABaseCharacter>(ThisCharacter);
-	if(!BaseCharacter) return;
-	const auto RotationDodge = RotationAngle(BaseCharacter);
-	
-}
+
 
 void UAttackComponent::SetCombo()
 {
@@ -255,6 +247,7 @@ void UAttackComponent::ResetAttackSpeedToDefault()
 		GetCharacter()->GetMesh()->GetAnimInstance()->Montage_SetPlayRate(Combos[CurrentComboAttack].Attack[AttackIndex].AttackMontage);
 }
 
+
 FRotator UAttackComponent::CheckRotationWithAttack(const ABaseCharacter* DamagedActor, const ABaseCharacter* ThisCharacter,FRotator Rotation)
 {
 	if(!DamagedActor || DamagedActor->GetHealthComponent()->IsDead())
@@ -270,6 +263,72 @@ FRotator UAttackComponent::CheckRotationWithAttack(const ABaseCharacter* Damaged
 		return Direction1To2.Rotation();
 	}
 	return FRotator().ZeroRotator;
+}
+
+void UAttackComponent::EndDodge()
+{
+	if(GetWorld())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(DodgeTimer);
+	}
+}
+
+void UAttackComponent::EndSprintDodge()
+{
+	if(!GetWorld()) return;
+	const auto ThisCharacter = GetCharacter();
+	if(!ThisCharacter) return ;
+	
+	if(!GetWorld()) return;
+
+	const auto Controller = Cast<AP_PlayerController>(ThisCharacter->GetController());
+	if(!Controller) return;
+
+	Controller->StopSprint(Value);
+		
+	GetWorld()->GetTimerManager().ClearTimer(DodgeTimer);
+	
+}
+
+void UAttackComponent::Dodge()
+{
+	if(DodgeTimer.IsValid()) return;	
+	
+	const auto ThisCharacter = GetCharacter();
+	if(!ThisCharacter) return ;
+	const auto RotationDodge = RotationAngle(ThisCharacter);
+	const auto PlayerCharacter = Cast<APlayerCharacter>(ThisCharacter);
+	if(!PlayerCharacter) return;
+	if(!GetWorld()) return;
+	
+	if(RotationDodge>0.0f)
+	{
+		const auto TimeDodge = PlayerCharacter->PlayAnimMontage(PlayerCharacter->DodgeRight,1.0f);
+		GetWorld()->GetTimerManager().SetTimer(DodgeTimer,this,&UAttackComponent::EndDodge,TimeDodge);
+	}
+	else
+	{
+		const auto TimeDodge = PlayerCharacter->PlayAnimMontage(PlayerCharacter->DodgeLeft,1.0f);
+		GetWorld()->GetTimerManager().SetTimer(DodgeTimer,this,&UAttackComponent::EndDodge,TimeDodge);
+	}
+}
+
+void UAttackComponent::SprintDodge(const FInputActionValue& NewValue)
+{
+	if(DodgeTimer.IsValid()) return;	
+	
+	const auto ThisCharacter = GetCharacter();
+	if(!ThisCharacter) return ;
+	
+	if(!GetWorld()) return;
+
+	const auto Controller = Cast<AP_PlayerController>(ThisCharacter->GetController());
+	if(!Controller) return;
+
+	Controller->Sprint(Value);
+
+	Value = NewValue;
+	GetWorld()->GetTimerManager().SetTimer( DodgeTimer, this,&UAttackComponent::EndSprintDodge, 0.5f,false);	
 }
 
 

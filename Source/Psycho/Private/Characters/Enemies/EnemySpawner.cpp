@@ -44,6 +44,7 @@ void AEnemySpawner::SpawnEnemies()
 	const auto World = GetWorld();
 	if(!World) return;
 
+	
 	if(!SpawnTimeHandle.IsValid() && GetWorld())
 	{
 		GetWorld()->GetTimerManager().SetTimer(SpawnTimeHandle,this,&AEnemySpawner::SpawnOneEnemy,0.2f,true);
