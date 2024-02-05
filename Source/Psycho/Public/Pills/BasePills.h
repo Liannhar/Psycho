@@ -25,6 +25,6 @@ public:
 protected:
 	class APlayerCharacter* Player;
 	
-	FTimerHandle PillPositiveEffectsTimer;
-	FTimerHandle PillNegativeEffectsTimer;
+	FTimerHandle PillEffectsTimer;
+	FTimerHandle PillAfterEffectsTimer;
 };

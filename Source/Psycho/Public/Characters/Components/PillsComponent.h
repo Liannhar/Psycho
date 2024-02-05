@@ -42,8 +42,9 @@ public:
 
 	void AddPill(class UPillsDataStructure* PillData);
 	void TakePill();
-	void SetPillPositiveEffectsTimer(FTimerHandle& Timer) { PillPositiveEffectsTimer = Timer;};
-	void SetPillNegativeEffectsTimer(FTimerHandle& Timer) { PillNegativeEffectsTimer = Timer;};
+	void SetPillEffectsTimer(FTimerHandle& Timer) { PillPositiveEffectsTimer = Timer;};
+	void SetPillAfterEffectsTimer(FTimerHandle& Timer) { PillNegativeEffectsTimer = Timer;};
+	bool IsPillEffectActive();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pills)
 	TArray<UBasePills*> PillsStack;	

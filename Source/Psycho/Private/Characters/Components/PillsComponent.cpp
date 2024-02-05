@@ -63,3 +63,9 @@ void UPillsComponent::TakePill()
 		PillsStack.Remove(PillToTake);
 	}
 }
+
+
+bool UPillsComponent::IsPillEffectActive()
+{
+	return GetWorld()->GetTimerManager().IsTimerActive(PillPositiveEffectsTimer) || GetWorld()->GetTimerManager().IsTimerActive(PillNegativeEffectsTimer);
+}
