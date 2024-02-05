@@ -21,16 +21,32 @@ void AEnemySpawner::BeginPlay()
 	Super::BeginPlay();
 }
 
+void AEnemySpawner::SpawnOneEnemy()
+{
+	if(!GetWorld()) return;
+	if(SpawnIndex<Enemies.Num())
+	{
+		const auto NewLocation = UKismetMathLibrary::RandomPointInBoundingBox(GetActorLocation(),BoxComponent->GetScaledBoxExtent());
+		const auto NewSpawnedEnemy = GetWorld()->SpawnActor<ABaseEnemy>(Enemies[SpawnIndex],NewLocation+FVector(0.0f,0.0f,0.0f),GetActorRotation());
+		const auto GameMode = Cast<APsychoGameModeBase>(GetWorld()->GetAuthGameMode());
+		GameMode->ChangeEnemiesCount(NewSpawnedEnemy,true);
+		SpawnIndex+=1;
+	}
+	else
+	{
+		SpawnIndex=0;
+		GetWorld()->GetTimerManager().ClearTimer(SpawnTimeHandle);
+	}
+}
+
 void AEnemySpawner::SpawnEnemies()
 {
 	const auto World = GetWorld();
 	if(!World) return;
-	for(const auto Enemy:Enemies)
+
+	if(!SpawnTimeHandle.IsValid() && GetWorld())
 	{
-		const auto NewLocation = UKismetMathLibrary::RandomPointInBoundingBox(GetActorLocation(),BoxComponent->GetScaledBoxExtent());
-		const auto NewSpawnedEnemy = World->SpawnActor<ABaseEnemy>(Enemy,NewLocation+FVector(0.0f,0.0f,0.0f),GetActorRotation());
-		const auto GameMode = Cast<APsychoGameModeBase>(World->GetAuthGameMode());
-		GameMode->ChangeEnemiesCount(NewSpawnedEnemy,true);
+		GetWorld()->GetTimerManager().SetTimer(SpawnTimeHandle,this,&AEnemySpawner::SpawnOneEnemy,0.2f,true);
 	}
 }
 

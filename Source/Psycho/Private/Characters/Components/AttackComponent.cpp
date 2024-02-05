@@ -25,7 +25,7 @@ void UAttackComponent::StartComboAttack(EComboInput Input)
 	DamagedCharacters.Empty();
 	for (int32 i=CurrentComboAttack; i < Combos.Num();i++ )
 	{
-		if(AttackIndex<Combos[i].Attack.Num() && Combos[i].Attack[AttackIndex].TypeAttack==Input && (AttackIndex==0  || !CantAttackInTime|| CanAttackNext ))
+		if(AttackIndex<Combos[i].Attack.Num() && Combos[i].Attack[AttackIndex].TypeAttack==Input && (AttackIndex==0  || !CantAttackInTime || CanAttackNext ))
 		{
 			CurrentComboInput=Combos[i].Attack[AttackIndex].TypeAttack;
 			if(Combos[i].Attack[AttackIndex].PreviosAttackNeedTiming)

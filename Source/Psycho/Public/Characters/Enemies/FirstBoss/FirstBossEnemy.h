@@ -11,5 +11,11 @@ UCLASS()
 class PSYCHO_API AFirstBossEnemy : public ABaseEnemy
 {
 	GENERATED_BODY()
-	
+public:
+	void StartEffectMoving();
+	void EndEffectMoving();
+protected:
+	FTimerHandle EffectTImer;
+	UPROPERTY(EditAnywhere,Category="Effect")
+	float EffectTime = 1.5f;
 };

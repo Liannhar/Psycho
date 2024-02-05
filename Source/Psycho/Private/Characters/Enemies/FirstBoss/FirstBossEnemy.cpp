@@ -3,3 +3,12 @@
 
 #include "Characters/Enemies/FirstBoss/FirstBossEnemy.h"
 
+void AFirstBossEnemy::StartEffectMoving()
+{
+	
+}
+
+void AFirstBossEnemy::EndEffectMoving()
+{
+	
+}

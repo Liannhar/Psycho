@@ -25,6 +25,10 @@ protected:
 	UPROPERTY(EditAnywhere,Category="Collision")
 	UBoxComponent* BoxComponent;
 
+	FTimerHandle SpawnTimeHandle;
+	int32 SpawnIndex;
+
+	void SpawnOneEnemy();
 public:	
 	UFUNCTION(BlueprintCallable)
 	void SpawnEnemies();

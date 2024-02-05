@@ -62,7 +62,7 @@ protected:
 	float RotationSpeed = 60.0f;
 	//длина попадания атаки для урона
 	UPROPERTY(EditAnywhere,Category="Attack")
-	float LengthLineAttack=100.0f;
+	float LengthLineAttack=20.0f;
 	//радиус сферы урона
 	UPROPERTY(EditAnywhere,Category="Attack")
 	float SphereDamageRadius=30.0f;

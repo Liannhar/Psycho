@@ -38,6 +38,9 @@ public:
 	void SetStartEnemies(const TArray<ABaseEnemy*>& Enemies){EnemiesInBattle = Enemies;}
 
 	void ChangeEnemiesCount(ABaseEnemy* Enemy,bool Add=false);
+
+	UFUNCTION(BlueprintCallable)
+	bool GetFightStatus(){return FightStatus;}
 protected:
 	UPROPERTY(EditAnywhere,Category="FightStatus")
 	bool FightStatus=false;

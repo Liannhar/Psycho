@@ -26,6 +26,7 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
 		const auto GameModeBase = World->GetAuthGameMode();
 		if(const auto PsychoGameModeBase = Cast<APsychoGameModeBase>(GameModeBase))
 		{
+			ChangeFightStatus(PsychoGameModeBase->GetFightStatus());
 			PsychoGameModeBase->OnChangeFightStatus.AddUObject(this,&ABaseEnemyAIController::ChangeFightStatus);
 		}
 	}

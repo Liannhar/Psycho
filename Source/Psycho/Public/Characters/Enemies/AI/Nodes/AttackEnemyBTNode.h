@@ -5,12 +5,9 @@
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTNode.h"
 #include "BehaviorTree/BTTaskNode.h"
+#include "Psycho/CoreTypes.h"
 #include "AttackEnemyBTNode.generated.h"
 
-enum EComboInput : int;
-/**
- * 
- */
 UCLASS()
 class PSYCHO_API UAttackEnemyBTNode : public UBTTaskNode
 {
