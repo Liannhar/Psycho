@@ -76,10 +76,12 @@ void UAttackComponent::Damage()
 {
 	const auto ThisCharacter = GetCharacter();
 	if(!ThisCharacter) return ;
+	const auto BaseCharacter = Cast<ABaseCharacter>(ThisCharacter);
+	if(!BaseCharacter) return;
 
 	TArray<FHitResult> HitResults;
 	FVector Start = GetWeaponComponent()->GetCurrentWeapon()->GetActorLocation();
-	FVector End = GetWeaponComponent()->GetCurrentWeapon()->GetActorLocation()+ThisCharacter->GetActorForwardVector()*LengthLineAttack;
+	FVector End = GetWeaponComponent()->GetCurrentWeapon()->GetActorLocation()+ThisCharacter->GetActorForwardVector()*BaseCharacter->LengthLineAttack;
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(ThisCharacter);
 	bool IsEnemy = false;
@@ -120,6 +122,7 @@ void UAttackComponent::Damage()
 				{
 					continue;
 				}
+
 				ChooseNewCurrentTheNearestDamagedCharacter(DamagedCharacter,ThisCharacter);
 				const UWeaponComponent* WeaponComponent = GetWeaponComponent();
 				const auto Weapon = WeaponComponent->GetCurrentWeapon();
@@ -128,6 +131,7 @@ void UAttackComponent::Damage()
 				case None:
 					break;
 				case LightAttack:
+					UE_LOG(LogTemp,Display,TEXT("%s"),*DamagedCharacter->GetName());
 					UGameplayStatics::ApplyDamage(DamagedCharacter,
 						Weapon->GetLightAttackDamage()* AttackDamage,
 						ThisCharacter->GetController(),

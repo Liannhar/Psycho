@@ -90,10 +90,7 @@ void ABaseEnemy::ChangeMaxSpeed(float NewSpeed) const
 {
 	const auto CharacterMovementComponent =Cast<UCharacterMovementComponent>(GetMovementComponent());
 	if(!CharacterMovementComponent) return;
-
-	UE_LOG(LogTemp,Display,TEXT("Speed:%f"),CharacterMovementComponent->MaxWalkSpeed);
 	CharacterMovementComponent->MaxWalkSpeed=NewSpeed;
-	UE_LOG(LogTemp,Display,TEXT("Speed:%f"),CharacterMovementComponent->MaxWalkSpeed);
 }
 
 bool ABaseEnemy::GetLastAttackIsHeavy() const

@@ -46,4 +46,8 @@ public:
 	UHealthComponent* GetHealthComponent() const { return HealthComponent; };
 	UAttackComponent* GetAttackComponent() const { return AttackComponent; };
 	UWeaponComponent* GetWeaponComponent() const { return WeaponComponent; };
+
+	//длина попадания атаки для урона
+	UPROPERTY(EditAnywhere,Category="Attack")
+	float LengthLineAttack=20.0f;
 };
