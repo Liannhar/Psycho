@@ -69,6 +69,8 @@ public:
 	// Movement
 	void Sprint(const FInputActionValue& Value);
 	void StopSprint(const FInputActionValue& Value);
+	void DodgeSprint(const FInputActionValue& Value);
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;

@@ -302,12 +302,12 @@ void UAttackComponent::Dodge()
 	
 	if(RotationDodge>0.0f)
 	{
-		const auto TimeDodge = PlayerCharacter->PlayAnimMontage(PlayerCharacter->DodgeRight,1.0f);
+		const auto TimeDodge = PlayerCharacter->PlayAnimMontage(PlayerCharacter->DodgeRight,1.5f);
 		GetWorld()->GetTimerManager().SetTimer(DodgeTimer,this,&UAttackComponent::EndDodge,TimeDodge);
 	}
 	else
 	{
-		const auto TimeDodge = PlayerCharacter->PlayAnimMontage(PlayerCharacter->DodgeLeft,1.0f);
+		const auto TimeDodge = PlayerCharacter->PlayAnimMontage(PlayerCharacter->DodgeLeft,1.5f);
 		GetWorld()->GetTimerManager().SetTimer(DodgeTimer,this,&UAttackComponent::EndDodge,TimeDodge);
 	}
 }
@@ -324,14 +324,17 @@ void UAttackComponent::SprintDodge(const FInputActionValue& NewValue)
 	const auto Controller = Cast<AP_PlayerController>(ThisCharacter->GetController());
 	if(!Controller) return;
 
+	
+
 	if (UAnimInstance* AnimInstance = ThisCharacter->GetMesh()->GetAnimInstance())
 	{
-		//AnimInstance->
+		AnimInstance->Montage_Stop(0.0f);
+		//AnimInstance->Montage_StopGroupByName(0.1f, FName("defaultGroup"));
 	}
 	
-	Controller->Sprint(Value);
-
+	
 	Value = NewValue;
+	Controller->DodgeSprint(Value);
 	GetWorld()->GetTimerManager().SetTimer( DodgeTimer, this,&UAttackComponent::EndSprintDodge, 0.5f,false);	
 }
 

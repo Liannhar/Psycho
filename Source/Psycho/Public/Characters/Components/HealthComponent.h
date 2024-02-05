@@ -25,6 +25,9 @@ protected:
 	UFUNCTION()
 	void ApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
 
+
+	UPROPERTY(EditAnywhere,Category="Animations")
+	UAnimMontage* TakingDamageAnimMontage;
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Values, meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
 	float MaxHP=100.0f;

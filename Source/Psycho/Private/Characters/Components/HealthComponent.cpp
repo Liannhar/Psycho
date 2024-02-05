@@ -66,7 +66,7 @@ void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDa
 {
 	
 	if (isInvulnerable) return;
-
+	
 	Damage *= TakeDamageMultiplier;
 
 	CurrentHP = FMath::Clamp(CurrentHP - Damage, 0, MaxHP);
@@ -88,6 +88,10 @@ void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDa
 	if(BaseCharacter && DamageCauser != GetOwner())
 	{
 		BaseCharacter->GetDamage(DamageCauser);
+		if(TakingDamageAnimMontage)
+		{
+			BaseCharacter->PlayAnimMontage(TakingDamageAnimMontage);
+		}
 	}
 	if (CurrentHP == 0)
 	{ 
