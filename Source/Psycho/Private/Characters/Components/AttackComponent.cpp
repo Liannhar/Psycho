@@ -133,7 +133,6 @@ void UAttackComponent::Damage()
 				case None:
 					break;
 				case LightAttack:
-					UE_LOG(LogTemp,Display,TEXT("%s"),*DamagedCharacter->GetName());
 					UGameplayStatics::ApplyDamage(DamagedCharacter,
 						Weapon->GetLightAttackDamage()* AttackDamage,
 						ThisCharacter->GetController(),
@@ -325,6 +324,11 @@ void UAttackComponent::SprintDodge(const FInputActionValue& NewValue)
 	const auto Controller = Cast<AP_PlayerController>(ThisCharacter->GetController());
 	if(!Controller) return;
 
+	if (UAnimInstance* AnimInstance = ThisCharacter->GetMesh()->GetAnimInstance())
+	{
+		//AnimInstance->
+	}
+	
 	Controller->Sprint(Value);
 
 	Value = NewValue;

@@ -64,7 +64,6 @@ float UHealthComponent::GetPercentHP()
 
 void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	UE_LOG(LogTemp,Display,TEXT("123"));
 	
 	if (isInvulnerable) return;
 
@@ -74,7 +73,6 @@ void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDa
 	OnTakeDamage.Broadcast();
 	CalculatePercentHP();
 
-	UE_LOG(LogTemp,Display,TEXT("123"));
 
 	if(Cast<UHeavyAttackDamageType>(DamageType))
 	{
