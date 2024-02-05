@@ -37,7 +37,6 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
 }
 
 void UHealthComponent::CalculatePercentHP()
@@ -65,6 +64,8 @@ float UHealthComponent::GetPercentHP()
 
 void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
+	UE_LOG(LogTemp,Display,TEXT("123"));
+	
 	if (isInvulnerable) return;
 
 	Damage *= TakeDamageMultiplier;
@@ -72,6 +73,8 @@ void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDa
 	CurrentHP = FMath::Clamp(CurrentHP - Damage, 0, MaxHP);
 	OnTakeDamage.Broadcast();
 	CalculatePercentHP();
+
+	UE_LOG(LogTemp,Display,TEXT("123"));
 
 	if(Cast<UHeavyAttackDamageType>(DamageType))
 	{
@@ -92,6 +95,7 @@ void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDa
 	{ 
 		OnDied();
 	}
+
 	
 	if(GEngine)
      GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(

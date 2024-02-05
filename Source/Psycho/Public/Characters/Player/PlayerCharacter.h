@@ -27,6 +27,8 @@ private:
 	void EndStunPlayer();
 
 	FTimerHandle StunTimerHandle;
+
+	
 protected:
 	void LoadGame();
 	virtual void BeginPlay() override;
@@ -41,4 +43,9 @@ public:
 	FORCEINLINE class UPillsComponent* GetPillsComponent() const { return PillsComponent; }
 
 	void StartStunPlayer(float TimeStun);
+
+	UPROPERTY(EditAnywhere,Category="Dodge")
+	UAnimMontage* DodgeRight;
+	UPROPERTY(EditAnywhere,Category="Dodge")
+	UAnimMontage* DodgeLeft;
 };

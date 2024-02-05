@@ -388,7 +388,14 @@ void AP_PlayerController::Interact(const FInputActionValue& Value)
 
 void AP_PlayerController::Dodge(const FInputActionValue& Value)
 {
-	GetAttackComponent()->Dodge();
+	if(LockedOnTarget)
+	{
+		GetAttackComponent()->Dodge();	
+	}
+	else
+	{
+		GetAttackComponent()->SprintDodge(Value);
+	}
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Dodge!"));
 }
