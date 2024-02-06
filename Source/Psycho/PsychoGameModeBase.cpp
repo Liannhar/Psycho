@@ -61,7 +61,8 @@ void APsychoGameModeBase::ChangeEnemiesCount(ABaseEnemy* Enemy, const bool Add)
 		EnemiesInBattle.Add(Enemy);
 		return;
 	}
-	
+	UE_LOG(LogTemp,Display,TEXT("Enemies in battle %d"),EnemiesInBattle.Num());
+
 	if(EnemiesInBattle.Contains(Enemy))
 	{
 		EnemiesInBattle.Remove(Enemy);
