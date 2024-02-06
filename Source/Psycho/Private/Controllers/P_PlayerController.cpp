@@ -171,6 +171,8 @@ void AP_PlayerController::Sprint(const FInputActionValue& Value)
 }
 
 
+
+
 void AP_PlayerController::StopSprint(const FInputActionValue& Value)
 {
 	bIsSprinting = false;
@@ -186,7 +188,6 @@ void AP_PlayerController::StopSprint(const FInputActionValue& Value)
 
 void AP_PlayerController::DodgeSprint(const FInputActionValue& Value)
 {
-	Move(Value);
 	
 	bIsSprinting = true;
 	bIsSlowWalking = false;
@@ -196,6 +197,7 @@ void AP_PlayerController::DodgeSprint(const FInputActionValue& Value)
 		PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = 2000.0f;
 	}
 
+	Move(Value);
 	if(GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Sprint!"));
 }
