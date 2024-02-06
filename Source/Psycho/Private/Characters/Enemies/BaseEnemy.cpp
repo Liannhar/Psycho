@@ -64,8 +64,7 @@ void ABaseEnemy::BlockAttack()
 void ABaseEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	const auto HealthhComponent = GetHealthComponent();
-	HealthhComponent->OnTakeDamage.AddUObject(this,&ABaseEnemy::TakingDamage);
+	HealthComponent->OnTakeDamage.AddUObject(this,&ABaseEnemy::TakingDamage);
 	OwnController = GetController();
 }
 

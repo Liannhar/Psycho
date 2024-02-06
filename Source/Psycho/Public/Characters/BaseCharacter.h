@@ -49,5 +49,5 @@ public:
 
 	//длина попадания атаки для урона
 	UPROPERTY(EditAnywhere,Category="Attack")
-	float LengthLineAttack=20.0f;
+	float LengthLineAttack=40.0f;
 };

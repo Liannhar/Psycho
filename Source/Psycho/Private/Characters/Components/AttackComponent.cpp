@@ -329,7 +329,6 @@ void UAttackComponent::SprintDodge(const FInputActionValue& NewValue)
 	if (UAnimInstance* AnimInstance = ThisCharacter->GetMesh()->GetAnimInstance())
 	{
 		AnimInstance->Montage_Stop(0.0f);
-		//AnimInstance->Montage_StopGroupByName(0.1f, FName("defaultGroup"));
 	}
 	
 	

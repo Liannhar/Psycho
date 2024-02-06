@@ -90,6 +90,11 @@ void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDa
 		BaseCharacter->GetDamage(DamageCauser);
 		if(TakingDamageAnimMontage)
 		{
+			if (UAnimInstance* AnimInstance = BaseCharacter->GetMesh()->GetAnimInstance())
+			{
+				AnimInstance->Montage_Stop(0.0f);
+			}
+			
 			BaseCharacter->PlayAnimMontage(TakingDamageAnimMontage);
 		}
 	}

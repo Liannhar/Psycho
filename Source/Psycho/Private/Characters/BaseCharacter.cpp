@@ -51,7 +51,7 @@ void ABaseCharacter::Tick(float DeltaTime)
 //здесь персонаж реагирует на урон
 void ABaseCharacter::GetDamage(AActor* Actor)
 {
-	//PlayAnimMontage();// Анимация получения урона
+	/*//PlayAnimMontage();// Анимация получения урона
 	const auto DamageActorForwardVector = Actor->GetActorForwardVector();
 	const auto ActorForwardVector = GetActorForwardVector();
 	const auto DotProduct = FVector::DotProduct(DamageActorForwardVector, ActorForwardVector);
@@ -62,5 +62,5 @@ void ABaseCharacter::GetDamage(AActor* Actor)
 	else
 	{
 		SetActorLocation(GetActorLocation()+(-1*ActorForwardVector+DamageActorForwardVector)*DistanceOfRepulsion);
-	}
+	}*/
 }
