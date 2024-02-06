@@ -26,6 +26,7 @@ void AStartFightActor::CheckEnemySpawners()
 		return;
 	}
 	GameMode->SetFightStatus(false);
+	GameMode->PLayer=nullptr;
 }
 
 void AStartFightActor::BeginPlay()
@@ -37,8 +38,10 @@ void AStartFightActor::BeginPlay()
 void AStartFightActor::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
-	if(Cast<APlayerCharacter>(OtherActor) && !FightWasStarted)
+	const auto PlayerChar= Cast<APlayerCharacter>(OtherActor);
+	if(PlayerChar && !FightWasStarted)
 	{
+		
 		FightWasStarted=true;
 		if(const auto GameMode = Cast<APsychoGameModeBase>(GetWorld()->GetAuthGameMode()))
 		{
@@ -49,7 +52,7 @@ void AStartFightActor::NotifyActorBeginOverlap(AActor* OtherActor)
 			}
 			GameMode->SetCurrentStartFightActor(this);
 			GameMode->SetFightStatus(true);
-			
+			GameMode->PLayer=OtherActor;
 		}	
 	}
 }

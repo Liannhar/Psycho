@@ -405,7 +405,7 @@ void AP_PlayerController::Interact(const FInputActionValue& Value)
 
 void AP_PlayerController::Dodge(const FInputActionValue& Value)
 {
-	if(LockedOnTarget)
+	if(bIsLockedOnTarget)
 	{
 		GetAttackComponent()->Dodge();	
 	}

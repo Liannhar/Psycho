@@ -28,6 +28,11 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
 		{
 			ChangeFightStatus(PsychoGameModeBase->GetFightStatus());
 			PsychoGameModeBase->OnChangeFightStatus.AddUObject(this,&ABaseEnemyAIController::ChangeFightStatus);
+			const auto BlackBoard = GetBlackboardComponent();
+			if(PsychoGameModeBase->PLayer && BlackBoard)
+			{
+				BlackBoard->SetValueAsObject(FocusOnKeyName,PsychoGameModeBase->PLayer);
+			}
 		}
 	}
 }

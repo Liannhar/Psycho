@@ -58,6 +58,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Target System", meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
 	float RotationSpeed;
 
+	UPROPERTY()
 	AActor* LockedOnTarget;
 	bool bIsLockedOnTarget;
 	FVector CameraDefaultLocation;

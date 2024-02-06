@@ -66,6 +66,8 @@ void ABaseEnemy::BeginPlay()
 	Super::BeginPlay();
 	HealthComponent->OnTakeDamage.AddUObject(this,&ABaseEnemy::TakingDamage);
 	OwnController = GetController();
+
+	
 }
 
 void ABaseEnemy::TakingDamage()

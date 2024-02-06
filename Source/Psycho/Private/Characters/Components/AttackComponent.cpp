@@ -209,10 +209,13 @@ void UAttackComponent::AttackTarget() const
 	if(!MotionWarpingComponent) return;
 	
 	const auto Controller = ThisCharacter->GetController();
-	if(!Controller) return;
+	if(!Controller) return;		
 	const auto PlayerController = Cast<AP_PlayerController>(Controller);
 	if(!PlayerController) return;
 
+
+	UE_LOG(LogTemp,Display,TEXT("A %d"),!PlayerController->GetLockOnTarget()?1:0);
+	
 	if(!PlayerController->GetLockOnTarget())
 	{
 		FTransform AttackTransform;

@@ -65,9 +65,9 @@ void APsychoGameModeBase::ChangeEnemiesCount(ABaseEnemy* Enemy, const bool Add)
 	if(EnemiesInBattle.Contains(Enemy))
 	{
 		EnemiesInBattle.Remove(Enemy);
-		if(EnemiesInBattle.Num()==0)
-		{
-			CheckEnemySpawners();
-		}
+	}
+	if(EnemiesInBattle.Num()==0)
+	{
+		CheckEnemySpawners();
 	}
 }

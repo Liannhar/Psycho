@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "PsychoGameModeBase.generated.h"
 
+class APlayerCharacter;
 class ABaseEnemy;
 class AStartFightActor;
 class UPsychoSaveGame;
@@ -39,6 +40,9 @@ public:
 
 	void ChangeEnemiesCount(ABaseEnemy* Enemy,bool Add=false);
 
+	UPROPERTY()
+	AActor* PLayer;
+	
 	UFUNCTION(BlueprintCallable)
 	bool GetFightStatus(){return FightStatus;}
 protected:
