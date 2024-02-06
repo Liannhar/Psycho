@@ -49,5 +49,6 @@ void UEnemyDamagedBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
 			BlackBoard->SetValueAsBool(EnemyIsDamagedKey.SelectedKeyName,true);
 		}
 	}
+	BlackBoard->SetValueAsBool(EnemyIsDamagedKey.SelectedKeyName,true);
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 }

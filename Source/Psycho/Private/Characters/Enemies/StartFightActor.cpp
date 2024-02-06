@@ -18,6 +18,7 @@ AStartFightActor::AStartFightActor()
 void AStartFightActor::CheckEnemySpawners()
 {
 	const auto GameMode = Cast<APsychoGameModeBase>(GetWorld()->GetAuthGameMode());
+
 	if(CurrentIndexEnemySpawner<EnemySpawners.Num())
 	{
 		EnemySpawners[CurrentIndexEnemySpawner]->SpawnEnemies();
@@ -27,6 +28,7 @@ void AStartFightActor::CheckEnemySpawners()
 	}
 	GameMode->SetFightStatus(false);
 	GameMode->PLayer=nullptr;
+	
 }
 
 void AStartFightActor::BeginPlay()
