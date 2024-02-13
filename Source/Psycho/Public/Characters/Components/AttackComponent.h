@@ -87,6 +87,8 @@ protected:
 	bool CanAttackNext = false;
 	//Попадает ли в тайминг обычной атаки
 	bool CantAttackInTime = true;
+	//Легкая Атака была уже использована
+	bool LightAttackUse = false;
 	FTimerHandle TimerEndAnimMontage;
 	//Использование текущей атаки
 	void ActiveAttack(FCombination Attack);
@@ -115,4 +117,6 @@ protected:
 	void EndSprintDodge();
 
 	FInputActionValue Value;
+
+	static int32 CompareSign(int First, int Second);
 };

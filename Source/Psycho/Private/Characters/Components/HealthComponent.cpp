@@ -88,15 +88,7 @@ void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDa
 	if(BaseCharacter && DamageCauser != GetOwner())
 	{
 		BaseCharacter->GetDamage(DamageCauser);
-		if(TakingDamageAnimMontage)
-		{
-			if (UAnimInstance* AnimInstance = BaseCharacter->GetMesh()->GetAnimInstance())
-			{
-				AnimInstance->Montage_Stop(0.0f);
-			}
-			
-			BaseCharacter->PlayAnimMontage(TakingDamageAnimMontage);
-		}
+		
 	}
 	if (CurrentHP == 0)
 	{ 

@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "StartFightActor.generated.h"
 
+class APsychoGameModeBase;
 class ABaseEnemy;
 class AEnemySpawner;
 class UBoxComponent;
@@ -23,7 +24,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	bool FightWasStarted = false;
-
+	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Enemies")
 	TArray<AEnemySpawner*> EnemySpawners;
 
@@ -37,4 +38,18 @@ protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Enemies")
 	TArray<ABaseEnemy*> StartEnemies;
+
+
+
+	FTimerHandle CheckEnemiesTimer;
+	float TimeForCheckEnemies = 0.5f;
+	void CheckEnemies();
+	float CalculateDistance(const AActor* Actor1, const ABaseEnemy* Actor2);
+	UPROPERTY()
+	APsychoGameModeBase* CurrentGameMode;
+	UPROPERTY()
+	AActor* PlayerActor;
+
+	UPROPERTY(EditAnywhere,Category="Enemies")
+	int32 HowManyEnemiesInCanBeFront = 2;
 };

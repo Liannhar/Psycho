@@ -12,7 +12,7 @@
 
 ABaseCharacter::ABaseCharacter()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>("Health Component");
 	AttackComponent = CreateDefaultSubobject<UAttackComponent>("Attack Component");
@@ -44,23 +44,9 @@ void ABaseCharacter::Death()
 	}
 }
 
-void ABaseCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
 //здесь персонаж реагирует на урон
 void ABaseCharacter::GetDamage(AActor* Actor)
 {
 	/*//PlayAnimMontage();// Анимация получения урона
-	const auto DamageActorForwardVector = Actor->GetActorForwardVector();
-	const auto ActorForwardVector = GetActorForwardVector();
-	const auto DotProduct = FVector::DotProduct(DamageActorForwardVector, ActorForwardVector);
-	if(DotProduct>0.0f)
-	{
-		SetActorLocation(GetActorLocation()+(ActorForwardVector+DamageActorForwardVector)*DistanceOfRepulsion);
-	}
-	else
-	{
-		SetActorLocation(GetActorLocation()+(-1*ActorForwardVector+DamageActorForwardVector)*DistanceOfRepulsion);
-	}*/
+	*/
 }

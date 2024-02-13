@@ -27,9 +27,7 @@ protected:
 
 	virtual void Death();
 	
-	UPROPERTY(EditAnywhere,Category="Health")
-	float DistanceOfRepulsion= 50.0f;
-
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Health, meta = (AllowPrivateAccess = "true"))
 	UHealthComponent* HealthComponent;
@@ -41,12 +39,11 @@ protected:
 	UMotionWarpingComponent* MotionWarpingComponent;
 
 public:	
-	virtual void Tick(float DeltaTime) override;
-	void GetDamage(AActor* Actor);
+	virtual void GetDamage(AActor* Actor);
 	UHealthComponent* GetHealthComponent() const { return HealthComponent; };
 	UAttackComponent* GetAttackComponent() const { return AttackComponent; };
 	UWeaponComponent* GetWeaponComponent() const { return WeaponComponent; };
-
+	
 	//длина попадания атаки для урона
 	UPROPERTY(EditAnywhere,Category="Attack")
 	float LengthLineAttack=40.0f;

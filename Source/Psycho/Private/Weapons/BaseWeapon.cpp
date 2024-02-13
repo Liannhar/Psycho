@@ -30,6 +30,5 @@ void ABaseWeapon::DisablePhysics()
 void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 

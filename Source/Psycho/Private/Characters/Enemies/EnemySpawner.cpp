@@ -27,15 +27,19 @@ void AEnemySpawner::SpawnOneEnemy()
 	if(SpawnIndex<Enemies.Num())
 	{
 		const auto NewLocation = UKismetMathLibrary::RandomPointInBoundingBox(GetActorLocation(),BoxComponent->GetScaledBoxExtent());
-		const auto NewSpawnedEnemy = GetWorld()->SpawnActor<ABaseEnemy>(Enemies[SpawnIndex],NewLocation+FVector(0.0f,0.0f,0.0f),GetActorRotation());
-		const auto GameMode = Cast<APsychoGameModeBase>(GetWorld()->GetAuthGameMode());
-		GameMode->ChangeEnemiesCount(NewSpawnedEnemy,true);
-		SpawnIndex+=1;
+		const auto NewSpawnedEnemy = GetWorld()->SpawnActor<ABaseEnemy>(Enemies[SpawnIndex],NewLocation + FVector(0.0f,0.0f,10.0f),GetActorRotation());
+		if(NewSpawnedEnemy)
+		{
+			const auto GameMode = Cast<APsychoGameModeBase>(GetWorld()->GetAuthGameMode());
+			GameMode->ChangeEnemiesCount(NewSpawnedEnemy,true);
+			SpawnIndex+=1;
+		}
 	}
 	else
 	{
 		SpawnIndex=0;
 		GetWorld()->GetTimerManager().ClearTimer(SpawnTimeHandle);
+		Destroy();
 	}
 }
 

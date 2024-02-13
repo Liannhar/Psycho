@@ -75,5 +75,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void RestoreHP(float RestoreAmount);
+
+	UAnimMontage* GetTakeDamageAnimMontage() const {return TakingDamageAnimMontage;}
 };
 

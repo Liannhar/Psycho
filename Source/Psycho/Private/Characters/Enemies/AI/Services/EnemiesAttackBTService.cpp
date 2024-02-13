@@ -19,6 +19,7 @@ void UEnemiesAttackBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 	if(!BlackBoard) return;
 	const auto Controller = OwnerComp.GetAIOwner();
 	const auto Pawn = Controller->GetPawn();
+	
 	const auto PerceptionComponentClass = Controller->GetComponentByClass(UEnemyAIPerceptionComponent::StaticClass());
 	if(const auto PerceptionComponent = Cast<UEnemyAIPerceptionComponent>(PerceptionComponentClass))
 	{
@@ -36,11 +37,12 @@ void UEnemiesAttackBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 				}
 			}
 		}
-		if(!CanAttack)
+		if(!CanAttack && CurrentEnemy->GetNotIsAttackingNow())
 		{
 			CurrentEnemy->ChangeMaxSpeed(SlowSpeed);
 		}
-		BlackBoard->SetValueAsBool(EnemyIsAttackingKey.SelectedKeyName,CanAttack);	
+		
+		//BlackBoard->SetValueAsBool(EnemyIsAttackingKey.SelectedKeyName,CanAttack);	
 	}
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 }

@@ -8,7 +8,7 @@ public class Psycho : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput","GameplayTasks","NavigationSystem" ,"MotionWarping"});
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput","GameplayTasks","NavigationSystem" ,"MotionWarping","Niagara"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 		
@@ -21,6 +21,7 @@ public class Psycho : ModuleRules
 			"Psycho/Public/Characters/Enemies/AI/Services",
 			"Psycho/Public/Characters/Enemies/AI/Decorators",
 			"Psycho/Public/Characters/Enemies/AI/Nodes",
+			"Psycho/Public/Characters/Enemies/AI/Filters",
 			"Psycho/Public/Characters/Components",
 			"Psycho/Public/Weapons",
 			"Psycho/Public/Weapons/DamageType",

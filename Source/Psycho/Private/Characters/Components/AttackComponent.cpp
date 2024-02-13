@@ -22,11 +22,13 @@ UAttackComponent::UAttackComponent()
 //начинает атаку
 void UAttackComponent::StartComboAttack(EComboInput Input)
 {
-	DamagedCharacters.Empty();
+	
 	for (int32 i=CurrentComboAttack; i < Combos.Num();i++ )
 	{
 		if(AttackIndex<Combos[i].Attack.Num() && Combos[i].Attack[AttackIndex].TypeAttack==Input && (AttackIndex==0  || !CantAttackInTime || CanAttackNext ))
 		{
+			DamagedCharacters.Empty();
+			LightAttackUse=false;
 			CurrentComboInput=Combos[i].Attack[AttackIndex].TypeAttack;
 			if(Combos[i].Attack[AttackIndex].PreviosAttackNeedTiming)
 			{
@@ -81,76 +83,138 @@ void UAttackComponent::Damage()
 	const auto BaseCharacter = Cast<ABaseCharacter>(ThisCharacter);
 	if(!BaseCharacter) return;
 
-	TArray<FHitResult> HitResults;
-	FVector Start = GetWeaponComponent()->GetCurrentWeapon()->GetActorLocation();
-	FVector End = GetWeaponComponent()->GetCurrentWeapon()->GetActorLocation()+ThisCharacter->GetActorForwardVector()*BaseCharacter->LengthLineAttack;
-	TArray<AActor*> ActorsToIgnore;
-	ActorsToIgnore.Add(ThisCharacter);
+	const UWeaponComponent* WeaponComponent = GetWeaponComponent();
+	const auto Weapon = WeaponComponent->GetCurrentWeapon();
+	if(!Weapon) return;
+
 	bool IsEnemy = false;
 	if(Cast<ABaseEnemy>(ThisCharacter)) IsEnemy=true;
+	
+	const auto SkeletalWeapon = Weapon->GetSkeletalMeshComponent();
+	
+	
+	
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(ThisCharacter);
+	FVector Start = FVector();
+	FVector End = FVector();
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypesArray;
 	if(IsEnemy)
 	{
+		Start = GetWeaponComponent()->GetCurrentWeapon()->GetActorLocation();
+		End = GetWeaponComponent()->GetCurrentWeapon()->GetActorLocation()+ThisCharacter->GetActorForwardVector()*BaseCharacter->LengthLineAttack;
 		ObjectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
 	}
 	else
 	{
-		ObjectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECC_GameTraceChannel1));
+		const auto SignX = CompareSign(SkeletalWeapon->GetSocketLocation("EndAttack").X,SkeletalWeapon->GetSocketLocation("StartAttack").X);
+		const auto SignY =CompareSign(SkeletalWeapon->GetSocketLocation("EndAttack").Y,SkeletalWeapon->GetSocketLocation("StartAttack").Y);
+		const auto SignZ = CompareSign(SkeletalWeapon->GetSocketLocation("EndAttack").Z,SkeletalWeapon->GetSocketLocation("StartAttack").Z);
+		Start=SkeletalWeapon->GetSocketLocation("StartAttack");
+		End=FVector(SkeletalWeapon->GetSocketLocation("EndAttack").X+SignX*BaseCharacter->LengthLineAttack,SkeletalWeapon->GetSocketLocation("EndAttack").Y+SignY*BaseCharacter->LengthLineAttack,SkeletalWeapon->GetSocketLocation("EndAttack").Z);
+		ObjectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
 	}
-
 	
-	if(UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), Start, End, SphereDamageRadius, ObjectTypesArray, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResults, true))
+	switch (CurrentComboInput)
 	{
-		for(auto HitResult:HitResults)
+	case None:
+		break;
+	case LightAttack:
 		{
-			auto HitActor = HitResult.GetActor();
-			if(auto DamagedCharacter = Cast<ABaseCharacter>(HitActor))
+			if(LightAttackUse)
 			{
-				bool NextHitResult=false;
-				for(auto DamageChar:DamagedCharacters)
+				break;
+			}
+			FHitResult HitResult;
+			if(UKismetSystemLibrary::SphereTraceSingleForObjects(GetWorld(), Start, End, SphereDamageRadius, ObjectTypesArray, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResult, true))
+			{
+				LightAttackUse=true;
+				auto HitActor = HitResult.GetActor();
+				if(auto DamagedCharacter = Cast<ABaseCharacter>(HitActor))
 				{
-					if(DamagedCharacter->GetName()==DamageChar->GetName())
+					bool NextHitResult=false;
+					for(auto DamageChar:DamagedCharacters)
 					{
-						NextHitResult=true;
+						if(DamagedCharacter->GetName()==DamageChar->GetName())
+						{
+							NextHitResult=true;
+							break;
+						}
+					}
+				
+					if(IsEnemy && Cast<ABaseEnemy>(DamagedCharacter))
+					{
+						return ;
+					}
+					if(NextHitResult)
+					{
 						break;
 					}
-				}
-				
-				if(IsEnemy && Cast<ABaseEnemy>(DamagedCharacter))
-				{
-					return ;
-				}
-				if(NextHitResult)
-				{
-					continue;
-				}
 
-				ChooseNewCurrentTheNearestDamagedCharacter(DamagedCharacter,ThisCharacter);
-				const UWeaponComponent* WeaponComponent = GetWeaponComponent();
-				const auto Weapon = WeaponComponent->GetCurrentWeapon();
-				switch (CurrentComboInput)
-				{
-				case None:
-					break;
-				case LightAttack:
+					//auto BoneHit = HitResult.BoneName;
+					
+					ChooseNewCurrentTheNearestDamagedCharacter(DamagedCharacter,ThisCharacter);
+					
+					if(IsEnemy && Cast<ABaseEnemy>(DamagedCharacter))
+					{
+						return ;
+					}
 					UGameplayStatics::ApplyDamage(DamagedCharacter,
 						Weapon->GetLightAttackDamage()* AttackDamage,
 						ThisCharacter->GetController(),
-						ThisCharacter,
-						UDamageType::StaticClass());
-					break;
-				case HeavyAttack:
-					UGameplayStatics::ApplyDamage(DamagedCharacter,
-						Weapon->GetHeavyAttackDamage()* AttackDamage,
-						ThisCharacter->GetController(),
-						ThisCharacter,
-						UHeavyAttackDamageType::StaticClass());
-					break;
+						ThisCharacter,UDamageType::StaticClass());
 				}
-			
 			}
+			break;
+		}
+	case HeavyAttack:
+		{
+			TArray<FHitResult> HitResults;
+			if(UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), Start, End, SphereDamageRadius, ObjectTypesArray, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResults, true))
+			{
+				for(auto NewHitResult:HitResults)
+				{
+					auto HitActor = NewHitResult.GetActor();
+					if(auto DamagedCharacter = Cast<ABaseCharacter>(HitActor))
+					{
+						bool NextHitResult=false;
+						for(auto DamageChar:DamagedCharacters)
+						{
+							if(DamagedCharacter->GetName()==DamageChar->GetName())
+							{
+								NextHitResult=true;
+								break;
+							}
+						}
+				
+						if(IsEnemy && Cast<ABaseEnemy>(DamagedCharacter))
+						{
+							return ;
+						}
+						if(NextHitResult)
+						{
+							continue;
+						}
+
+					
+					
+						ChooseNewCurrentTheNearestDamagedCharacter(DamagedCharacter,ThisCharacter);
+				
+						UGameplayStatics::ApplyDamage(DamagedCharacter,
+							Weapon->GetHeavyAttackDamage()* AttackDamage,
+							ThisCharacter->GetController(),
+							ThisCharacter,
+							UHeavyAttackDamageType::StaticClass());
+					}
+				}
+			}
+			break;	
 		}
 	}
+}
+
+int32 UAttackComponent::CompareSign(const int First, const int Second) {
+	return (First > Second) ? 1 : ((First < Second) ? -1 : 0);
 }
 
 void UAttackComponent::ChooseNewCurrentTheNearestDamagedCharacter(ABaseCharacter* DamagedCharacter, const ABaseCharacter* ThisCharacter)
@@ -213,12 +277,9 @@ void UAttackComponent::AttackTarget() const
 	const auto PlayerController = Cast<AP_PlayerController>(Controller);
 	if(!PlayerController) return;
 
-
-	UE_LOG(LogTemp,Display,TEXT("A %d"),!PlayerController->GetLockOnTarget()?1:0);
-	
+	FTransform AttackTransform=ThisCharacter->GetActorTransform();
 	if(!PlayerController->GetLockOnTarget())
 	{
-		FTransform AttackTransform;
 		auto NewRotation = ThisCharacter->GetActorRotation();
 		NewRotation	+=FRotator(0.0f,RotationAngle(ThisCharacter)*RotationSpeed,0.0f);
 		if(const auto EnemyRotation = CheckRotationWithAttack(CurrentTheNearestDamagedCharacter,ThisCharacter,NewRotation);!EnemyRotation.IsZero())
@@ -231,8 +292,8 @@ void UAttackComponent::AttackTarget() const
 			AttackTransform.SetLocation(ThisCharacter->GetActorLocation());
 			AttackTransform.SetRotation(NewRotation.Quaternion());
 		}
-		MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform("Attack",AttackTransform);
 	}
+	MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform("Attack",AttackTransform);
 }
 
 void UAttackComponent::MultiplyAttackSpeed(const float& Multiplier)
@@ -333,7 +394,7 @@ void UAttackComponent::SprintDodge(const FInputActionValue& NewValue)
 	{
 		AnimInstance->Montage_Stop(0.0f);
 	}
-
+	EndAttackCombo();
 	FRotator NewRotation = ThisCharacter->GetActorRotation() + FRotator(0.0f, RotationAngle(ThisCharacter)*100.0f, 0.0f);
 	float YawInRadians = FMath::DegreesToRadians(NewRotation.Yaw);
 	FVector Direction = FVector(FMath::Cos(YawInRadians), FMath::Sin(YawInRadians), 0.0f).GetSafeNormal();
@@ -345,6 +406,7 @@ void UAttackComponent::SprintDodge(const FInputActionValue& NewValue)
 	Value = NewValue;
 	//Controller->DodgeSprint(Value);
 	GetWorld()->GetTimerManager().SetTimer( DodgeTimer, this,&UAttackComponent::EndSprintDodge, 0.5f,false);	
+	
 }
 
 

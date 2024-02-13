@@ -40,6 +40,8 @@ public:
 
 	void ChangeEnemiesCount(ABaseEnemy* Enemy,bool Add=false);
 
+	TArray<ABaseEnemy*> GetEnemiesInBattle(){return EnemiesInBattle;}
+	
 	UPROPERTY()
 	AActor* PLayer;
 	

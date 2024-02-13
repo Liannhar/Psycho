@@ -25,6 +25,7 @@ public:
 	TArray<FCombination> DifferentCombos;
 	virtual void EnablePhysics(FVector NewLocation);
 	virtual void DisablePhysics();
+	USkeletalMeshComponent* GetSkeletalMeshComponent(){return SkeletalMeshComponent;}
 protected:
 	UPROPERTY(EditAnywhere,Category="Damage")
 	float LightAttackDamage;
