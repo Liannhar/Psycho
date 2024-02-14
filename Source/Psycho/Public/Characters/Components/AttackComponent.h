@@ -88,7 +88,7 @@ protected:
 	//Попадает ли в тайминг обычной атаки
 	bool CantAttackInTime = true;
 	//Легкая Атака была уже использована
-	bool LightAttackUse = false;
+	bool IsLightAttackUse = false;
 	FTimerHandle TimerEndAnimMontage;
 	//Использование текущей атаки
 	void ActiveAttack(FCombination Attack);

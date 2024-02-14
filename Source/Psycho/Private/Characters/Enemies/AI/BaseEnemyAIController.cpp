@@ -81,12 +81,25 @@ bool ABaseEnemyAIController::GetCanFocus() const
 	return false;
 }
 
+AActor* ABaseEnemyAIController::GetFocusOnActor() const
+{
+	if(!GetBlackboardComponent()) return nullptr;
+	
+	if(GetCanFocus() && FightStatus)
+	{
+		return Cast<AActor>(GetBlackboardComponent()->GetValueAsObject(FocusOnKeyName));
+	}
+	return nullptr;
+}
+
 void ABaseEnemyAIController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	const auto FocusActor = GetFocusOnActor();
 	SetFocus(FocusActor);
 }
+
+
 
 /*FPathFollowingRequestResult ABaseEnemyAIController::MoveTo(const FAIMoveRequest& MoveRequest,
 	FNavPathSharedPtr* OutPath)
@@ -175,14 +188,3 @@ void ABaseEnemyAIController::Tick(float DeltaSeconds)
 
 	return ResultData;
 }*/
-
-AActor* ABaseEnemyAIController::GetFocusOnActor() const
-{
-	if(!GetBlackboardComponent()) return nullptr;
-	
-	if(GetCanFocus() && FightStatus)
-	{
-		return Cast<AActor>(GetBlackboardComponent()->GetValueAsObject(FocusOnKeyName));
-	}
-	return nullptr;
-}

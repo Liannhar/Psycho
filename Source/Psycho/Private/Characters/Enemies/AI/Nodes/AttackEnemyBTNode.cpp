@@ -20,7 +20,7 @@ EBTNodeResult::Type UAttackEnemyBTNode::ExecuteTask(UBehaviorTreeComponent& Owne
                    
 	if(const auto Enemy = Cast<ABaseEnemy>(Pawn))
 	{
-		Enemy->ChangeCountCombo(ComboType,ComboIndex,AttackCount-1,NeedRandom);
+		Enemy->PreparationsBeforeTheAttack(ComboType,ComboIndex,AttackCount-1,NeedRandom);
 		Enemy->Attack();
 	}
 	return EBTNodeResult::Succeeded;

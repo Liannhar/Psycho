@@ -29,7 +29,7 @@ protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="AI")
 	FName IsPawnCanAttack = "IsCanAttack";
 	virtual void OnPossess(APawn* InPawn) override;
-	bool GetCanFocus() const;
+	virtual bool GetCanFocus() const;
 	virtual void Tick(float DeltaSeconds) override;
 	//virtual FPathFollowingRequestResult MoveTo(const FAIMoveRequest& MoveRequest, FNavPathSharedPtr* OutPath) override;
 private:

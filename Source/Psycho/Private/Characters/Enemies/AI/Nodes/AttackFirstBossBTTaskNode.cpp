@@ -1,30 +1,28 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Characters/Enemies/AI/Nodes/UseEffectsFirstBossBTTaskNode.h"
+#include "Characters/Enemies/AI/Nodes/AttackFirstBossBTTaskNode.h"
 
 #include "AIController.h"
-#include "BaseEnemy.h"
 #include "FirstBossEnemy.h"
 
-UUseEffectsFirstBossBTTaskNode::UUseEffectsFirstBossBTTaskNode()
+UAttackFirstBossBTTaskNode::UAttackFirstBossBTTaskNode()
 {
-	NodeName="Use Effect";
+	NodeName="AttackFirstBoss";
 }
 
-EBTNodeResult::Type UUseEffectsFirstBossBTTaskNode::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UAttackFirstBossBTTaskNode::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	const auto Controller = OwnerComp.GetAIOwner();
 	if(!Controller) return EBTNodeResult::Failed;
                    	
 	const auto Pawn = Controller->GetPawn();
 	if(!Pawn) return EBTNodeResult::Failed;
-
+                   
 	if(const auto Enemy = Cast<AFirstBossEnemy>(Pawn))
 	{
-		Enemy->StartEffectMoving(StaminaCost);
-		return EBTNodeResult::Succeeded;
+		Enemy->PreparationBossBeforeAttack(ComboType,ComboIndex,AttackCount-1,NeedRandom,StaminaCost);
+		Enemy->Attack();
 	}
-	
 	return EBTNodeResult::Succeeded;
 }

@@ -28,7 +28,7 @@ void UAttackComponent::StartComboAttack(EComboInput Input)
 		if(AttackIndex<Combos[i].Attack.Num() && Combos[i].Attack[AttackIndex].TypeAttack==Input && (AttackIndex==0  || !CantAttackInTime || CanAttackNext ))
 		{
 			DamagedCharacters.Empty();
-			LightAttackUse=false;
+			IsLightAttackUse=false;
 			CurrentComboInput=Combos[i].Attack[AttackIndex].TypeAttack;
 			if(Combos[i].Attack[AttackIndex].PreviosAttackNeedTiming)
 			{
@@ -121,14 +121,14 @@ void UAttackComponent::Damage()
 		break;
 	case LightAttack:
 		{
-			if(LightAttackUse)
+			if(IsLightAttackUse)
 			{
 				break;
 			}
 			FHitResult HitResult;
 			if(UKismetSystemLibrary::SphereTraceSingleForObjects(GetWorld(), Start, End, SphereDamageRadius, ObjectTypesArray, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResult, true))
 			{
-				LightAttackUse=true;
+				IsLightAttackUse=true;
 				auto HitActor = HitResult.GetActor();
 				if(auto DamagedCharacter = Cast<ABaseCharacter>(HitActor))
 				{

@@ -28,13 +28,13 @@ public:
 	UBehaviorTree* BehaviorTreeAsset;
 	
 	void EndEnemyAttack();
-	void Attack();
+	virtual void Attack();
 	
 	bool GetNotIsAttackingNow() const {return NotIsAttackingNow;}
 	bool GetIsTakenDamage() const {return IsTakenDamage;}
 	bool GetLastAttackIsHeavy() const;
 
-	void ChangeCountCombo(EComboInput Type,int32 NewCombo,int32 NewCount,bool NeedRandomCount=false);
+	void PreparationsBeforeTheAttack(EComboInput Type,int32 NewCombo,int32 NewCount,bool NeedRandomCount=false);
 	void ChangeMaxSpeed(float NewSpeed) const;
 	void BlockAttack();
 
@@ -47,6 +47,8 @@ public:
 	void SetCanAttack(bool NewBool) const;
 
 	float GetBaseSpeed() const {return BaseSpeed;}
+	
+
 protected:
 	UPROPERTY()
 	bool IsTakenDamage = false;

@@ -80,7 +80,7 @@ void ABaseEnemy::ChangeMaxSpeed(float NewSpeed) const
 	CharacterMovementComponent->MaxWalkSpeed=NewSpeed;
 }
 
-void ABaseEnemy::ChangeCountCombo(const EComboInput Type, const int32 NewCombo, const int32 NewCount, const bool NeedRandomCount)
+void ABaseEnemy::PreparationsBeforeTheAttack(const EComboInput Type, const int32 NewCombo, const int32 NewCount, const bool NeedRandomCount)
 {
 	ComboIndex=NewCombo;
 	AttackType = Type;
