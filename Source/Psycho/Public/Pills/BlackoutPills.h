@@ -31,5 +31,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effect", meta = (ClampMin = "0.0"))
 	float DamageDecreaseTime;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effect", meta = (ClampMin = "0.0"))
-	float AttackDamageMultiplier;
+	float SpeedMultiplier;
 };

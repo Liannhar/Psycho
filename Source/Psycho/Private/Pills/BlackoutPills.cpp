@@ -38,7 +38,7 @@ void UBlackoutPills::UsePill()
             ABaseEnemy* EnemyCharacter = Cast<ABaseEnemy>(HitResults[Index].GetActor());
             if (EnemyCharacter)
             {
-                EnemyCharacter->Deactivate();
+                EnemyCharacter->Deactivate(SpeedMultiplier);
                 DeactivatedEnemies.Add(EnemyCharacter);
                 HitResults.RemoveAtSwap(Index);
             }
@@ -65,7 +65,7 @@ void UBlackoutPills::StopBlurring()
     if (Player)
     {
         Player->GetPillsComponent()->OnBlurringEnd.Broadcast();
-        Player->GetAttackComponent()->MultiplyAttackDamage(AttackDamageMultiplier);
+        //Player->GetAttackComponent()->MultiplyAttackDamage(AttackDamageMultiplier);
         GetWorld()->GetTimerManager().ClearTimer(PillEffectsTimer);
         GetWorld()->GetTimerManager().SetTimer(PillAfterEffectsTimer,this,&UBlackoutPills::StopDamageDecrease,DamageDecreaseTime,false);
         Player->GetPillsComponent()->SetPillAfterEffectsTimer(PillAfterEffectsTimer);

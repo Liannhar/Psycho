@@ -25,6 +25,8 @@ ABaseEnemy::ABaseEnemy()
 	SmokeNiagaraComponent->SetupAttachment(RootComponent);
 	EnemyChannelCollision->SetBoxExtent(FVector(1,1,1));
 	EnemyChannelCollision->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
+
+	DefaultMaxWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
 }
 
 void ABaseEnemy::BeginPlay()
@@ -204,35 +206,39 @@ void ABaseEnemy::Death()
 
 
 
-void ABaseEnemy::Deactivate()
+void ABaseEnemy::Deactivate(float SpeedReduceMultiplier)
 {
-	SetActorHiddenInGame(true);
-	GetWeaponComponent()->GetCurrentWeapon()->SetActorHiddenInGame(true);
-	GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-	// Hide all attached actors
-	// TArray<AActor*> AttachedActors;
-	// GetAttachedActors(AttachedActors);
-	// for (AActor* Actor : AttachedActors)
-	// {
-	// 	Actor->SetActorHiddenInGame(true);
-	// }
-	GetMovementComponent()->StopActiveMovement();
-	OwnController->UnPossess();
+	ChangeMaxSpeed(GetCharacterMovement()->MaxWalkSpeed * SpeedReduceMultiplier);
+	GetAttackComponent()->MultiplyAttackSpeed(SpeedReduceMultiplier);
+	// SetActorHiddenInGame(true);
+	// GetWeaponComponent()->GetCurrentWeapon()->SetActorHiddenInGame(true);
+	// GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
+	// GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+	// // Hide all attached actors
+	// // TArray<AActor*> AttachedActors;
+	// // GetAttachedActors(AttachedActors);
+	// // for (AActor* Actor : AttachedActors)
+	// // {
+	// // 	Actor->SetActorHiddenInGame(true);
+	// // }
+	// GetMovementComponent()->StopActiveMovement();
+	// OwnController->UnPossess();
 }
 
 void ABaseEnemy::Reactivate()
 {
-	SetActorHiddenInGame(false);
-	GetWeaponComponent()->GetCurrentWeapon()->SetActorHiddenInGame(false);
-	GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
-	// Unhide all attached actors
-	// TArray<AActor*> AttachedActors;
-	// GetAttachedActors(AttachedActors);
-	// for (AActor* Actor : AttachedActors)
-	// {
-	// 	Actor->SetActorHiddenInGame(false);
-	// }
-	OwnController->Possess(this);
+	ChangeMaxSpeed(DefaultMaxWalkSpeed);
+	GetAttackComponent()->ResetAttackSpeedToDefault();
+	// SetActorHiddenInGame(false);
+	// GetWeaponComponent()->GetCurrentWeapon()->SetActorHiddenInGame(false);
+	// GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+	// GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+	// // Unhide all attached actors
+	// // TArray<AActor*> AttachedActors;
+	// // GetAttachedActors(AttachedActors);
+	// // for (AActor* Actor : AttachedActors)
+	// // {
+	// // 	Actor->SetActorHiddenInGame(false);
+	// // }
+	// OwnController->Possess(this);
 }

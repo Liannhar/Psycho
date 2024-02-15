@@ -26,7 +26,7 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="AI")
 	UBehaviorTree* BehaviorTreeAsset;
-	
+
 	void EndEnemyAttack();
 	virtual void Attack();
 	
@@ -38,7 +38,7 @@ public:
 	void ChangeMaxSpeed(float NewSpeed) const;
 	void BlockAttack();
 
-	void Deactivate();
+	void Deactivate(float SpeedReduceMultiplier);
 	void Reactivate();
 
 	virtual void BeginPlay() override;
@@ -70,6 +70,8 @@ protected:
 	int32 AttacksCount=0;
 	UPROPERTY()
 	int32 ComboIndex = 0;
+
+	float DefaultMaxWalkSpeed;
 
 	UPROPERTY(EditAnywhere,Category="Health")
 	float DistanceOfRepulsion= 20.0f;
