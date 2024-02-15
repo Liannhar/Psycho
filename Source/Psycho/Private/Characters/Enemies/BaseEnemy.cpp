@@ -2,20 +2,18 @@
 
 
 #include "BaseEnemy.h"
-#include "..\..\..\Public\Characters\Enemies\BaseEnemy.h"
 
 #include "AttackComponent.h"
 #include "BaseEnemyAIController.h"
-#include "EnemyAIPerceptionComponent.h"
 #include "Psycho/PsychoGameModeBase.h"
 #include "HealthComponent.h"
 #include "WeaponComponent.h"
 #include "Weapons/BaseWeapon.h"
-#include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/PlayerCharacter.h"
 
 ABaseEnemy::ABaseEnemy()
 {
@@ -37,6 +35,12 @@ void ABaseEnemy::BeginPlay()
 
 void ABaseEnemy::Attack()
 {
+	auto const CurrentAiController = Cast<ABaseEnemyAIController>(OwnController);
+	if(!CurrentAiController) return;
+
+	const auto Distance = FVector::Dist(CurrentAiController->GetPlayerCharacter()->GetActorLocation(),GetActorLocation());
+	if(Distance>130.0f) return;
+	
 	const auto AttackIndex = AttackComponent->GetAttackIndex();
 	if(AttackIndex<=AttacksCount && !IsTakenDamage)
 	{
@@ -111,7 +115,6 @@ void ABaseEnemy::GetDamage(AActor* Actor)
 	}*/
 	if(HealthComponent->GetTakeDamageAnimMontage())
 	{
-		UE_LOG(LogTemp,Display,TEXT("2 %s"),*GetName());
 		PlayAnimMontage(HealthComponent->GetTakeDamageAnimMontage());
 	}
 	

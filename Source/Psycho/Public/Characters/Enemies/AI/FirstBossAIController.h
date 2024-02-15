@@ -13,6 +13,11 @@ UCLASS()
 class PSYCHO_API AFirstBossAIController : public ABaseEnemyAIController
 {
 	GENERATED_BODY()
+public:
+	void SetBoolCurrentStamina(int32 CurrentStamina);
 protected:
 	virtual bool GetCanFocus() const override;
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="AI")
+	FName IsStaminaNotOut = "IsStaminaNotOut";
+	virtual void OnPossess(APawn* InPawn) override;
 };

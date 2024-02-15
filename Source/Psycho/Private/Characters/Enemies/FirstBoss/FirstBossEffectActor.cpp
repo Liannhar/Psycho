@@ -9,8 +9,8 @@
 AFirstBossEffectActor::AFirstBossEffectActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
-
 	PoseableMeshComponent = CreateDefaultSubobject<UPoseableMeshComponent>("PoseableMeshComponent");
+	SetRootComponent(PoseableMeshComponent);
 
 }
 
@@ -18,8 +18,13 @@ void AFirstBossEffectActor::Create(USkeletalMeshComponent* NewSkeletalMeshCompon
 {
 	if(NewSkeletalMeshComponent && NewSkeletalMesh && NewMaterial && GetWorld())
 	{
-		PoseableMeshComponent->SetSkeletalMesh(NewSkeletalMesh);	
-		PoseableMeshComponent->SetMaterial(0,NewMaterial);
+		PoseableMeshComponent->SetSkeletalMesh(NewSkeletalMesh);
+		PoseableMeshComponent->SetWorldLocation(GetActorLocation());
+		PoseableMeshComponent->SetWorldRotation(GetActorRotation());
+		for(int32 i=0;i<NewSkeletalMesh->Materials.Num();i++)
+		{
+			PoseableMeshComponent->SetMaterial(i,NewMaterial);	
+		}
 		PoseableMeshComponent->CopyPoseFromSkeletalComponent(NewSkeletalMeshComponent);
 		GetWorld()->GetTimerManager().SetTimer(LiveTimerHandle,this,&AFirstBossEffectActor::EndLive,LiveTime);
 	}
@@ -32,6 +37,7 @@ void AFirstBossEffectActor::BeginPlay()
 
 void AFirstBossEffectActor::EndLive()
 {
+	
 	GetWorld()->GetTimerManager().ClearTimer(LiveTimerHandle);
 	Destroy();
 }
