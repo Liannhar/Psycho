@@ -23,7 +23,7 @@ protected:
 
 	void EndLive();
 	
-	UPROPERTY()
+	UPROPERTY(EditAnywhere,Category="PoseableMesh")
 	UPoseableMeshComponent* PoseableMeshComponent;
 
 	UPROPERTY(EditAnywhere,Category="Mesh")
@@ -32,5 +32,5 @@ protected:
 	FTimerHandle LiveTimerHandle;
 
 	UPROPERTY(EditAnywhere,Category="Live")
-	float LiveTime=2.0f;
+	float LiveTime=3.0f;
 };

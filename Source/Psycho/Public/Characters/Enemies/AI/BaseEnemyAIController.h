@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "BaseEnemyAIController.generated.h"
 
+class APlayerCharacter;
 class UEnemyAIPerceptionComponent;
 /**
  * AI Controller
@@ -39,7 +40,11 @@ private:
 
 	bool FightStatus = false;
 
+	UPROPERTY()
+	APlayerCharacter* PlayerCharacter;
 public:
+	
+	APlayerCharacter* GetPlayerCharacter() const {return PlayerCharacter;}
 	void ChangeIsPawnDamage(bool NewBool);
 	void ChangeIsPawnCanAttack(bool NewBool);
 };

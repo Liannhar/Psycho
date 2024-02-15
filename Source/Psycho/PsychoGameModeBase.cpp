@@ -23,9 +23,9 @@ void APsychoGameModeBase::SetFightStatus(bool CurrentStatus)
 void APsychoGameModeBase::SaveAll(UPsychoSaveGame* Save) const
 {
 	const auto PlayerActor = UGameplayStatics::GetActorOfClass(GetWorld(), APlayerCharacter::StaticClass());
-	if(const auto Player = Cast<APlayerCharacter>(PlayerActor))
+	if(const auto PlayerCharacter = Cast<APlayerCharacter>(PlayerActor))
 	{
-		Save->SavePlayer(Player);	
+		Save->SavePlayer(PlayerCharacter);	
 	}
 	TArray<AActor*> CheckPoints;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACheckPointActor::StaticClass(),CheckPoints);

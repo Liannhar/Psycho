@@ -18,7 +18,6 @@ AActor* UEnemyAIPerceptionComponent::GetVisiblePlayer() const
 	
 	for (const auto Actor:FoundActors)
 	{
-		//Проверка жив ли Actor 
 		const auto Player = Cast<APlayerCharacter>(Actor);
 		if(Player && !Player->GetHealthComponent()->IsDead()) return Player;
 	}

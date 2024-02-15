@@ -43,7 +43,7 @@ public:
 	TArray<ABaseEnemy*> GetEnemiesInBattle(){return EnemiesInBattle;}
 	
 	UPROPERTY()
-	AActor* PLayer;
+	AActor* Player;
 	
 	UFUNCTION(BlueprintCallable)
 	bool GetFightStatus(){return FightStatus;}

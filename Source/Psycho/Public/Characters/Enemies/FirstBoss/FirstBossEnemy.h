@@ -7,6 +7,7 @@
 #include "FirstBossEnemy.generated.h"
 
 
+class AFirstBossAIController;
 class AFirstBossEffectActor;
 
 UCLASS()
@@ -17,7 +18,7 @@ public:
 	void StartEffectMoving(int32 NewStaminaCost);
 	void EndEffectMoving();
 	
-	void ChangeStaminaCost(int32 NewCost);
+	bool ChangeStaminaCost(int32 NewCost);
 	virtual void Attack() override;
 	void PreparationBossBeforeAttack(const EComboInput Type, const int32 NewCombo, const int32 NewCount, const bool NeedRandomCount,const int32 NewStaminaCost);
 
@@ -25,11 +26,16 @@ public:
 protected:
 	FTimerHandle EffectTImer;
 	UPROPERTY(EditAnywhere,Category="Effect")
-	float EffectTime = 0.5f;
+	float EffectTime = 0.2f;
 
+	int32 CurrentAttackStaminaCost = 0;
+	
 	void MakeEffect();
 
 	virtual void BeginPlay() override;
+
+	UPROPERTY()
+	AFirstBossAIController* AIController;
 
 	FTimerHandle StaminaRecoverTimer;
 	UPROPERTY(EditAnywhere,Category="Stamina")

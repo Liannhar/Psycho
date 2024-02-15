@@ -19,7 +19,8 @@ void UFindPlayerBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* No
 	
 	const auto Controller = OwnerComp.GetAIOwner();
 	const auto PerceptionComponentClass = Controller->GetComponentByClass(UEnemyAIPerceptionComponent::StaticClass());
-	if(const auto PerceptionComponent = Cast<UEnemyAIPerceptionComponent>(PerceptionComponentClass))
+	const auto PerceptionComponent = Cast<UEnemyAIPerceptionComponent>(PerceptionComponentClass);
+	if(PerceptionComponent)
 	{
 		const auto Player = PerceptionComponent->GetVisiblePlayer();
 		BlackBoard->SetValueAsObject(PlayerActorKey.SelectedKeyName,Player);
