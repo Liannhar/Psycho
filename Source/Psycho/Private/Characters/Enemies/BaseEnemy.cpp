@@ -12,6 +12,8 @@
 #include "NiagaraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/DecalComponent.h"
+#include "Engine/DecalActor.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/PlayerCharacter.h"
 
@@ -22,8 +24,8 @@ ABaseEnemy::ABaseEnemy()
 	SmokeNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>("SmokeNiagara");
 	SmokeNiagaraComponent->SetupAttachment(RootComponent);
 	EnemyChannelCollision->SetBoxExtent(FVector(1,1,1));
-	EnemyChannelCollision->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
-
+	EnemyChannelCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
+	
 	DefaultMaxWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
 }
 
@@ -100,6 +102,35 @@ void ABaseEnemy::BlockAttack()
 }
 
 
+void ABaseEnemy::DamageDecalCreate(bool ActorRotationIsHead)
+{
+	const auto RandomZ = FMath::FRandRange(DamageDecalLocationZDownLimit,DamageDecalLocationZUPLimit);
+	float RandomY;
+	if(ActorRotationIsHead)
+	{
+		RandomY= FMath::FRandRange(DamageDecalLocationYLeftLimitHead,DamageDecalLocationYRightLimitHead);	
+	}
+	else
+	{
+		RandomY = FMath::FRandRange(DamageDecalLocationYLeftLimitBack,DamageDecalLocationYRightLimitBack);	
+	}
+	
+	const auto RandomRoll = FMath::FRandRange(0.0f,360.0f);
+	ADecalActor* decal = GetWorld()->SpawnActor<ADecalActor>(FVector(DamageDecalLocationXLimit,RandomY,RandomZ), FRotator(0.0f,0.0f,RandomRoll));
+	if (decal)
+	{
+		decal->SetDecalMaterial(DamageDecalMaterialInterface);
+		decal->SetLifeSpan(5.0f);
+		decal->GetDecal()->DecalSize = FVector(7.0f, 4.0f, 14.0f);
+		decal->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
+		decal->SetActorRelativeLocation(FVector(DamageDecalLocationXLimit,RandomY,RandomZ)); 
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No decal spawned"));
+	}
+}
 
 void ABaseEnemy::GetDamage(AActor* Actor)
 {
@@ -113,6 +144,9 @@ void ABaseEnemy::GetDamage(AActor* Actor)
 		UE_LOG(LogTemp,Display,TEXT("1 %s"),*GetName());
 		AnimInstance->StopAllMontages(0.0f);
 	}*/
+
+	
+	
 	if(HealthComponent->GetTakeDamageAnimMontage())
 	{
 		PlayAnimMontage(HealthComponent->GetTakeDamageAnimMontage());
@@ -144,16 +178,20 @@ void ABaseEnemy::GetDamage(AActor* Actor)
 	const auto ActorForwardVector = GetActorForwardVector();
 	if(const auto DotProduct = FVector::DotProduct(DamageActorForwardVector, ActorForwardVector); DotProduct>0.0f)
 	{
+		DamageDecalCreate(false);
 		SetActorLocation(GetActorLocation()+(ActorForwardVector+DamageActorForwardVector)*DistanceOfRepulsion);
 	}
 	else
 	{
+		DamageDecalCreate(true);
 		SetActorLocation(GetActorLocation()+(-1*ActorForwardVector+DamageActorForwardVector)*DistanceOfRepulsion);
 	}
 	
 	if(!GetWorld()) return;
 	GetWorld()->GetTimerManager().SetTimer(EndDamageEffectTimer,this,&ABaseEnemy::EndDamageEffects,TimeForWaitDamage);
 }
+
+
 
 void ABaseEnemy::EndNiagaraEffect()
 {

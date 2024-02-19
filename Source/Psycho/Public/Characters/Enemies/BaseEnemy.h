@@ -11,9 +11,9 @@ class UNiagaraComponent;
 class UNiagaraSystem;
 
 class UBehaviorTree;
-/**
- * 
- */
+
+
+
 UCLASS()
 class PSYCHO_API ABaseEnemy : public ABaseCharacter
 {
@@ -52,7 +52,7 @@ public:
 protected:
 	UPROPERTY()
 	bool IsTakenDamage = false;
-	
+
 	virtual void GetDamage(AActor* Actor) override;
 
 	UPROPERTY()
@@ -103,4 +103,25 @@ protected:
 	UNiagaraSystem* NewNiagaraSystem;
 	UPROPERTY()
 	UNiagaraSystem* OldNiagaraSystem;
+
+	void DamageDecalCreate(bool ActorRotationIsHead);
+	UPROPERTY(EditAnywhere,Category="Decal")
+	float DamageDecalLocationZUPLimit = 112.0f;
+	UPROPERTY(EditAnywhere,Category="Decal")
+	float DamageDecalLocationZDownLimit = 84.0f;
+	UPROPERTY(EditAnywhere,Category="Decal")
+	float DamageDecalLocationYLeftLimitHead = 7.0f;
+	UPROPERTY(EditAnywhere,Category="Decal")
+	float DamageDecalLocationYRightLimitHead = 13.0f;
+	UPROPERTY(EditAnywhere,Category="Decal")
+	float DamageDecalLocationYLeftLimitBack = -3.0f;
+	UPROPERTY(EditAnywhere,Category="Decal")
+	float DamageDecalLocationYRightLimitBack = -5.0f;
+	UPROPERTY(EditAnywhere,Category="Decal")
+	float DamageDecalLocationXLimit = -5.0f;
+	FTimerHandle DamageDecalTimer;
+	float EndDamageDecalTime;
+	UPROPERTY(EditAnywhere,Category="Decal")
+	UMaterialInterface* DamageDecalMaterialInterface;
+	
 };

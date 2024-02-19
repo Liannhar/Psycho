@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "StartFightActor.generated.h"
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDoorOpen,bool,IsOpen);
+
 
 class APsychoGameModeBase;
 class ABaseEnemy;
@@ -52,4 +54,7 @@ protected:
 
 	UPROPERTY(EditAnywhere,Category="Enemies")
 	int32 HowManyEnemiesInCanBeFront = 2;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnDoorOpen OpenDoor;
 };

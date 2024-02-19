@@ -11,8 +11,11 @@
 #include "HealthComponent.h"
 #include "MotionWarpingComponent.h"
 #include "P_PlayerController.h"
+#include "Components/DecalComponent.h"
 #include "DamageType/HeavyAttackDamageType.h"
+#include "Engine/DecalActor.h"
 #include "Kismet/GameplayStatics.h"
+
 
 UAttackComponent::UAttackComponent()
 {
@@ -30,17 +33,19 @@ void UAttackComponent::StartComboAttack(EComboInput Input)
 			DamagedCharacters.Empty();
 			IsLightAttackUse=false;
 			CurrentComboInput=Combos[i].Attack[AttackIndex].TypeAttack;
-			if(Combos[i].Attack[AttackIndex].PreviosAttackNeedTiming)
+			if(!CantAttackInTime)
 			{
-				if( CanAttackNext )
+				if(Combos[i].Attack[AttackIndex].PreviosAttackNeedTiming)
 				{
 					CurrentComboAttack=i;
-					ActiveAttack(Combos[i]);	
-					break;	
+					ActiveAttack(Combos[i]);
+					break;
 				}
-				continue;
+				else
+				{
+					continue;
+				}
 			}
-
 			CurrentComboAttack=i;
 			ActiveAttack(Combos[i]);
 			break;
@@ -91,8 +96,6 @@ void UAttackComponent::Damage()
 	if(Cast<ABaseEnemy>(ThisCharacter)) IsEnemy=true;
 	
 	const auto SkeletalWeapon = Weapon->GetSkeletalMeshComponent();
-	
-	
 	
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(ThisCharacter);
@@ -151,7 +154,6 @@ void UAttackComponent::Damage()
 						break;
 					}
 
-					//auto BoneHit = HitResult.BoneName;
 					
 					ChooseNewCurrentTheNearestDamagedCharacter(DamagedCharacter,ThisCharacter);
 					

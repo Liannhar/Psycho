@@ -39,6 +39,7 @@ void AStartFightActor::CheckEnemySpawners()
 	}
 	CurrentGameMode->SetFightStatus(false);
 	CurrentGameMode->Player=nullptr;
+	OpenDoor.Broadcast(true);
 	CurrentGameMode->SetCurrentStartFightActor(nullptr);
 	GetWorld()->GetTimerManager().ClearTimer(CheckEnemiesTimer);
 	Destroy();
@@ -59,6 +60,7 @@ void AStartFightActor::NotifyActorBeginOverlap(AActor* OtherActor)
 		CurrentGameMode->SetCurrentStartFightActor(this);
 		CurrentGameMode->SetFightStatus(true);
 		PlayerActor=OtherActor;
+		OpenDoor.Broadcast(false);
 		CurrentGameMode->Player=OtherActor;
 		GetWorld()->GetTimerManager().SetTimer(CheckEnemiesTimer,this,&AStartFightActor::CheckEnemies,TimeForCheckEnemies,true);
 	}

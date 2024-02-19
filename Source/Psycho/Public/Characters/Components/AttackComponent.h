@@ -51,7 +51,7 @@ public:
 	void MultiplyAttackDamage(const float& Multiplier){AttackDamage*=Multiplier;}
 	void SprintDodge(const FInputActionValue& Value);
 	//восстановление множителя урона
-	void ResetAttackDamage(){AttackDamage=1.f;};
+	void ResetAttackDamage(){AttackDamage=1.f;}
 	//нанесение урона
 	void Damage();
 	// получить текущий номер атаки в комбинации
@@ -76,6 +76,8 @@ protected:
 	UPROPERTY(EditAnywhere,Category="Attack", meta = (ClampMin = "1.0"))
 	float AttackDamage = 1.f;
 
+	UPROPERTY()
+	UAnimMontage* CurrentAttackMontage;
 
 	//получаем владельца AttackComponent
 	ABaseCharacter* GetCharacter() const;
@@ -119,4 +121,6 @@ protected:
 	FInputActionValue Value;
 
 	static int32 CompareSign(int First, int Second);
+
+	
 };
