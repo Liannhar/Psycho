@@ -32,9 +32,12 @@ void AStartFightActor::CheckEnemySpawners()
 
 	if(CurrentIndexEnemySpawner<EnemySpawners.Num())
 	{
-		EnemySpawners[CurrentIndexEnemySpawner]->SpawnEnemies();
-		CurrentIndexEnemySpawner++;
-		CurrentGameMode->SetFightStatus(true);
+		if(EnemySpawners[CurrentIndexEnemySpawner])
+		{
+			EnemySpawners[CurrentIndexEnemySpawner]->SpawnEnemies();
+			CurrentIndexEnemySpawner++;
+			CurrentGameMode->SetFightStatus(true);
+		}
 		return;
 	}
 	CurrentGameMode->SetFightStatus(false);
