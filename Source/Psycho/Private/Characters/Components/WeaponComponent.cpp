@@ -21,7 +21,7 @@ void UWeaponComponent::ChangeWeapon(ABaseWeapon* NewWeapon,TSubclassOf<ABaseWeap
 		DetachWeaponOfSocket(CurrentWeapon,NewWeapon->GetActorLocation());
 		CurrentWeapon=NewWeapon;
 		CurrentClassOfWeapon = NewClassOfWeapon;
-		NewWeapon->DisablePhysics();
+		NewWeapon->AttachWeapon();
 		AttachWeaponToSocket(CurrentWeapon,BaseCharacter,WeaponSocketName);
 		const auto AttackComponent = GetAttackComponent();
 		AttackComponent->SetCombo();
@@ -36,7 +36,7 @@ void UWeaponComponent::SetNewWeapon(TSubclassOf<ABaseWeapon> NewClassOfWeapon)
 		const auto NewWeapon = GetWorld()->SpawnActor<ABaseWeapon>(CurrentClassOfWeapon);
 		if(!NewWeapon) return;
 		CurrentWeapon=NewWeapon;
-		NewWeapon->DisablePhysics();
+		NewWeapon->AttachWeapon();
 		AttachWeaponToSocket(CurrentWeapon,BaseCharacter,WeaponSocketName);
 		const auto AttackComponent = GetAttackComponent();
 		AttackComponent->SetCombo();
@@ -94,7 +94,7 @@ void UWeaponComponent::DetachWeaponOfSocket(ABaseWeapon* Weapon, FVector NewLoca
 {
 	if(!Weapon) return;
 	const FDetachmentTransformRules DettachmentRules(EDetachmentRule::KeepWorld,EDetachmentRule::KeepWorld,EDetachmentRule::KeepWorld,false);
-	Weapon->EnablePhysics(NewLocation);
+	Weapon->DettachWeapon(NewLocation);
 	Weapon->DetachFromActor(DettachmentRules);
 }
 

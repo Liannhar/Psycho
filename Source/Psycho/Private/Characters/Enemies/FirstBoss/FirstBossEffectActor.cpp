@@ -21,7 +21,7 @@ void AFirstBossEffectActor::Create(USkeletalMeshComponent* NewSkeletalMeshCompon
 		PoseableMeshComponent->SetSkeletalMesh(NewSkeletalMesh);
 		PoseableMeshComponent->SetWorldLocation(GetActorLocation());
 		PoseableMeshComponent->SetWorldRotation(GetActorRotation());
-		for(int32 i=0;i<NewSkeletalMesh->Materials.Num();i++)
+		for(int32 i=0;i<NewSkeletalMesh->GetMaterials().Num();i++)
 		{
 			PoseableMeshComponent->SetMaterial(i,NewMaterial);	
 		}

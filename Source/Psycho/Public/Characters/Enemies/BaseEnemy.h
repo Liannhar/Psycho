@@ -64,8 +64,6 @@ protected:
 	void EndWait();
 	UPROPERTY(EditAnywhere,Category="Damage")
 	float TimeForWaitDamage=4.0f;
-	UPROPERTY(EditAnywhere,Category="Damage")
-	float TimeForEndNiagara=1.0f;
 	UPROPERTY()
 	int32 AttacksCount=0;
 	UPROPERTY()
@@ -80,7 +78,7 @@ protected:
 	
 	FTimerHandle WaitNextAttemptAttack;
 	
-	FTimerHandle EndNiagaraEffectTimer;
+	
 
 	FTimerHandle EndDamageEffectTimer;
 	
@@ -89,20 +87,9 @@ protected:
 	virtual void Death() override;
 
 	void EndDamageEffects();
-	void EndNiagaraEffect();
-
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Materials")
-	TArray<UMaterialInterface*> MaterialsChangedForDamaged;
 	
-	UPROPERTY()
-	TArray<UMaterialInterface*> OldMaterials;
 
-	UPROPERTY(EditAnywhere,Category="Niagara")
-	UNiagaraComponent* SmokeNiagaraComponent;
-	UPROPERTY(EditAnywhere,Category="Niagara")
-	UNiagaraSystem* NewNiagaraSystem;
-	UPROPERTY()
-	UNiagaraSystem* OldNiagaraSystem;
+	
 
 	void DamageDecalCreate(bool ActorRotationIsHead);
 	UPROPERTY(EditAnywhere,Category="Decal")
@@ -123,5 +110,8 @@ protected:
 	float EndDamageDecalTime;
 	UPROPERTY(EditAnywhere,Category="Decal")
 	UMaterialInterface* DamageDecalMaterialInterface;
+
+	UPROPERTY(EditAnywhere,Category="Decal")
+	FVector DecalSizeVector =FVector(7.0f, 4.0f, 14.0f);
 	
 };

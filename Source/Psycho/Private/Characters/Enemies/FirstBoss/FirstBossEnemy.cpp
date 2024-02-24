@@ -6,7 +6,7 @@
 #include "FirstBossAIController.h"
 #include "FirstBossEffectActor.h"
 
-void AFirstBossEnemy::StartEffectMoving(int32 NewStaminaCost)
+void AFirstBossEnemy::StartEffectMoving(const int32 NewStaminaCost)
 {
 	if(ChangeStaminaCost(NewStaminaCost)) return;
 	UE_LOG(LogTemp,Display,TEXT("StartEffect"));
@@ -30,8 +30,7 @@ void AFirstBossEnemy::MakeEffect()
 	{
 		const auto ActorMesh = GetMesh();
 		if(!ActorMesh) return;
-		const auto EffectActor = GetWorld()->SpawnActor<AFirstBossEffectActor>(CurrentEffectActor,GetActorLocation(), GetActorRotation());
-		if(EffectActor)
+		if(const auto EffectActor = GetWorld()->SpawnActor<AFirstBossEffectActor>(CurrentEffectActor,GetActorLocation(), GetActorRotation()))
 		{
 			EffectActor->Create(GetMesh(),GetMesh()->SkeletalMesh);
 		}
@@ -48,7 +47,6 @@ void AFirstBossEnemy::BeginPlay()
 void AFirstBossEnemy::Attack()
 {
 	if(ChangeStaminaCost(CurrentAttackStaminaCost)) return;
-	UE_LOG(LogTemp,Display,TEXT("Attack"));
 	Super::Attack();
 }
 

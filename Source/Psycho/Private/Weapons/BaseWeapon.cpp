@@ -9,7 +9,7 @@
 ABaseWeapon::ABaseWeapon()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	CollisionComponent = CreateDefaultSubobject<UBoxComponent>("Capsule component");
+	CollisionComponent = CreateDefaultSubobject<UBoxComponent>("Box component");
 	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("Skeletal Mesh");
 	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CollisionComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
@@ -17,18 +17,25 @@ ABaseWeapon::ABaseWeapon()
 	CollisionComponent->SetupAttachment(RootComponent);
 }
 
-void ABaseWeapon::EnablePhysics(FVector NewLocation)
+void ABaseWeapon::DettachWeapon(FVector NewLocation)
 {
 	//SkeletalMeshComponent->SetSimulatePhysics(true);
+	CollisionComponent->Activate();
 }
 
-void ABaseWeapon::DisablePhysics()
+void ABaseWeapon::AttachWeapon()
 {
 	//SkeletalMeshComponent->SetSimulatePhysics(false);
+	CollisionComponent->Deactivate();
 }
 
 void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+	if(GetAttachParentActor())
+	{
+		UE_LOG(LogTemp,Display,TEXT("%s"),*GetAttachParentActor()->GetName());
+		CollisionComponent->Deactivate();
+	}
 }
 

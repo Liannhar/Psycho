@@ -23,8 +23,8 @@ public:
 	float GetHeavyAttackDamage() const {return HeavyAttackDamage;}
 	UPROPERTY(EditAnywhere,Category="Combo")
 	TArray<FCombination> DifferentCombos;
-	virtual void EnablePhysics(FVector NewLocation);
-	virtual void DisablePhysics();
+	virtual void DettachWeapon(FVector NewLocation);
+	virtual void AttachWeapon();
 	USkeletalMeshComponent* GetSkeletalMeshComponent(){return SkeletalMeshComponent;}
 protected:
 	UPROPERTY(EditAnywhere,Category="Damage")

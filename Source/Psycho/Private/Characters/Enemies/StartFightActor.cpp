@@ -2,9 +2,9 @@
 
 
 #include "Characters/Enemies/StartFightActor.h"
-
 #include "BaseEnemy.h"
 #include "EnemySpawner.h"
+#include "CoreTypes.h"
 #include "Components/BoxComponent.h"
 #include "Player/PlayerCharacter.h"
 #include "Psycho/PsychoGameModeBase.h"
@@ -29,16 +29,19 @@ void AStartFightActor::BeginPlay()
 
 void AStartFightActor::CheckEnemySpawners()
 {
-
-	if(CurrentIndexEnemySpawner<EnemySpawners.Num())
+	if(CurrentIndexEnemySpawner<Waves.Num())
 	{
-		if(EnemySpawners[CurrentIndexEnemySpawner])
+		CurrentHowManyEnemiesCanBeInFront=Waves[CurrentIndexEnemySpawner].HowManyEnemiesCanBeInFront;
+		for (const auto EnemySpawner: Waves[CurrentIndexEnemySpawner].EnemySpawners)
 		{
-			EnemySpawners[CurrentIndexEnemySpawner]->SpawnEnemies();
-			CurrentIndexEnemySpawner++;
-			CurrentGameMode->SetFightStatus(true);
+			if(EnemySpawner)
+			{
+				EnemySpawner->SpawnEnemies();
+				CurrentIndexEnemySpawner++;
+				CurrentGameMode->SetFightStatus(true);
+			}
 		}
-		return;
+		return;	
 	}
 	CurrentGameMode->SetFightStatus(false);
 	CurrentGameMode->Player=nullptr;
@@ -51,20 +54,21 @@ void AStartFightActor::CheckEnemySpawners()
 void AStartFightActor::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
+	if(NeedTrigger)
+	{
+		return;
+	}
 	const auto PlayerChar= Cast<APlayerCharacter>(OtherActor);
 	if(PlayerChar && !FightWasStarted)
 	{
 		FightWasStarted=true;
 		CurrentGameMode->SetStartEnemies(StartEnemies);
-		if(NeedSpawnInStartOfBattle)
-		{
-			CheckEnemySpawners();
-		}
 		CurrentGameMode->SetCurrentStartFightActor(this);
 		CurrentGameMode->SetFightStatus(true);
+		CurrentGameMode->ChangeEnemiesCount(nullptr);
 		PlayerActor=OtherActor;
-		OpenDoor.Broadcast(false);
 		CurrentGameMode->Player=OtherActor;
+		OpenDoor.Broadcast(false);
 		GetWorld()->GetTimerManager().SetTimer(CheckEnemiesTimer,this,&AStartFightActor::CheckEnemies,TimeForCheckEnemies,true);
 	}
 }
@@ -92,7 +96,7 @@ void AStartFightActor::CheckEnemies()
 		NearestActors.Add(Distances[i].Key);
 	}
 
-	int32 CountEnemies = HowManyEnemiesInCanBeFront;
+	int32 CountEnemies = CurrentHowManyEnemiesCanBeInFront;
 	
 	for (const auto Dist : Distances)
 	{

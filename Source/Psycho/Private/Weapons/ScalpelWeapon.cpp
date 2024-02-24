@@ -9,16 +9,16 @@ AScalpelWeapon::AScalpelWeapon()
 	LightAttackDamage = 10.0f;
 }
 
-void AScalpelWeapon::EnablePhysics(FVector NewLocation)
+void AScalpelWeapon::DettachWeapon(FVector NewLocation)
 {
-	Super::EnablePhysics(NewLocation);
+	Super::DettachWeapon(NewLocation);
 	SetActorLocation(NewLocation);
 	SetActorRotation(FRotator(0.0f,0.0f,0.0f));
 	SkeletalMeshComponent->SetWorldScale3D(FVector(0.3f,0.3f,0.3f));
 }
 
-void AScalpelWeapon::DisablePhysics()
+void AScalpelWeapon::AttachWeapon()
 {
-	Super::DisablePhysics();
+	Super::AttachWeapon();
 	SkeletalMeshComponent->SetWorldScale3D(FVector(1.0f,1.0f,1.0f));
 }
