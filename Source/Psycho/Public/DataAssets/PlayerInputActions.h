@@ -46,4 +46,10 @@ public:
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     UInputAction* DodgeAction;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    UInputAction* PreviousPillAction;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    UInputAction* NextPillAction;
 };

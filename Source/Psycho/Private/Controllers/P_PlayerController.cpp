@@ -79,6 +79,8 @@ void AP_PlayerController::SetupInputComponent()
 
 		// Pill
 		EnhancedInputComponent->BindAction(InputActions->TakePillAction, ETriggerEvent::Triggered, this, &AP_PlayerController::TakePill);
+		EnhancedInputComponent->BindAction(InputActions->PreviousPillAction, ETriggerEvent::Triggered, this, &AP_PlayerController::SelectPreviousPill);
+		EnhancedInputComponent->BindAction(InputActions->NextPillAction, ETriggerEvent::Triggered, this, &AP_PlayerController::SelectNextPill);
 		
 		// Lock On Target
 		EnhancedInputComponent->BindAction(InputActions->LockOnTargetAction, ETriggerEvent::Triggered, this, &AP_PlayerController::LockOnTarget);
@@ -91,7 +93,6 @@ void AP_PlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(InputActions->DodgeAction, ETriggerEvent::Triggered, this, &AP_PlayerController::Dodge);
 	}
 }
-
 
 void AP_PlayerController::Tick(float DeltaSeconds)
 {
@@ -170,9 +171,6 @@ void AP_PlayerController::Sprint(const FInputActionValue& Value)
      GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Sprint!"));
 }
 
-
-
-
 void AP_PlayerController::StopSprint(const FInputActionValue& Value)
 {
 	bIsSprinting = false;
@@ -202,7 +200,6 @@ void AP_PlayerController::DodgeSprint(const FInputActionValue& Value)
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Sprint!"));
 }
 
-
 void AP_PlayerController::SlowWalk(const FInputActionValue& Value)
 {
 	bIsSlowWalking = true;
@@ -217,7 +214,6 @@ void AP_PlayerController::SlowWalk(const FInputActionValue& Value)
      GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Slow Walk!"));
 }
 
-
 void AP_PlayerController::StopSlowWalk(const FInputActionValue& Value)
 {
 	bIsSlowWalking = false;
@@ -230,7 +226,6 @@ void AP_PlayerController::StopSlowWalk(const FInputActionValue& Value)
 	if(GEngine)
      GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Stop Slow Walk!"));
 }
-
 
 void AP_PlayerController::LightAttack(const FInputActionValue& Value)
 {
@@ -266,7 +261,6 @@ UAttackComponent* AP_PlayerController::GetAttackComponent() const
 
 	return Cast<UAttackComponent>(Component);
 }
-
 
 void AP_PlayerController::LockOnTarget(const FInputActionValue& Value)
 {
@@ -312,7 +306,6 @@ void AP_PlayerController::LockOnTarget(const FInputActionValue& Value)
 		Subsystem->AddMappingContext(TargetOnMappingContext, 0);
 	}
 }
-
 
 AActor* AP_PlayerController::FindTargetToChange(const FVector& Direction)
 {
@@ -375,7 +368,6 @@ AActor* AP_PlayerController::FindTargetToChange(const FVector& Direction)
 	return NewTarget;
 }
 
-
 void AP_PlayerController::ChangeTargetOn(const FInputActionValue& Value)
 {
 	// Get the X input of the mouse to determine the direction in which the Player is trying to change the target.
@@ -396,14 +388,12 @@ void AP_PlayerController::ChangeTargetOn(const FInputActionValue& Value)
 	}
 }
 
-
 void AP_PlayerController::Interact(const FInputActionValue& Value)
 {
 	// TODO: Interact
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Interacted"));
 }
-
 
 void AP_PlayerController::Dodge(const FInputActionValue& Value)
 {
@@ -417,4 +407,14 @@ void AP_PlayerController::Dodge(const FInputActionValue& Value)
 	}
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Dodge!"));
+}
+
+void AP_PlayerController::SelectPreviousPill(const FInputActionValue& Value)
+{
+	PlayerCharacter->GetPillsComponent()->SetCurrentPillIndex(PlayerCharacter->GetPillsComponent()->GetCurrentPillIndex() - 1);
+}
+
+void AP_PlayerController::SelectNextPill(const FInputActionValue& Value)
+{
+	PlayerCharacter->GetPillsComponent()->SetCurrentPillIndex(PlayerCharacter->GetPillsComponent()->GetCurrentPillIndex() + 1);
 }

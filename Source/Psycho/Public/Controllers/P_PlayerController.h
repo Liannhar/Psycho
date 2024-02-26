@@ -92,6 +92,8 @@ protected:
 
 	// Pill
 	void TakePill(const FInputActionValue& Value);
+	void SelectPreviousPill(const FInputActionValue& Value);
+	void SelectNextPill(const FInputActionValue& Value);
 	UAttackComponent* GetAttackComponent() const;
 
 	// Target System

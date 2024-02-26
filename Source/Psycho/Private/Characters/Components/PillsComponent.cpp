@@ -44,14 +44,36 @@ void UPillsComponent::TakePill()
 		return;
 	}
 
-	if (UBasePills* PillToTake = NewObject<UBasePills>(this, PillStack.Last()))
+	if (UBasePills* PillToTake = NewObject<UBasePills>(this, PillStack[CurrentPillIndex]))
 	{
 		PillToTake->UsePill();
-		PillStack.RemoveAt(PillStack.Num() - 1);
+		PillStack.RemoveAt(CurrentPillIndex);
+		SetCurrentPillIndex(CurrentPillIndex - 1);
 		OnPillUsed.Broadcast(PillToTake);
 	}
 }
 
+
+void UPillsComponent::SetCurrentPillIndex(int NewCurrentPIllIndex)
+{
+	if (PillStack.IsEmpty()) return;
+
+	NewCurrentPIllIndex %= PillStack.Num();
+
+	if (NewCurrentPIllIndex == 0)
+	{
+		CurrentPillIndex = 0;
+	} 
+	else if (NewCurrentPIllIndex > 0)
+	{
+		CurrentPillIndex = NewCurrentPIllIndex;
+	} 
+	else if (NewCurrentPIllIndex < 0)
+	{
+		CurrentPillIndex = PillStack.Num() + NewCurrentPIllIndex;
+	}
+	OnPillChanged.Broadcast(CurrentPillIndex);
+}
 
 bool UPillsComponent::IsPillEffectActive()
 {

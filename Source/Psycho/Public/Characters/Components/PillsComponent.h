@@ -11,6 +11,7 @@ class UBasePills;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPillAddedDelegate, TSubclassOf<UBasePills>, AddedPill);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPillUsedDelegate, UBasePills*, UsedPill);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBlurringStartDelegate, const float&, BlurStrength);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPillChanged, const int&, CurrentPill);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBlurringEndDelegate);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -26,6 +27,8 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	uint8 CurrentPillIndex;
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -39,12 +42,18 @@ public:
 	FBlurringStartDelegate OnBlurringStart;
 	UPROPERTY(BlueprintAssignable)
 	FBlurringEndDelegate OnBlurringEnd;
+	UPROPERTY(BlueprintAssignable)
+	FPillChanged OnPillChanged;
 
 	void AddPill(class UPillsDataStructure* PillData);
 	void TakePill();
 	void SetPillEffectsTimer(FTimerHandle& Timer) { PillPositiveEffectsTimer = Timer;};
 	void SetPillAfterEffectsTimer(FTimerHandle& Timer) { PillNegativeEffectsTimer = Timer;};
+	void SetCurrentPillIndex(int NewCurrentPIllIndex);
 	bool IsPillEffectActive();
+
+	UFUNCTION(BlueprintCallable)
+	uint8 GetCurrentPillIndex() { return CurrentPillIndex; };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pills)
 	TArray<TSubclassOf<UBasePills>> PillStack;	
