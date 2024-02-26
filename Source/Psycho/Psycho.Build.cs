@@ -16,6 +16,7 @@ public class Psycho : ModuleRules
 			"Psycho/Public/Characters",
 			"Psycho/Public/Characters/Enemies",
 			"Psycho/Public/Characters/Enemies/FirstBoss",
+			"Psycho/Public/Characters/Enemies/SmokedEnemies",
 			"Psycho/Public/Characters/Enemies/Components",
 			"Psycho/Public/Characters/Enemies/AI",
 			"Psycho/Public/Characters/Enemies/AI/Services",
@@ -33,6 +34,7 @@ public class Psycho : ModuleRules
 			"Psycho/Public/GameInstance",
 			"Psycho/Public/Structures",
 			"Psycho/Public/DataAssets",
+			"Psycho/Public/TriggerBoxes",
 		});
 
 		// Uncomment if you are using Slate UI

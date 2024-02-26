@@ -21,8 +21,7 @@ ABaseEnemy::ABaseEnemy()
 {
 	EnemyChannelCollision = CreateDefaultSubobject<UBoxComponent>("Enemy Channel Collision");
 	EnemyChannelCollision->SetupAttachment(RootComponent);
-	SmokeNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>("SmokeNiagara");
-	SmokeNiagaraComponent->SetupAttachment(RootComponent);
+	
 	EnemyChannelCollision->SetBoxExtent(FVector(1,1,1));
 	EnemyChannelCollision->SetCollisionObjectType(ECC_GameTraceChannel1);
 	
@@ -121,10 +120,11 @@ void ABaseEnemy::DamageDecalCreate(bool ActorRotationIsHead)
 	{
 		decal->SetDecalMaterial(DamageDecalMaterialInterface);
 		decal->SetLifeSpan(5.0f);
-		decal->GetDecal()->DecalSize = FVector(7.0f, 4.0f, 14.0f);
+		decal->GetDecal()->DecalSize = DecalSizeVector;
 		decal->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
 		decal->SetActorRelativeLocation(FVector(DamageDecalLocationXLimit,RandomY,RandomZ)); 
-
+		UE_LOG(LogTemp,Display,TEXT("X%fY%fZ%f"),decal->GetActorLocation().X,decal->GetActorLocation().Y,decal->GetActorLocation().Z);
+		UE_LOG(LogTemp,Display,TEXT("Relative X%fY%fZ%f"),DamageDecalLocationXLimit,RandomY,RandomZ);
 	}
 	else
 	{
@@ -136,16 +136,7 @@ void ABaseEnemy::GetDamage(AActor* Actor)
 {
 	Super::GetDamage(Actor);
 
-	const auto EnemyMesh=GetMesh();
-	if(!EnemyMesh) return;
-	
-	/*if (UAnimInstance* AnimInstance = EnemyMesh->GetAnimInstance())
-	{
-		UE_LOG(LogTemp,Display,TEXT("1 %s"),*GetName());
-		AnimInstance->StopAllMontages(0.0f);
-	}*/
-
-	
+	IsTakenDamage=true;
 	
 	if(HealthComponent->GetTakeDamageAnimMontage())
 	{
@@ -156,22 +147,6 @@ void ABaseEnemy::GetDamage(AActor* Actor)
 	{
 		AIController->ChangeIsPawnDamage(false);
 	}
-
-	if(!EndNiagaraEffectTimer.IsValid())
-	{
-		for (int32 i=0;i<MaterialsChangedForDamaged.Num();i++)
-		{
-			OldMaterials.Add(EnemyMesh->GetMaterial(i));
-			EnemyMesh->SetMaterial(i,MaterialsChangedForDamaged[i]);
-		}
-	
-		if( NewNiagaraSystem && SmokeNiagaraComponent->GetAsset())
-		{
-			OldNiagaraSystem=SmokeNiagaraComponent->GetAsset();
-			SmokeNiagaraComponent->SetAsset(NewNiagaraSystem);
-		}
-	}
-	GetWorld()->GetTimerManager().SetTimer(EndNiagaraEffectTimer,this,&ABaseEnemy::EndNiagaraEffect,TimeForEndNiagara);
 
 
 	const auto DamageActorForwardVector = Actor->GetActorForwardVector();
@@ -191,28 +166,9 @@ void ABaseEnemy::GetDamage(AActor* Actor)
 	GetWorld()->GetTimerManager().SetTimer(EndDamageEffectTimer,this,&ABaseEnemy::EndDamageEffects,TimeForWaitDamage);
 }
 
-
-
-void ABaseEnemy::EndNiagaraEffect()
-{
-	const auto EnemyMesh= GetMesh();
-	if(!EnemyMesh) return;
-
-	for (int32 i=0;i<OldMaterials.Num();i++)
-	{
-		EnemyMesh->SetMaterial(i,OldMaterials[i]);
-	}
-	OldMaterials.Empty();
-
-	if(OldNiagaraSystem)
-	{
-		SmokeNiagaraComponent->SetAsset(OldNiagaraSystem);
-	}
-	GetWorld()->GetTimerManager().ClearTimer(EndNiagaraEffectTimer);
-}
-
 void ABaseEnemy::EndDamageEffects()
 {
+	IsTakenDamage=false;
 	if(const auto AIController = Cast<ABaseEnemyAIController>(GetController()))
 	{
 		AIController->ChangeIsPawnDamage(true);

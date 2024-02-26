@@ -13,6 +13,6 @@ class PSYCHO_API AScalpelWeapon : public ABaseWeapon
 	GENERATED_BODY()
 public:
 	AScalpelWeapon();
-	virtual void EnablePhysics(FVector NewLocation) override;
-	virtual void DisablePhysics() override;
+	virtual void DettachWeapon(FVector NewLocation) override;
+	virtual void AttachWeapon() override;
 };

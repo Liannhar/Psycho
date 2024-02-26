@@ -1,7 +1,9 @@
 ﻿#pragma once
+#include "Templates/SubclassOf.h"
 #include "CoreTypes.generated.h"
 
 class ABaseWeapon;
+class AEnemySpawner;
 
 //Типы атак
 UENUM(BlueprintType)
@@ -69,4 +71,16 @@ struct FCheckPointSave
 	FVector CheckPointLocation=FVector(0.0f,0.0f,0.0f);
 	UPROPERTY(EditAnywhere,Category="Save CheckPoint")
 	bool CheckPointNotUsed=false;
+};
+
+//Волны Спавнеров мобов
+USTRUCT(BlueprintType)
+struct FWaves
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere,Category="Enemy")
+	TArray<AEnemySpawner*> EnemySpawners;
+	UPROPERTY(EditAnywhere,Category="Enemy")
+	int32 HowManyEnemiesCanBeInFront=0;
 };
