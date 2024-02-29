@@ -6,6 +6,7 @@
 #include "Characters/Enemies/BaseEnemy.h"
 #include "SmokedEnemy.generated.h"
 
+class AEnemySmokeActorEffectNiagara;
 /**
  * 
  */
@@ -25,13 +26,12 @@ protected:
 	UNiagaraComponent* SecondSmokeNiagaraComponent;
 	UPROPERTY(EditAnywhere,Category="Niagara")
 	UNiagaraComponent* ThirdSmokeNiagaraComponent;
-	UPROPERTY()
-	UNiagaraSystem* OldNiagaraSystem;
-	UPROPERTY()
-	FVector OldNiagaraLocation;
+	UPROPERTY(EditAnywhere,Category="Effect")
+	TSubclassOf<AEnemySmokeActorEffectNiagara> EnemySmokeDeathEffect;
 
-	virtual void GetDamage(AActor* Actor) override;
+	virtual void GetDamage(AActor* Actor,const UDamageType* DamageType) override;
 
+	virtual void Death() override;
 	void EndNiagaraEffect();
 	UPROPERTY(EditAnywhere,Category="Damage")
 	float TimeForEndNiagara=2.0f;

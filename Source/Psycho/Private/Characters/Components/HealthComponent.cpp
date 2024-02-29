@@ -4,7 +4,7 @@
 #include "Characters/Components/HealthComponent.h"
 
 #include "BaseCharacter.h"
-#include "DamageType/HeavyAttackDamageType.h"
+#include "DamageType/AttackDamageType.h"
 #include "Math/UnrealMathUtility.h"
 
 // Sets default values for this component's properties
@@ -73,22 +73,12 @@ void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDa
 	OnTakeDamage.Broadcast();
 	CalculatePercentHP();
 
-
-	if(Cast<UHeavyAttackDamageType>(DamageType))
-	{
-		LastAttackIsHeavy=true;
-	}
-	else
-	{
-		LastAttackIsHeavy=false;
-	}
+	
 	
 	const auto BaseCharacter = Cast<ABaseCharacter>(DamagedActor);
-
 	if(BaseCharacter && DamageCauser != GetOwner())
 	{
-		BaseCharacter->GetDamage(DamageCauser);
-		
+		BaseCharacter->GetDamage(DamageCauser,DamageType);
 	}
 	if (CurrentHP == 0)
 	{ 
@@ -105,6 +95,13 @@ void UHealthComponent::RestoreHP(float RestoreAmount)
 {
 	CurrentHP = FMath::Clamp(CurrentHP + RestoreAmount, 0, MaxHP);
 	CalculatePercentHP();
+}
+
+UAnimMontage* UHealthComponent::GetTakeDamageAnimMontage(const int32 Direction) const
+{
+	if(!TakingDamageBackAnimMontage && !TakingDamageLeftAnimMontage && !TakingDamageRightAnimMontage )
+		return nullptr;
+	return Direction==1 ? TakingDamageLeftAnimMontage : Direction==-1 ? TakingDamageRightAnimMontage : TakingDamageBackAnimMontage;
 }
 
 void UHealthComponent::OnDied()

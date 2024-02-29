@@ -25,6 +25,8 @@ struct FBlueprintMontageAttack
 	UAnimMontage* AttackMontage;
 	UPROPERTY(EditAnywhere)
 	bool PreviosAttackNeedTiming;
+	UPROPERTY(EditAnywhere)
+	float DamageDistance = 10.0f;
 	
 };
 //Структура из массива типа атак и Анимации атаки

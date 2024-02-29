@@ -24,10 +24,13 @@ protected:
 	
 	UFUNCTION()
 	void ApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
-
-
+	
 	UPROPERTY(EditAnywhere,Category="Animations")
-	UAnimMontage* TakingDamageAnimMontage;
+	UAnimMontage* TakingDamageBackAnimMontage;
+	UPROPERTY(EditAnywhere,Category="Animations")
+	UAnimMontage* TakingDamageLeftAnimMontage;
+	UPROPERTY(EditAnywhere,Category="Animations")
+	UAnimMontage* TakingDamageRightAnimMontage;
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Values, meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
 	float MaxHP=100.0f;
@@ -76,6 +79,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RestoreHP(float RestoreAmount);
 
-	UAnimMontage* GetTakeDamageAnimMontage() const {return TakingDamageAnimMontage;}
+	UAnimMontage* GetTakeDamageAnimMontage(const int32 Direction) const;
 };
 

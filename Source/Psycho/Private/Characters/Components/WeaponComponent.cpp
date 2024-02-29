@@ -18,7 +18,11 @@ void UWeaponComponent::ChangeWeapon(ABaseWeapon* NewWeapon,TSubclassOf<ABaseWeap
 {
 	if(const auto BaseCharacter = GetCharacter())
 	{
-		DetachWeaponOfSocket(CurrentWeapon,NewWeapon->GetActorLocation());
+		if(CurrentWeapon)
+		{
+			DetachWeaponOfSocket(CurrentWeapon,NewWeapon->GetActorLocation());
+			CurrentWeapon->DettachWeapon(NewWeapon->GetActorLocation());
+		}
 		CurrentWeapon=NewWeapon;
 		CurrentClassOfWeapon = NewClassOfWeapon;
 		NewWeapon->AttachWeapon();

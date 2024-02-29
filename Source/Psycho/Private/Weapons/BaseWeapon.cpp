@@ -20,13 +20,13 @@ ABaseWeapon::ABaseWeapon()
 void ABaseWeapon::DettachWeapon(FVector NewLocation)
 {
 	//SkeletalMeshComponent->SetSimulatePhysics(true);
-	CollisionComponent->Activate();
+	CollisionComponent->SetCollisionResponseToChannel(ECC_Visibility,ECR_Block);
 }
 
 void ABaseWeapon::AttachWeapon()
 {
 	//SkeletalMeshComponent->SetSimulatePhysics(false);
-	CollisionComponent->Deactivate();
+	CollisionComponent->SetCollisionResponseToChannel(ECC_Visibility,ECR_Ignore);
 }
 
 void ABaseWeapon::BeginPlay()

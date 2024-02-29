@@ -7,10 +7,9 @@
 #include "BaseEnemyAIController.h"
 #include "Psycho/PsychoGameModeBase.h"
 #include "HealthComponent.h"
+#include "MotionWarpingComponent.h"
 #include "WeaponComponent.h"
 #include "Weapons/BaseWeapon.h"
-#include "NiagaraComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/DecalComponent.h"
 #include "Engine/DecalActor.h"
@@ -111,20 +110,19 @@ void ABaseEnemy::DamageDecalCreate(bool ActorRotationIsHead)
 	}
 	else
 	{
-		RandomY = FMath::FRandRange(DamageDecalLocationYLeftLimitBack,DamageDecalLocationYRightLimitBack);	
+		RandomY=FMath::FRandRange(DamageDecalLocationYLeftLimitBack,DamageDecalLocationYRightLimitBack);	
 	}
 	
 	const auto RandomRoll = FMath::FRandRange(0.0f,360.0f);
-	ADecalActor* decal = GetWorld()->SpawnActor<ADecalActor>(FVector(DamageDecalLocationXLimit,RandomY,RandomZ), FRotator(0.0f,0.0f,RandomRoll));
-	if (decal)
+	if (ADecalActor* Decal = GetWorld()->SpawnActor<ADecalActor>(FVector(DamageDecalLocationXLimit,RandomY,RandomZ), FRotator(0.0f,0.0f,RandomRoll)))
 	{
-		decal->SetDecalMaterial(DamageDecalMaterialInterface);
-		decal->SetLifeSpan(5.0f);
-		decal->GetDecal()->DecalSize = DecalSizeVector;
-		decal->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
-		decal->SetActorRelativeLocation(FVector(DamageDecalLocationXLimit,RandomY,RandomZ)); 
-		UE_LOG(LogTemp,Display,TEXT("X%fY%fZ%f"),decal->GetActorLocation().X,decal->GetActorLocation().Y,decal->GetActorLocation().Z);
-		UE_LOG(LogTemp,Display,TEXT("Relative X%fY%fZ%f"),DamageDecalLocationXLimit,RandomY,RandomZ);
+		Decal->SetDecalMaterial(DamageDecalMaterialInterface);
+		Decal->SetLifeSpan(5.0f);
+		Decal->GetDecal()->DecalSize = DecalSizeVector;
+		Decal->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
+		Decal->SetActorRelativeLocation(FVector(DamageDecalLocationXLimit,RandomY,RandomZ)); 
+		UE_LOG(LogTemp,Display,TEXT("X %f Y %f Z %f"),Decal->GetActorLocation().X,Decal->GetActorLocation().Y,Decal->GetActorLocation().Z);
+		UE_LOG(LogTemp,Display,TEXT("Relative X %f Y %f Z %f"),DamageDecalLocationXLimit,RandomY,RandomZ);
 	}
 	else
 	{
@@ -132,36 +130,49 @@ void ABaseEnemy::DamageDecalCreate(bool ActorRotationIsHead)
 	}
 }
 
-void ABaseEnemy::GetDamage(AActor* Actor)
+void ABaseEnemy::GetDamage(AActor* Actor,const UDamageType* DamageType)
 {
-	Super::GetDamage(Actor);
+	Super::GetDamage(Actor,DamageType);
 
 	IsTakenDamage=true;
-	
-	if(HealthComponent->GetTakeDamageAnimMontage())
-	{
-		PlayAnimMontage(HealthComponent->GetTakeDamageAnimMontage());
-	}
 	
 	if(const auto AIController = Cast<ABaseEnemyAIController>(GetController()))
 	{
 		AIController->ChangeIsPawnDamage(false);
 	}
-
-
+	AttackDirection = 0;
+	DistanceOfRepulsion = 0.0f;
+	if(const auto Player = Cast<APlayerCharacter>(Actor))
+	{
+		AttackDirection = Player->GetAttackComponent()->GetCurrentAttackDirection();
+		DistanceOfRepulsion = Player->GetAttackComponent()->GetCurrentAttackRepulsion();
+	}
+	
 	const auto DamageActorForwardVector = Actor->GetActorForwardVector();
 	const auto ActorForwardVector = GetActorForwardVector();
+	FTransform HitReactTransform = FTransform();
 	if(const auto DotProduct = FVector::DotProduct(DamageActorForwardVector, ActorForwardVector); DotProduct>0.0f)
-	{
+	{	
 		DamageDecalCreate(false);
-		SetActorLocation(GetActorLocation()+(ActorForwardVector+DamageActorForwardVector)*DistanceOfRepulsion);
 	}
 	else
 	{
 		DamageDecalCreate(true);
-		SetActorLocation(GetActorLocation()+(-1*ActorForwardVector+DamageActorForwardVector)*DistanceOfRepulsion);
+		if(AttackDirection!=0)
+		{	
+			const auto NewLocation = FVector(GetActorLocation().X+GetActorRightVector().X*AttackDirection*DistanceOfRepulsion*10.0f,GetActorLocation().Y+GetActorRightVector().Y*AttackDirection*DistanceOfRepulsion*10.0f,GetActorLocation().Z);
+			HitReactTransform.SetLocation(NewLocation);
+			HitReactTransform.SetRotation(GetActorRotation().Quaternion());
+		}
+		else
+		{
+			const auto NewLocation = GetActorLocation()+(ActorForwardVector+DamageActorForwardVector)*DistanceOfRepulsion;
+			HitReactTransform.SetLocation(NewLocation);
+			HitReactTransform.SetRotation(GetActorRotation().Quaternion());
+		}
 	}
-	
+	MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform("React",HitReactTransform);
+	PlayAnimMontage(HealthComponent->GetTakeDamageAnimMontage(AttackDirection));	
 	if(!GetWorld()) return;
 	GetWorld()->GetTimerManager().SetTimer(EndDamageEffectTimer,this,&ABaseEnemy::EndDamageEffects,TimeForWaitDamage);
 }
@@ -197,7 +208,6 @@ void ABaseEnemy::Death()
 	const auto PsychoGameMode = Cast<APsychoGameModeBase>(GameMode);
 	PsychoGameMode->ChangeEnemiesCount(this);
 	WeaponComponent->GetCurrentWeapon()->Destroy();
-	Destroy();
 }
 
 

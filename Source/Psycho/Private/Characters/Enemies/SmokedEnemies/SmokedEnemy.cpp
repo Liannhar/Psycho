@@ -3,6 +3,7 @@
 
 #include "Characters/Enemies/SmokedEnemies/SmokedEnemy.h"
 
+#include "EnemySmokeActorEffectNiagara.h"
 #include "NiagaraComponent.h"
 
 ASmokedEnemy::ASmokedEnemy()
@@ -21,9 +22,9 @@ void ASmokedEnemy::BeginPlay()
 	ThirdSmokeNiagaraComponent->SetVisibility(false);
 }
 
-void ASmokedEnemy::GetDamage(AActor* Actor)
+void ASmokedEnemy::GetDamage(AActor* Actor,const UDamageType* DamageType)
 {
-	Super::GetDamage(Actor);
+	Super::GetDamage(Actor,DamageType);
 	const auto EnemyMesh=GetMesh();
 	if(!EnemyMesh) return;
 	if(!EndNiagaraEffectTimer.IsValid())
@@ -33,6 +34,17 @@ void ASmokedEnemy::GetDamage(AActor* Actor)
 		ThirdSmokeNiagaraComponent->SetVisibility(true);
 	}
 	GetWorld()->GetTimerManager().SetTimer(EndNiagaraEffectTimer,this,&ASmokedEnemy::EndNiagaraEffect,TimeForEndNiagara);
+}
+
+void ASmokedEnemy::Death()
+{
+	Super::Death();
+	if(GetWorld())
+	{
+		GetWorld()->SpawnActor<AEnemySmokeActorEffectNiagara>(EnemySmokeDeathEffect,GetActorLocation(), GetActorRotation());
+	}
+	
+	Destroy();
 }
 
 void ASmokedEnemy::EndNiagaraEffect()

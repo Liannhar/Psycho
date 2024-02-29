@@ -16,5 +16,6 @@ class PSYCHO_API UEndEffectFirstBossBTTaskNode : public UBTTaskNode
 public:
 	UEndEffectFirstBossBTTaskNode();
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="AI")
+	FBlackboardKeySelector IsNotRangeAttack;
 };

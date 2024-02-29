@@ -59,10 +59,17 @@ public:
 	
 	//Номер текущего комбо
 	int32 CurrentComboAttack = 0;
+	
+	int32 GetCurrentAttackDirection() const {return CurrentAttackDirection;}
+	float GetCurrentAttackRepulsion() const {return CurrentAttackRepulsion;}
 protected:
 	virtual void BeginPlay() override;
 	//массив комбо
 	TArray<FCombination> Combos;
+
+	//Угол между векторами
+	static float GetAngle(const FVector& RightVector, const FVector& AnotherVector);
+
 	//скорость поворота
 	UPROPERTY(EditAnywhere,Category="Attack")
 	float RotationSpeed = 60.0f;
@@ -96,6 +103,10 @@ protected:
 	void ActiveAttack(FCombination Attack);
 	//Цель для атаки
 	void AttackTarget() const;
+	//Направление атаки при нанесение урона
+	int32 CurrentAttackDirection=0;
+	//Отталкивание данной атаки
+	float CurrentAttackRepulsion=0.0f;
 
 	void ChooseNewCurrentTheNearestDamagedCharacter(ABaseCharacter* DamagedCharacter, const ABaseCharacter* ThisCharacter);
 	
@@ -119,8 +130,14 @@ protected:
 	void EndSprintDodge();
 
 	FInputActionValue Value;
-
-	static int32 CompareSign(int First, int Second);
-
 	
+	template<typename T> static int32 CompareSign(T, T);
+
+	int32 CheckAngle(float Angle);
 };
+
+template <typename T>
+int32 UAttackComponent::CompareSign(T First, T Second)
+{
+	return (First > Second) ? 1 : ((First < Second) ? -1 : 0);
+}

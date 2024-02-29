@@ -12,7 +12,7 @@
 #include "MotionWarpingComponent.h"
 #include "P_PlayerController.h"
 #include "Components/DecalComponent.h"
-#include "DamageType/HeavyAttackDamageType.h"
+#include "DamageType/AttackDamageType.h"
 #include "Engine/DecalActor.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -41,10 +41,7 @@ void UAttackComponent::StartComboAttack(EComboInput Input)
 					ActiveAttack(Combos[i]);
 					break;
 				}
-				else
-				{
-					continue;
-				}
+				continue;
 			}
 			CurrentComboAttack=i;
 			ActiveAttack(Combos[i]);
@@ -83,6 +80,10 @@ void UAttackComponent::SetCombo()
 //Используется в AnimNotifyDamage для нанесения урона
 void UAttackComponent::Damage()
 {
+	if(IsLightAttackUse)
+	{
+		return;
+	}
 	const auto ThisCharacter = GetCharacter();
 	if(!ThisCharacter) return ;
 	const auto BaseCharacter = Cast<ABaseCharacter>(ThisCharacter);
@@ -110,13 +111,18 @@ void UAttackComponent::Damage()
 	}
 	else
 	{
-		const auto SignX = CompareSign(SkeletalWeapon->GetSocketLocation("EndAttack").X,SkeletalWeapon->GetSocketLocation("StartAttack").X);
+		int32 SignX = CompareSign(SkeletalWeapon->GetSocketLocation("EndAttack").X,SkeletalWeapon->GetSocketLocation("StartAttack").X);
 		const auto SignY =CompareSign(SkeletalWeapon->GetSocketLocation("EndAttack").Y,SkeletalWeapon->GetSocketLocation("StartAttack").Y);
-		const auto SignZ = CompareSign(SkeletalWeapon->GetSocketLocation("EndAttack").Z,SkeletalWeapon->GetSocketLocation("StartAttack").Z);
 		Start=SkeletalWeapon->GetSocketLocation("StartAttack");
 		End=FVector(SkeletalWeapon->GetSocketLocation("EndAttack").X+SignX*BaseCharacter->LengthLineAttack,SkeletalWeapon->GetSocketLocation("EndAttack").Y+SignY*BaseCharacter->LengthLineAttack,SkeletalWeapon->GetSocketLocation("EndAttack").Z);
 		ObjectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
 	}
+
+	const auto Angle = GetAngle(BaseCharacter->GetActorRightVector(),End-Start);
+	CurrentAttackDirection =CheckAngle(Angle);
+	
+	if(CurrentComboAttack<Combos.Num() && AttackIndex<Combos[CurrentComboAttack].Attack.Num())
+		CurrentAttackRepulsion = Combos[CurrentComboAttack].Attack[AttackIndex].DamageDistance;
 	
 	switch (CurrentComboInput)
 	{
@@ -124,10 +130,6 @@ void UAttackComponent::Damage()
 		break;
 	case LightAttack:
 		{
-			if(IsLightAttackUse)
-			{
-				break;
-			}
 			FHitResult HitResult;
 			if(UKismetSystemLibrary::SphereTraceSingleForObjects(GetWorld(), Start, End, SphereDamageRadius, ObjectTypesArray, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResult, true))
 			{
@@ -164,7 +166,7 @@ void UAttackComponent::Damage()
 					UGameplayStatics::ApplyDamage(DamagedCharacter,
 						Weapon->GetLightAttackDamage()* AttackDamage,
 						ThisCharacter->GetController(),
-						ThisCharacter,UDamageType::StaticClass());
+						ThisCharacter,UAttackDamageType::StaticClass());
 				}
 			}
 			break;
@@ -201,22 +203,18 @@ void UAttackComponent::Damage()
 					
 					
 						ChooseNewCurrentTheNearestDamagedCharacter(DamagedCharacter,ThisCharacter);
-				
+						
 						UGameplayStatics::ApplyDamage(DamagedCharacter,
 							Weapon->GetHeavyAttackDamage()* AttackDamage,
 							ThisCharacter->GetController(),
 							ThisCharacter,
-							UHeavyAttackDamageType::StaticClass());
+							UAttackDamageType::StaticClass());
 					}
 				}
 			}
 			break;	
 		}
 	}
-}
-
-int32 UAttackComponent::CompareSign(const int First, const int Second) {
-	return (First > Second) ? 1 : ((First < Second) ? -1 : 0);
 }
 
 void UAttackComponent::ChooseNewCurrentTheNearestDamagedCharacter(ABaseCharacter* DamagedCharacter, const ABaseCharacter* ThisCharacter)
@@ -355,6 +353,8 @@ void UAttackComponent::EndSprintDodge()
 	
 }
 
+
+
 void UAttackComponent::Dodge()
 {
 	if(DodgeTimer.IsValid()) return;	
@@ -389,9 +389,7 @@ void UAttackComponent::SprintDodge(const FInputActionValue& NewValue)
 
 	const auto Controller = Cast<AP_PlayerController>(ThisCharacter->GetController());
 	if(!Controller) return;
-
 	
-
 	if (UAnimInstance* AnimInstance = ThisCharacter->GetMesh()->GetAnimInstance())
 	{
 		AnimInstance->Montage_Stop(0.0f);
@@ -411,6 +409,15 @@ void UAttackComponent::SprintDodge(const FInputActionValue& NewValue)
 	
 }
 
+float UAttackComponent::GetAngle(const FVector& RightVector, const FVector& AnotherVector)
+{
+	return FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(RightVector, AnotherVector.GetSafeNormal())));
+}
+
+int32 UAttackComponent::CheckAngle(float Angle)
+{
+	return (Angle > 95.0f) ? 1 : ((Angle<85.0f) ? -1 : 0);
+}
 
 float UAttackComponent::RotationAngle(const ABaseCharacter* BaseCharacter) const
 {
@@ -435,6 +442,8 @@ void UAttackComponent::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
+
 
 ABaseCharacter* UAttackComponent::GetCharacter() const
 {

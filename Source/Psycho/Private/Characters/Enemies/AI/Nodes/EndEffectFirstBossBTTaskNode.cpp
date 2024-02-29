@@ -22,6 +22,7 @@ EBTNodeResult::Type UEndEffectFirstBossBTTaskNode::ExecuteTask(UBehaviorTreeComp
 	if(const auto Enemy = Cast<AFirstBossEnemy>(Pawn))
 	{
 		Enemy->EndEffectMoving();
+		
 		return EBTNodeResult::Succeeded;
 	}
 	

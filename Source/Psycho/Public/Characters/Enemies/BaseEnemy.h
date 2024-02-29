@@ -9,7 +9,6 @@
 
 class UNiagaraComponent;
 class UNiagaraSystem;
-
 class UBehaviorTree;
 
 
@@ -21,6 +20,8 @@ class PSYCHO_API ABaseEnemy : public ABaseCharacter
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Collision", meta = (AllowPrivateAccess = "true"))
 	class UBoxComponent* EnemyChannelCollision;
+	
+
 public:
 	ABaseEnemy();
 	
@@ -53,7 +54,7 @@ protected:
 	UPROPERTY()
 	bool IsTakenDamage = false;
 
-	virtual void GetDamage(AActor* Actor) override;
+	virtual void GetDamage(AActor* Actor,const UDamageType* DamageType) override;
 
 	UPROPERTY()
 	AController* OwnController;
@@ -78,7 +79,7 @@ protected:
 	
 	FTimerHandle WaitNextAttemptAttack;
 	
-	
+	int32 AttackDirection=0;
 
 	FTimerHandle EndDamageEffectTimer;
 	
@@ -88,9 +89,6 @@ protected:
 
 	void EndDamageEffects();
 	
-
-	
-
 	void DamageDecalCreate(bool ActorRotationIsHead);
 	UPROPERTY(EditAnywhere,Category="Decal")
 	float DamageDecalLocationZUPLimit = 112.0f;

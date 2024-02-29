@@ -39,7 +39,7 @@ protected:
 	UMotionWarpingComponent* MotionWarpingComponent;
 
 public:	
-	virtual void GetDamage(AActor* Actor);
+	virtual void GetDamage(AActor* Actor,const UDamageType* DamageType);
 	UHealthComponent* GetHealthComponent() const { return HealthComponent; };
 	UAttackComponent* GetAttackComponent() const { return AttackComponent; };
 	UWeaponComponent* GetWeaponComponent() const { return WeaponComponent; };

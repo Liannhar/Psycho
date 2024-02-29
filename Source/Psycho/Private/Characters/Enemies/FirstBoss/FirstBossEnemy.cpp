@@ -9,7 +9,6 @@
 void AFirstBossEnemy::StartEffectMoving(const int32 NewStaminaCost)
 {
 	if(ChangeStaminaCost(NewStaminaCost)) return;
-	UE_LOG(LogTemp,Display,TEXT("StartEffect"));
 	if(GetWorld())
 	{
 		GetWorld()->GetTimerManager().SetTimer(EffectTImer,this,&AFirstBossEnemy::MakeEffect,EffectTime,true);
@@ -90,4 +89,10 @@ void AFirstBossEnemy::RecoverStamina()
 		GetWorld()->GetTimerManager().ClearTimer(StaminaRecoverTimer);	
 	}
 	
+}
+
+void AFirstBossEnemy::Death()
+{
+	Super::Death();
+	Destroy();
 }

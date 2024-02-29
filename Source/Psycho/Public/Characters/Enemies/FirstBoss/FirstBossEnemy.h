@@ -48,6 +48,8 @@ protected:
 	int32 CurrentStamina=0;
 
 	void RecoverStamina();
+
+	virtual void Death() override;
 	
 	UPROPERTY(EditAnywhere,Category="Effect")
 	TSubclassOf<AFirstBossEffectActor> CurrentEffectActor;

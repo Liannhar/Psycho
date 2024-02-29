@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "BaseEnemy.h"
 #include "FirstBossEnemy.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 UUseEffectsFirstBossBTTaskNode::UUseEffectsFirstBossBTTaskNode()
 {
@@ -23,6 +24,7 @@ EBTNodeResult::Type UUseEffectsFirstBossBTTaskNode::ExecuteTask(UBehaviorTreeCom
 	if(const auto Enemy = Cast<AFirstBossEnemy>(Pawn))
 	{
 		Enemy->StartEffectMoving(StaminaCost);
+		
 		return EBTNodeResult::Succeeded;
 	}
 	

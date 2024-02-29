@@ -32,5 +32,5 @@ protected:
 	FTimerHandle LiveTimerHandle;
 
 	UPROPERTY(EditAnywhere,Category="Live")
-	float LiveTime=3.0f;
+	float LiveTime=1.0f;
 };

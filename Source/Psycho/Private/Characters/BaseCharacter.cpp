@@ -45,7 +45,7 @@ void ABaseCharacter::Death()
 }
 
 //здесь персонаж реагирует на урон
-void ABaseCharacter::GetDamage(AActor* Actor)
+void ABaseCharacter::GetDamage(AActor* Actor,const UDamageType* DamageType)
 {
 	/*//PlayAnimMontage();// Анимация получения урона
 	*/
