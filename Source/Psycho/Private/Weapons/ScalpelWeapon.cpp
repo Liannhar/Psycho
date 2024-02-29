@@ -14,7 +14,7 @@ void AScalpelWeapon::DettachWeapon(FVector NewLocation)
 	Super::DettachWeapon(NewLocation);
 	SetActorLocation(NewLocation);
 	SetActorRotation(FRotator(0.0f,0.0f,0.0f));
-	SkeletalMeshComponent->SetWorldScale3D(FVector(0.3f,0.3f,0.3f));
+	
 }
 
 void AScalpelWeapon::AttachWeapon()
