@@ -27,6 +27,7 @@ EBTNodeResult::Type USpawnDecalBTTaskNode::ExecuteTask(UBehaviorTreeComponent& O
 			{
 				NewDecalActor->SetDecalMaterial(DecalMaterial);
 			}
+			NewDecalActor->SetActorLocation(FVector(NewDecalActor->GetActorLocation().X,NewDecalActor->GetActorLocation().Y,NewDecalActor->GetActorLocation().Z-100.0f)); 
 			NewDecalActor->GetDecal()->DecalSize = DecalSize;
 		}
 	}

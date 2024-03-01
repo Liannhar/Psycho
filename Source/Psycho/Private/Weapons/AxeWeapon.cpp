@@ -9,17 +9,14 @@ AAxeWeapon::AAxeWeapon()
 	LightAttackDamage = 20.0f;
 }
 
-void AAxeWeapon::EnablePhysics(FVector NewLocation)
+void AAxeWeapon::AttachWeapon()
 {
-	Super::EnablePhysics(NewLocation);
+	Super::AttachWeapon();
+}
+
+void AAxeWeapon::DettachWeapon(FVector NewLocation)
+{
+	Super::DettachWeapon(NewLocation);
 	SetActorLocation(NewLocation);
-	SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
-	
+	SetActorRotation(FRotator(0.0f,0.0f,0.0f));
 }
-
-void AAxeWeapon::DisablePhysics()
-{
-	Super::DisablePhysics();
-	SkeletalMeshComponent->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
-}
-

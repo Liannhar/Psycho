@@ -13,6 +13,8 @@ class PSYCHO_API AAxeWeapon : public ABaseWeapon
 	GENERATED_BODY()
 public:
 	AAxeWeapon();
-	virtual void EnablePhysics(FVector NewLocation) override;
-	virtual void DisablePhysics() override;
+	virtual void AttachWeapon() override;
+	virtual void DettachWeapon(FVector NewLocation) override;
 };
+
+
