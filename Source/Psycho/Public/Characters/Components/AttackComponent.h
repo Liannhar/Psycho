@@ -115,4 +115,4 @@ protected:
 	void EndSprintDodge();
 
 	FInputActionValue Value;
-};
+}		;

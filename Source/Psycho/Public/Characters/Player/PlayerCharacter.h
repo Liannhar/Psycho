@@ -24,11 +24,13 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pills, meta = (AllowPrivateAccess = "true"))
 	class UPillsComponent* PillsComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Inventory, meta = (AllowPrivateAccess = "true"))
+	class UInventoryComponent* InventoryComponent;
+	
 	void EndStunPlayer();
 
 	FTimerHandle StunTimerHandle;
 
-	
 protected:
 	void LoadGame();
 	virtual void BeginPlay() override;
@@ -41,6 +43,8 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	FORCEINLINE class UPillsComponent* GetPillsComponent() const { return PillsComponent; }
+
+	FORCEINLINE class UInventoryComponent* GetInventoryComponent() const { return InventoryComponent; }
 
 	void StartStunPlayer(float TimeStun);
 

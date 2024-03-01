@@ -16,6 +16,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "InventorySystem/InventoryComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Psycho/PsychoGameModeBase.h"
 
@@ -68,6 +69,7 @@ APlayerCharacter::APlayerCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 
 	PillsComponent = CreateDefaultSubobject<UPillsComponent>(TEXT("Pills Component"));
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory Component"));
 }
 
 void APlayerCharacter::BeginPlay()
