@@ -37,7 +37,7 @@ public:
 
 	void PreparationsBeforeTheAttack(EComboInput Type,int32 NewCombo,int32 NewCount,bool NeedRandomCount=false);
 	void ChangeMaxSpeed(float NewSpeed) const;
-	void BlockAttack();
+	static void BlockAttack();
 
 	void Deactivate(float SpeedReduceMultiplier);
 	void Reactivate();

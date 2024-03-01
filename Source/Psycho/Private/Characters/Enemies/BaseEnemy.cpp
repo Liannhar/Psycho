@@ -5,6 +5,7 @@
 
 #include "AttackComponent.h"
 #include "BaseEnemyAIController.h"
+#include "FirstBossEnemy.h"
 #include "Psycho/PsychoGameModeBase.h"
 #include "HealthComponent.h"
 #include "MotionWarpingComponent.h"
@@ -42,11 +43,11 @@ void ABaseEnemy::Attack()
 	if(Distance>130.0f) return;
 	
 	const auto AttackIndex = AttackComponent->GetAttackIndex();
-	if(AttackIndex<=AttacksCount && !IsTakenDamage)
+	if(AttackIndex<=AttacksCount && (!IsTakenDamage || Cast<AFirstBossEnemy>(this)))
 	{
 		AttackComponent->CurrentComboAttack=ComboIndex;
 		AttackComponent->StartComboAttack(AttackType);
-		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndWait,1.0f);
+		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndWait,0.2f);
 		return;
 	}
 	GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,3.0f);	
@@ -54,7 +55,7 @@ void ABaseEnemy::Attack()
 
 void ABaseEnemy::EndWait()
 {
-	if(!IsTakenDamage)
+	if(!IsTakenDamage || Cast<AFirstBossEnemy>(this))
 	{
 		Attack();	
 	}	

@@ -42,7 +42,7 @@ protected:
 	float TimeStaminaRecover = 3.0f;
 	
 	UPROPERTY(EditAnywhere,Category="Stamina")
-	int32 MaxStamina=30;
+	int32 MaxStamina=40;
 
 	UPROPERTY(EditAnywhere,Category="Stamina")
 	int32 CurrentStamina=0;
