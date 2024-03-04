@@ -7,16 +7,6 @@
 
 class UAttackComponent;
 
-/*//При вызове Notify вызываем функцию Damage владельца MeshComp
-void UAttackDamageAnimNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
-{
-	Super::Notify(MeshComp, Animation);
-	if(const auto AttackComponent = GetAttackComponent(MeshComp))
-	{
-		AttackComponent->Damage();
-	}
-}*/
-
 
 void UAttackDamageAnimNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
 	float FrameDeltaTime)

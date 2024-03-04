@@ -17,11 +17,6 @@ UCLASS()
 class PSYCHO_API ABaseEnemy : public ABaseCharacter
 {
 	GENERATED_BODY()
-private:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Collision", meta = (AllowPrivateAccess = "true"))
-	class UBoxComponent* EnemyChannelCollision;
-	
-
 public:
 	ABaseEnemy();
 	
@@ -111,5 +106,7 @@ protected:
 
 	UPROPERTY(EditAnywhere,Category="Decal")
 	FVector DecalSizeVector =FVector(7.0f, 4.0f, 14.0f);
-	
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Collision", meta = (AllowPrivateAccess = "true"))
+	class UBoxComponent* EnemyChannelCollision;
 };

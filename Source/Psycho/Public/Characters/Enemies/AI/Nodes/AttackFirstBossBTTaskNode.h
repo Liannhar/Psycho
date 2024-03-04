@@ -27,6 +27,8 @@ public:
 	UPROPERTY(EditAnywhere,Category="Attacks")
 	int32 ComboIndex=0;
 
+	bool CurrentAttackEnd = true;
+	
 	UPROPERTY(EditAnywhere,Category="Attacks")
 	TEnumAsByte<EComboInput> ComboType;
 	

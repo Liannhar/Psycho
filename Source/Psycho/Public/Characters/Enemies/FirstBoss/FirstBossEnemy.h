@@ -23,6 +23,7 @@ public:
 	bool ChangeStaminaCost(int32 NewCost);
 	virtual void Attack() override;
 	void PreparationBossBeforeAttack(const EComboInput Type, const int32 NewCombo, const int32 NewCount, const bool NeedRandomCount,const int32 NewStaminaCost);
+	void DeathConfigurations();
 
 	int32 GetCurrentStamina() const {return CurrentStamina;}
 	void SetThatNeedBossKey(ADoorBaseActor* NewDoor){DoorThatNeedBossKey = NewDoor;}
@@ -30,7 +31,7 @@ protected:
 	FTimerHandle EffectTImer;
 	UPROPERTY(EditAnywhere,Category="Effect")
 	float EffectTime = 0.2f;
-
+	
 	int32 CurrentAttackStaminaCost = 0;
 	
 	void MakeEffect();
@@ -44,15 +45,20 @@ protected:
 	UPROPERTY(EditAnywhere,Category="Stamina")
 	float TimeStaminaRecover = 3.0f;
 	
-	UPROPERTY(EditAnywhere,Category="Stamina")
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="Stamina")
 	int32 MaxStamina=40;
 
-	UPROPERTY(EditAnywhere,Category="Stamina")
-	int32 CurrentStamina=0;
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="Stamina")
+	int32 CurrentStamina=40;
 
+	void UpdateStaminaAI();
 	void RecoverStamina();
 
 	virtual void Death() override;
+	void AfterDeath() const;
+	FTimerHandle DeathTimer;
+	UPROPERTY(EditAnywhere,Category="Death")
+	UAnimMontage* DeathAnimMontage;
 	
 	UPROPERTY(EditAnywhere,Category="Effect")
 	TSubclassOf<AFirstBossEffectActor> CurrentEffectActor;

@@ -47,7 +47,7 @@ void ABaseEnemy::Attack()
 	{
 		AttackComponent->CurrentComboAttack=ComboIndex;
 		AttackComponent->StartComboAttack(AttackType);
-		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndWait,0.2f);
+		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndWait,0.3f);
 		return;
 	}
 	GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,3.0f);	

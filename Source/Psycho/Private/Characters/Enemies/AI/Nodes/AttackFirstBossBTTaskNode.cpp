@@ -13,16 +13,30 @@ UAttackFirstBossBTTaskNode::UAttackFirstBossBTTaskNode()
 
 EBTNodeResult::Type UAttackFirstBossBTTaskNode::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
+	UE_LOG(LogTemp,Display,TEXT("%d"),CurrentAttackEnd?1:0);
 	const auto Controller = OwnerComp.GetAIOwner();
 	if(!Controller) return EBTNodeResult::Failed;
                    	
 	const auto Pawn = Controller->GetPawn();
 	if(!Pawn) return EBTNodeResult::Failed;
-                   
-	if(const auto Enemy = Cast<AFirstBossEnemy>(Pawn))
+	
+	const auto Enemy = Cast<AFirstBossEnemy>(Pawn);
+	
+	/*if(Enemy && !Enemy->GetNotIsAttackingNow() && !CurrentAttackEnd)
 	{
+		CurrentAttackEnd=true;
+		return EBTNodeResult::Succeeded;
+	}*/
+
+	UE_LOG(LogTemp,Display,TEXT("%d"),CurrentAttackEnd?1:0);
+	if(Enemy )
+	{
+		UE_LOG(LogTemp,Display,TEXT("%d"),CurrentAttackEnd?1:0);
 		Enemy->PreparationBossBeforeAttack(ComboType,ComboIndex,AttackCount-1,NeedRandom,StaminaCost);
 		Enemy->Attack();
+		CurrentAttackEnd=false;
+		UE_LOG(LogTemp,Display,TEXT("%d"),CurrentAttackEnd?1:0);
 	}
+	
 	return EBTNodeResult::Succeeded;
 }

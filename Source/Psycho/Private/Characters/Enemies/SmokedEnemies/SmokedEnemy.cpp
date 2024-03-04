@@ -3,8 +3,10 @@
 
 #include "Characters/Enemies/SmokedEnemies/SmokedEnemy.h"
 
+#include "BaseWeapon.h"
 #include "EnemySmokeActorEffectNiagara.h"
 #include "NiagaraComponent.h"
+#include "WeaponComponent.h"
 
 ASmokedEnemy::ASmokedEnemy()
 {
@@ -43,7 +45,7 @@ void ASmokedEnemy::Death()
 	{
 		GetWorld()->SpawnActor<AEnemySmokeActorEffectNiagara>(EnemySmokeDeathEffect,GetActorLocation(), GetActorRotation());
 	}
-	
+	WeaponComponent->GetCurrentWeapon()->Destroy();
 	Destroy();
 }
 

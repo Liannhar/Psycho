@@ -59,6 +59,8 @@ public:
 	
 	//Номер текущего комбо
 	int32 CurrentComboAttack = 0;
+
+	bool GetIsDodge() const {return IsDodge;}
 	
 	int32 GetCurrentAttackDirection() const {return CurrentAttackDirection;}
 	float GetCurrentAttackRepulsion() const {return CurrentAttackRepulsion;}
@@ -73,6 +75,9 @@ protected:
 	//скорость поворота
 	UPROPERTY(EditAnywhere,Category="Attack")
 	float RotationSpeed = 60.0f;
+
+	UPROPERTY(EditAnywhere,Category="Attack")
+	float LengthOfDodge = 350.0f;
 	
 	//радиус сферы урона
 	UPROPERTY(EditAnywhere,Category="Attack")
@@ -126,6 +131,7 @@ protected:
 	ABaseCharacter* CurrentTheNearestDamagedCharacter;
 
 	FTimerHandle DodgeTimer;
+	bool IsDodge=false;
 	void EndDodge();
 	void EndSprintDodge();
 

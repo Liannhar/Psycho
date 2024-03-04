@@ -147,7 +147,7 @@ void UAttackComponent::Damage()
 						}
 					}
 				
-					if(IsEnemy && Cast<ABaseEnemy>(DamagedCharacter))
+					if(IsEnemy && (Cast<ABaseEnemy>(DamagedCharacter) || DamagedCharacter->GetAttackComponent()->IsDodge))
 					{
 						return ;
 					}
@@ -395,7 +395,7 @@ void UAttackComponent::SprintDodge(const FInputActionValue& NewValue)
 		AnimInstance->Montage_Stop(0.0f);
 	}
 	EndAttackCombo();
-	const FRotator NewRotation = ThisCharacter->GetActorRotation() + FRotator(0.0f, RotationAngle(ThisCharacter)*100.0f, 0.0f);
+	const FRotator NewRotation = ThisCharacter->GetActorRotation() + FRotator(0.0f, RotationAngle(ThisCharacter)*RotationSpeed, 0.0f);
 	const float YawInRadians = FMath::DegreesToRadians(NewRotation.Yaw);
 	const FVector Direction = FVector(FMath::Cos(YawInRadians), FMath::Sin(YawInRadians), 0.0f).GetSafeNormal();
 	
@@ -407,12 +407,14 @@ void UAttackComponent::SprintDodge(const FInputActionValue& NewValue)
 	const auto Player = Cast<APlayerCharacter>(ThisCharacter);
 	if(!Player) return;
 	
-	const auto NewLocation = Direction* 200.0f;
-	
-	//ThisCharacter->AddActorWorldOffset(NewLocation);
-	//Value = NewValue;
-	//Controller->DodgeSprint(Value);
-	MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation("Dodge",NewLocation);
+	const auto NewLocation = ThisCharacter->GetActorLocation()+Direction* 500.0f;
+
+	auto NewTransform = FTransform();
+	NewTransform.SetLocation(NewLocation);
+	ThisCharacter->SetActorRotation(NewRotation);
+	NewTransform.SetRotation(ThisCharacter->GetActorRotation().Quaternion());
+
+	MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform("Dodge",NewTransform);
 	const auto TimeDodge = Player->PlayAnimMontage(Player->DodgeForward);
 	GetWorld()->GetTimerManager().SetTimer( DodgeTimer, this,&UAttackComponent::EndSprintDodge, TimeDodge,false);	
 	
