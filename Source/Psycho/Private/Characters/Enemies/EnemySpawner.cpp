@@ -21,6 +21,10 @@ void AEnemySpawner::BeginPlay()
 	Super::BeginPlay();
 }
 
+void AEnemySpawner::ActionWithEnemy(ABaseEnemy* Enemy)
+{
+}
+
 void AEnemySpawner::SpawnOneEnemy()
 {
 	if(!GetWorld()) return;
@@ -31,6 +35,7 @@ void AEnemySpawner::SpawnOneEnemy()
 		if(NewSpawnedEnemy)
 		{
 			const auto GameMode = Cast<APsychoGameModeBase>(GetWorld()->GetAuthGameMode());
+			ActionWithEnemy(NewSpawnedEnemy);
 			GameMode->ChangeEnemiesCount(NewSpawnedEnemy,true);
 			SpawnIndex+=1;
 		}

@@ -7,6 +7,8 @@
 #include "FirstBossEnemy.generated.h"
 
 
+class ADoorBaseActor;
+class AKeyActor;
 class AFirstBossAIController;
 class AFirstBossEffectActor;
 
@@ -23,6 +25,7 @@ public:
 	void PreparationBossBeforeAttack(const EComboInput Type, const int32 NewCombo, const int32 NewCount, const bool NeedRandomCount,const int32 NewStaminaCost);
 
 	int32 GetCurrentStamina() const {return CurrentStamina;}
+	void SetThatNeedBossKey(ADoorBaseActor* NewDoor){DoorThatNeedBossKey = NewDoor;}
 protected:
 	FTimerHandle EffectTImer;
 	UPROPERTY(EditAnywhere,Category="Effect")
@@ -53,4 +56,11 @@ protected:
 	
 	UPROPERTY(EditAnywhere,Category="Effect")
 	TSubclassOf<AFirstBossEffectActor> CurrentEffectActor;
+
+	UPROPERTY(EditAnywhere,Category="Key")
+	TSubclassOf<AKeyActor> CardKey;
+	UPROPERTY(EditAnywhere,Category="Key")
+	ADoorBaseActor* DoorThatNeedBossKey;
+	UPROPERTY(EditAnywhere,Category="Weapon")
+	TSubclassOf<ABaseWeapon> NewWeaponClassForPlayer;
 };

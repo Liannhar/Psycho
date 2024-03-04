@@ -28,6 +28,7 @@ protected:
 	FTimerHandle SpawnTimeHandle;
 	int32 SpawnIndex;
 
+	virtual void ActionWithEnemy(ABaseEnemy* Enemy);
 	void SpawnOneEnemy();
 public:	
 	UFUNCTION(BlueprintCallable)

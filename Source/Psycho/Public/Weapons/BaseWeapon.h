@@ -25,8 +25,11 @@ public:
 	TArray<FCombination> DifferentCombos;
 	virtual void DettachWeapon(FVector NewLocation);
 	virtual void AttachWeapon();
+	void EnablePhysics();
 	USkeletalMeshComponent* GetSkeletalMeshComponent(){return SkeletalMeshComponent;}
 protected:
+	void DisablePhysics();
+	
 	UPROPERTY(EditAnywhere,Category="Damage")
 	float LightAttackDamage;
 	UPROPERTY(EditAnywhere,Category="Damage")
@@ -36,4 +39,7 @@ protected:
 	UBoxComponent* CollisionComponent;
 	UPROPERTY(EditAnywhere,Category="Components")
 	USkeletalMeshComponent* SkeletalMeshComponent;
+
+	FTimerHandle PhysicsTimer;
+	float TimeForFall=2.0f;
 };

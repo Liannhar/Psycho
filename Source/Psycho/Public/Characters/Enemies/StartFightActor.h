@@ -30,7 +30,9 @@ public:
 	void ChangeNeedTrigger(bool NewBool){NeedTrigger=NewBool;}
 protected:
 	virtual void BeginPlay() override;
+	virtual void ActionInNotify(AActor* OtherActor);
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	void EndFight();
 	bool FightWasStarted = false;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Enemies")

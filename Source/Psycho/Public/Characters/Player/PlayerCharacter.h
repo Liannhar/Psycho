@@ -23,6 +23,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pills, meta = (AllowPrivateAccess = "true"))
 	class UPillsComponent* PillsComponent;
+	
 
 	void EndStunPlayer();
 
@@ -48,4 +49,6 @@ public:
 	UAnimMontage* DodgeRight;
 	UPROPERTY(EditAnywhere,Category="Dodge")
 	UAnimMontage* DodgeLeft;
+	UPROPERTY(EditAnywhere,Category="Dodge")
+	UAnimMontage* DodgeForward;
 };

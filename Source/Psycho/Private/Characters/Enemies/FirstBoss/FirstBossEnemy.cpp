@@ -3,8 +3,11 @@
 
 #include "Characters/Enemies/FirstBoss/FirstBossEnemy.h"
 
+#include "BaseWeapon.h"
 #include "FirstBossAIController.h"
 #include "FirstBossEffectActor.h"
+#include "KeyActor.h"
+#include "WeaponComponent.h"
 
 void AFirstBossEnemy::StartEffectMoving(const int32 NewStaminaCost)
 {
@@ -58,7 +61,6 @@ void AFirstBossEnemy::PreparationBossBeforeAttack(const EComboInput Type, const 
 
 bool AFirstBossEnemy::ChangeStaminaCost(const int32 NewCost)
 {
-	UE_LOG(LogTemp,Display,TEXT("CS: %d"),CurrentStamina);
 	if(CurrentStamina==0)
 	{
 		AIController = Cast<AFirstBossAIController>(OwnController);
@@ -69,13 +71,11 @@ bool AFirstBossEnemy::ChangeStaminaCost(const int32 NewCost)
 		}
 		return true;
 	}
-	else
-	{
-		AIController = Cast<AFirstBossAIController>(OwnController);
-		AIController->SetBoolCurrentStamina(CurrentStamina);
-		CurrentStamina = FMath::Clamp(CurrentStamina - NewCost, 0, MaxStamina);
-		return false;
-	}
+	
+	AIController = Cast<AFirstBossAIController>(OwnController);
+	AIController->SetBoolCurrentStamina(CurrentStamina);
+	CurrentStamina = FMath::Clamp(CurrentStamina - NewCost, 0, MaxStamina);
+	return false;
 }
 
 void AFirstBossEnemy::RecoverStamina()
@@ -93,6 +93,20 @@ void AFirstBossEnemy::RecoverStamina()
 
 void AFirstBossEnemy::Death()
 {
+	if(GetWorld())
+	{
+		const auto NewSpawnedKey = GetWorld()->SpawnActor<AKeyActor>(CardKey,GetActorLocation(), GetActorRotation());
+		if(NewSpawnedKey)
+		{
+			NewSpawnedKey->SetDoorThatNeedKey(DoorThatNeedBossKey);
+			NewSpawnedKey->EnablePhysics();
+		}
+		const auto NewSpawnedWeapon = GetWorld()->SpawnActor<ABaseWeapon>(NewWeaponClassForPlayer,WeaponComponent->GetCurrentWeapon()->GetActorLocation(), WeaponComponent->GetCurrentWeapon()->GetActorRotation());
+		if (NewSpawnedWeapon)
+		{
+			NewSpawnedWeapon->EnablePhysics();
+		}
+	}
 	Super::Death();
 	Destroy();
 }

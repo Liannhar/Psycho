@@ -16,6 +16,15 @@ AStartFightActor::AStartFightActor()
 	BoxComponent->SetBoxExtent(FVector(100.0f,100.0f,50.0f));
 }
 
+void AStartFightActor::EndFight()
+{
+	CurrentGameMode->SetFightStatus(false);
+	CurrentGameMode->Player=nullptr;
+	OpenDoor.Broadcast(true);
+	CurrentGameMode->SetCurrentStartFightActor(nullptr);
+	GetWorld()->GetTimerManager().ClearTimer(CheckEnemiesTimer);
+	Destroy();
+}
 
 
 void AStartFightActor::BeginPlay()
@@ -26,6 +35,11 @@ void AStartFightActor::BeginPlay()
 		CurrentGameMode=GameMode;
 	}
 }
+
+void AStartFightActor::ActionInNotify(AActor* OtherActor)
+{
+}
+
 
 void AStartFightActor::CheckEnemySpawners()
 {
@@ -43,12 +57,7 @@ void AStartFightActor::CheckEnemySpawners()
 		}
 		return;	
 	}
-	CurrentGameMode->SetFightStatus(false);
-	CurrentGameMode->Player=nullptr;
-	OpenDoor.Broadcast(true);
-	CurrentGameMode->SetCurrentStartFightActor(nullptr);
-	GetWorld()->GetTimerManager().ClearTimer(CheckEnemiesTimer);
-	Destroy();
+	EndFight();
 }
 
 void AStartFightActor::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -69,6 +78,7 @@ void AStartFightActor::NotifyActorBeginOverlap(AActor* OtherActor)
 		PlayerActor=OtherActor;
 		CurrentGameMode->Player=OtherActor;
 		OpenDoor.Broadcast(false);
+		ActionInNotify(OtherActor);
 		GetWorld()->GetTimerManager().SetTimer(CheckEnemiesTimer,this,&AStartFightActor::CheckEnemies,TimeForCheckEnemies,true);
 	}
 }

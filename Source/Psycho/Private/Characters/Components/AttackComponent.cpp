@@ -395,17 +395,26 @@ void UAttackComponent::SprintDodge(const FInputActionValue& NewValue)
 		AnimInstance->Montage_Stop(0.0f);
 	}
 	EndAttackCombo();
-	FRotator NewRotation = ThisCharacter->GetActorRotation() + FRotator(0.0f, RotationAngle(ThisCharacter)*100.0f, 0.0f);
-	float YawInRadians = FMath::DegreesToRadians(NewRotation.Yaw);
-	FVector Direction = FVector(FMath::Cos(YawInRadians), FMath::Sin(YawInRadians), 0.0f).GetSafeNormal();
+	const FRotator NewRotation = ThisCharacter->GetActorRotation() + FRotator(0.0f, RotationAngle(ThisCharacter)*100.0f, 0.0f);
+	const float YawInRadians = FMath::DegreesToRadians(NewRotation.Yaw);
+	const FVector Direction = FVector(FMath::Cos(YawInRadians), FMath::Sin(YawInRadians), 0.0f).GetSafeNormal();
 	
 	//const FVector NewDirection = FQuat(FRotator(0, RotationAngle(ThisCharacter), 0)) * ThisCharacter->GetActorForwardVector();
+	const auto Component = ThisCharacter->GetComponentByClass(UMotionWarpingComponent::StaticClass());
+	if(!Component) return;
+	const auto MotionWarpingComponent = Cast<UMotionWarpingComponent>(Component);
+	if(!MotionWarpingComponent) return;
+	const auto Player = Cast<APlayerCharacter>(ThisCharacter);
+	if(!Player) return;
 	
 	const auto NewLocation = Direction* 200.0f;
-	ThisCharacter->AddActorWorldOffset(NewLocation);
-	Value = NewValue;
+	
+	//ThisCharacter->AddActorWorldOffset(NewLocation);
+	//Value = NewValue;
 	//Controller->DodgeSprint(Value);
-	GetWorld()->GetTimerManager().SetTimer( DodgeTimer, this,&UAttackComponent::EndSprintDodge, 0.5f,false);	
+	MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation("Dodge",NewLocation);
+	const auto TimeDodge = Player->PlayAnimMontage(Player->DodgeForward);
+	GetWorld()->GetTimerManager().SetTimer( DodgeTimer, this,&UAttackComponent::EndSprintDodge, TimeDodge,false);	
 	
 }
 

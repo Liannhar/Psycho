@@ -35,6 +35,8 @@ public class Psycho : ModuleRules
 			"Psycho/Public/Structures",
 			"Psycho/Public/DataAssets",
 			"Psycho/Public/TriggerBoxes",
+			"Psycho/Public/Key",
+			"Psycho/Public/Door",
 		});
 
 		// Uncomment if you are using Slate UI

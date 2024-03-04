@@ -29,6 +29,20 @@ void ABaseWeapon::AttachWeapon()
 	CollisionComponent->SetCollisionResponseToChannel(ECC_Visibility,ECR_Ignore);
 }
 
+void ABaseWeapon::EnablePhysics()
+{
+	SkeletalMeshComponent->SetSimulatePhysics(true);
+	if(GetWorld())
+	{
+		GetWorld()->GetTimerManager().SetTimer(PhysicsTimer,this,&ABaseWeapon::DisablePhysics,TimeForFall);
+	}
+}
+
+void ABaseWeapon::DisablePhysics()
+{
+	SkeletalMeshComponent->SetSimulatePhysics(false);
+}
+
 void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
