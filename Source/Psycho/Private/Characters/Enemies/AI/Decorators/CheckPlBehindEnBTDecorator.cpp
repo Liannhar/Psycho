@@ -32,7 +32,7 @@ bool UCheckPlBehindEnBTDecorator::CalculateRawConditionValue(UBehaviorTreeCompon
 	return CheckPlayerBehindEnemy(Enemy,Player);
 }
 
-bool UCheckPlBehindEnBTDecorator::CheckPlayerBehindEnemy(const AActor* Enemy, const AActor* Player)
+bool UCheckPlBehindEnBTDecorator::CheckPlayerBehindEnemy(const ABaseEnemy* Enemy, const AActor* Player)
 {
 	const FVector EnemyLocation = Enemy->GetActorLocation();
 	const FVector PlayerLocation = Player->GetActorLocation();
@@ -46,11 +46,7 @@ bool UCheckPlBehindEnBTDecorator::CheckPlayerBehindEnemy(const AActor* Enemy, co
 	{
 		return true;
 	}
-	else
-	{
-		return false;
-	}
-	
+	return false;
 }
 
 

@@ -9,7 +9,7 @@ AScalpelWeapon::AScalpelWeapon()
 	LightAttackDamage = 10.0f;
 }
 
-void AScalpelWeapon::DettachWeapon(FVector NewLocation)
+void AScalpelWeapon::DettachWeapon(FVector& NewLocation)
 {
 	Super::DettachWeapon(NewLocation);
 	SetActorLocation(NewLocation);

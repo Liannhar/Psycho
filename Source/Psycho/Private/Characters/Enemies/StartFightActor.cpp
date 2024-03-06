@@ -89,7 +89,7 @@ void AStartFightActor::CheckEnemies()
 
 	TArray<TPair<ABaseEnemy*, float>> Distances;
 
-	for (auto Actor : EnemiesInBattle)
+	for (ABaseEnemy* Actor : EnemiesInBattle)
 	{
 		float Distance = CalculateDistance(PlayerActor, Actor);
 		Distances.Emplace(Actor, Distance);
@@ -108,7 +108,7 @@ void AStartFightActor::CheckEnemies()
 
 	int32 CountEnemies = CurrentHowManyEnemiesCanBeInFront;
 	
-	for (const auto Dist : Distances)
+	for (const auto& Dist : Distances)
 	{
 		if(Dist.Value<=30.0f)
 		{

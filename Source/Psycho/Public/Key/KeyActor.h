@@ -20,7 +20,7 @@ public:
 	void EnablePhysics();
 protected:
 	
-	void DisablePhysics();
+	void DisablePhysics() const;
 	virtual void BeginPlay() override;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Door")
 	ADoorBaseActor* DoorThatNeedKey;

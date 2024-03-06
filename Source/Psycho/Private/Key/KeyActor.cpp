@@ -26,7 +26,7 @@ void AKeyActor::EnablePhysics()
 	}
 }
 
-void AKeyActor::DisablePhysics()
+void AKeyActor::DisablePhysics() const
 {
 	StaticMesh->SetSimulatePhysics(false);
 }

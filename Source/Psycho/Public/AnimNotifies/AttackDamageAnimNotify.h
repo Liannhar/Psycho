@@ -16,5 +16,4 @@ class PSYCHO_API UAttackDamageAnimNotify : public UAnimNotify
 	GENERATED_BODY()
 protected:
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
-	UAttackComponent* GetAttackComponent(USkeletalMeshComponent* MeshComp);
 };

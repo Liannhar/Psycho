@@ -5,6 +5,7 @@
 
 #include "AttackComponent.h"
 #include "BaseCharacter.h"
+#include "ComponentsCoreTypes.h"
 
 UNextAttackAnimNotifyState::UNextAttackAnimNotifyState()
 {
@@ -34,19 +35,5 @@ void UNextAttackAnimNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UA
 	float FrameDeltaTime)
 {
 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
-}
-//получаем AttackComponent
-UAttackComponent* UNextAttackAnimNotifyState::GetAttackComponent(USkeletalMeshComponent* MeshComp)
-{
-	const auto Actor = MeshComp->GetOwner();
-	if(!Actor) return nullptr;
-	const auto BaseCharacter = Cast<ABaseCharacter>(Actor);
-	if(!BaseCharacter) return nullptr;
-	const auto Component = BaseCharacter->GetComponentByClass(UAttackComponent::StaticClass());
-	if(!Component) return nullptr;
-	const auto AttackComponent = Cast<UAttackComponent>(Component);
-	if(!AttackComponent) return nullptr;
-	
-	return AttackComponent;
 }
 

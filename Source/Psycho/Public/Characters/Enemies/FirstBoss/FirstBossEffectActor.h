@@ -17,7 +17,7 @@ public:
 	AFirstBossEffectActor();
 
 
-	void Create(USkeletalMeshComponent* NewSkeletalMeshComponent,USkeletalMesh* NewSkeletalMesh);
+	void Create(USkeletalMeshComponent*&& NewSkeletalMeshComponent,USkeletalMesh*&& NewSkeletalMesh);
 protected:
 	virtual void BeginPlay() override;
 

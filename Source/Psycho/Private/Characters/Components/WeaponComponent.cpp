@@ -21,7 +21,8 @@ void UWeaponComponent::ChangeWeapon(ABaseWeapon* NewWeapon,TSubclassOf<ABaseWeap
 		if(CurrentWeapon)
 		{
 			DetachWeaponOfSocket(CurrentWeapon,NewWeapon->GetActorLocation());
-			CurrentWeapon->DettachWeapon(NewWeapon->GetActorLocation());
+			auto NewWeaponLocation = NewWeapon->GetActorLocation();
+			CurrentWeapon->DettachWeapon(NewWeaponLocation);
 		}
 		CurrentWeapon=NewWeapon;
 		CurrentClassOfWeapon = NewClassOfWeapon;
@@ -87,7 +88,7 @@ void UWeaponComponent::BeginPlay()
 	
 }
 
-void UWeaponComponent::AttachWeaponToSocket(ABaseWeapon *Weapon, const ABaseCharacter *Character, const FName& SocketName)
+void UWeaponComponent::AttachWeaponToSocket(ABaseWeapon* Weapon, const ABaseCharacter* Character, const FName& SocketName)
 {
 	if (!Weapon) return;
 	const FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget,false);

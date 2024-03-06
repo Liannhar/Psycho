@@ -97,7 +97,7 @@ void UHealthComponent::RestoreHP(float RestoreAmount)
 	CalculatePercentHP();
 }
 
-UAnimMontage* UHealthComponent::GetTakeDamageAnimMontage(const int32 Direction) const
+UAnimMontage* UHealthComponent::GetTakeDamageAnimMontage(const int32& Direction) const
 {
 	if(!TakingDamageBackAnimMontage && !TakingDamageLeftAnimMontage && !TakingDamageRightAnimMontage )
 		return nullptr;
@@ -106,8 +106,10 @@ UAnimMontage* UHealthComponent::GetTakeDamageAnimMontage(const int32 Direction) 
 
 void UHealthComponent::OnDied()
 {
-	if(GEngine)
-     GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s died!"), *(GetOwner()->GetName())));
 	OnDeath.Broadcast();
 	CharacterIsDead=true;
+	
+	if(GEngine)
+     GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s died!"), *(GetOwner()->GetName())));
+	
 }

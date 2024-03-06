@@ -9,34 +9,55 @@
 UAttackFirstBossBTTaskNode::UAttackFirstBossBTTaskNode()
 {
 	NodeName="AttackFirstBoss";
+	bNotifyTick = true;
+}
+
+uint16 UAttackFirstBossBTTaskNode::GetInstanceMemorySize() const
+{
+	return sizeof(FAttackAIMemory);
 }
 
 EBTNodeResult::Type UAttackFirstBossBTTaskNode::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	UE_LOG(LogTemp,Display,TEXT("%d"),CurrentAttackEnd?1:0);
+
 	const auto Controller = OwnerComp.GetAIOwner();
 	if(!Controller) return EBTNodeResult::Failed;
-                   	
+                     
 	const auto Pawn = Controller->GetPawn();
 	if(!Pawn) return EBTNodeResult::Failed;
+  
+	Enemy = Cast<AFirstBossEnemy>(Pawn);
+	if(!Enemy) return EBTNodeResult::Failed;
 	
-	const auto Enemy = Cast<AFirstBossEnemy>(Pawn);
-	
-	/*if(Enemy && !Enemy->GetNotIsAttackingNow() && !CurrentAttackEnd)
+	if(!Enemy->GetNotIsAttackingNow())
 	{
-		CurrentAttackEnd=true;
-		return EBTNodeResult::Succeeded;
-	}*/
-
-	UE_LOG(LogTemp,Display,TEXT("%d"),CurrentAttackEnd?1:0);
-	if(Enemy )
-	{
-		UE_LOG(LogTemp,Display,TEXT("%d"),CurrentAttackEnd?1:0);
 		Enemy->PreparationBossBeforeAttack(ComboType,ComboIndex,AttackCount-1,NeedRandom,StaminaCost);
 		Enemy->Attack();
-		CurrentAttackEnd=false;
-		UE_LOG(LogTemp,Display,TEXT("%d"),CurrentAttackEnd?1:0);
+		return EBTNodeResult::InProgress;
 	}
-	
-	return EBTNodeResult::Succeeded;
+	return EBTNodeResult::Failed;
 }
+
+void UAttackFirstBossBTTaskNode::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+{
+	if (Enemy && Enemy->GetNotIsAttackingNow())
+	{
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+	}
+}
+
+/*AFirstBossEnemy*  UAttackFirstBossBTTaskNode::GetEnemy(UBehaviorTreeComponent& OwnerComp)
+{
+	
+	const auto Controller = OwnerComp.GetAIOwner();
+	if(!Controller) return nullptr;
+                   	
+	const auto Pawn = Controller->GetPawn();
+	if(!Pawn) return nullptr;
+	
+	const auto Enemy = Cast<AFirstBossEnemy>(Pawn);
+	if(!Enemy) return nullptr;
+
+	return Enemy;
+}*/
+

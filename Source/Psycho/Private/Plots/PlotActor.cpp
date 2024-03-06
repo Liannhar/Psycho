@@ -31,7 +31,7 @@ void APlotActor::NotifyActorBeginOverlap(AActor* OtherActor)
 	}
 }
 
-void APlotActor::PlayDialog(AActor* NeededOwner)
+void APlotActor::PlayDialog(AActor*& NeededOwner)
 {
 	const auto World = GetWorld();
 	if(SoundWaves.Num()>CurrentIndex && World ){

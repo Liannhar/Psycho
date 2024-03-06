@@ -17,7 +17,7 @@ ABaseWeapon::ABaseWeapon()
 	CollisionComponent->SetupAttachment(RootComponent);
 }
 
-void ABaseWeapon::DettachWeapon(FVector NewLocation)
+void ABaseWeapon::DettachWeapon(FVector& NewLocation)
 {
 	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }

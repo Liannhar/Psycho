@@ -93,10 +93,8 @@ void APlayerCharacter::LoadGame()
 	}
 }
 
-void APlayerCharacter::StartStunPlayer(float TimeStun)
+void APlayerCharacter::StartStunPlayer(const float& TimeStun)
 {
-	//здесь анимация стана
-
 	const auto PlayerController = Cast<AP_PlayerController>(GetController());
 	if(!PlayerController) return;
 	PlayerController->DisableInput(PlayerController);

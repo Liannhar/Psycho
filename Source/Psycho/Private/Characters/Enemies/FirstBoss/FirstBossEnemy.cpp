@@ -8,10 +8,8 @@
 #include "FirstBossEffectActor.h"
 #include "KeyActor.h"
 #include "WeaponComponent.h"
-#include "Animation/AnimNode_StateMachine.h"
 #include "Components/BoxComponent.h"
-#include "Components/CapsuleComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "Player/PlayerCharacter.h"
 
 void AFirstBossEnemy::StartEffectMoving(const int32 NewStaminaCost)
 {
@@ -52,8 +50,35 @@ void AFirstBossEnemy::BeginPlay()
 
 void AFirstBossEnemy::Attack()
 {
-	if(ChangeStaminaCost(CurrentAttackStaminaCost)) return;
-	Super::Attack();
+	auto const CurrentAiController = Cast<ABaseEnemyAIController>(OwnController);
+	if(!CurrentAiController)
+	{
+		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndEnemyAttack,EndEnemyAttackTime);	
+		return;
+	}
+
+	const auto Distance = FVector::Dist(CurrentAiController->GetPlayerCharacter()->GetActorLocation(),GetActorLocation());
+	if(Distance>100.0f)
+	{
+		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndEnemyAttack,EndEnemyAttackTime);	
+		return;
+	}
+	
+	
+	const auto AttackIndex = AttackComponent->GetAttackIndex();
+	if(AttackIndex<=AttacksCount && (!IsTakenDamage || Cast<AFirstBossEnemy>(this)))
+	{
+		if(ChangeStaminaCost(CurrentAttackStaminaCost))
+		{
+			GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndEnemyAttack,EndEnemyAttackTime);	
+			return;
+		}
+		AttackComponent->CurrentComboAttack=ComboIndex;
+		AttackComponent->StartComboAttack(AttackType);
+		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndWait,0.3f);
+		return;
+	}
+	GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndEnemyAttack,EndEnemyAttackTime);	
 }
 
 void AFirstBossEnemy::PreparationBossBeforeAttack(const EComboInput Type, const int32 NewCombo, const int32 NewCount, const bool NeedRandomCount,const int32 NewStaminaCost)
@@ -82,12 +107,16 @@ void AFirstBossEnemy::DeathConfigurations()
 }
 
 
-bool AFirstBossEnemy::ChangeStaminaCost(const int32 NewCost)
+bool AFirstBossEnemy::ChangeStaminaCost(const int32& NewCost)
 {
+	AIController = Cast<AFirstBossAIController>(OwnController);
+	AIController->SetBoolCurrentStamina(CurrentStamina);
+	UE_LOG(LogTemp,Display,TEXT("CS %d"),CurrentStamina);
 	if(CurrentStamina==0)
 	{
-		AIController = Cast<AFirstBossAIController>(OwnController);
-		AIController->SetBoolCurrentStamina(CurrentStamina);
+		StaminaHaveRemainder=false;
+		GetMesh()->GetAnimInstance()->StopAllMontages(0.0f);
+		
 		if(GetWorld() && !StaminaRecoverTimer.IsValid())
 		{
 			GetWorld()->GetTimerManager().SetTimer(StaminaRecoverTimer,this,&AFirstBossEnemy::RecoverStamina,TimeStaminaRecover);
@@ -95,9 +124,11 @@ bool AFirstBossEnemy::ChangeStaminaCost(const int32 NewCost)
 		return true;
 	}
 	
-	AIController = Cast<AFirstBossAIController>(OwnController);
-	AIController->SetBoolCurrentStamina(CurrentStamina);
 	CurrentStamina = FMath::Clamp(CurrentStamina - NewCost, 0, MaxStamina);
+	if(CurrentStamina==0)
+	{
+		StaminaHaveRemainder=true;
+	}
 	return false;
 }
 
@@ -106,10 +137,6 @@ void AFirstBossEnemy::UpdateStaminaAI()
 	AIController = Cast<AFirstBossAIController>(OwnController);
 	if(GetWorld() && AIController)
 	{
-		/*const auto AnimInstance = GetMesh()->GetAnimInstance();
-		const auto StateName = AnimInstance->GetStateMachineInstance(0);
-		const auto Time = AnimInstance->GetRelevantAnimTimeRemaining(0,2);
-		UE_LOG(LogTemp,Display,TEXT("%s"),*StateName.ToString());*/
 		AIController->SetBoolCurrentStamina(CurrentStamina);
 		GetWorld()->GetTimerManager().ClearTimer(StaminaRecoverTimer);	
 	}
@@ -119,6 +146,8 @@ void AFirstBossEnemy::RecoverStamina()
 {
 	UE_LOG(LogTemp,Display,TEXT("Recover"));
 	CurrentStamina=MaxStamina;
+	StaminaHaveRemainder=false;
+	
 	GetWorld()->GetTimerManager().SetTimer(StaminaRecoverTimer,this,&AFirstBossEnemy::UpdateStaminaAI,1.5f);
 }
 

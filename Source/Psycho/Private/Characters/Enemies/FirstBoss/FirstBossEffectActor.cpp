@@ -14,7 +14,7 @@ AFirstBossEffectActor::AFirstBossEffectActor()
 
 }
 
-void AFirstBossEffectActor::Create(USkeletalMeshComponent* NewSkeletalMeshComponent,USkeletalMesh* NewSkeletalMesh)
+void AFirstBossEffectActor::Create(USkeletalMeshComponent*&& NewSkeletalMeshComponent,USkeletalMesh*&& NewSkeletalMesh)
 {
 	if(NewSkeletalMeshComponent && NewSkeletalMesh && NewMaterial && GetWorld())
 	{

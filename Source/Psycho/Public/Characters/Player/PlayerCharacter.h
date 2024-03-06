@@ -43,7 +43,7 @@ public:
 
 	FORCEINLINE class UPillsComponent* GetPillsComponent() const { return PillsComponent; }
 
-	void StartStunPlayer(float TimeStun);
+	void StartStunPlayer(const float& TimeStun);
 
 	UPROPERTY(EditAnywhere,Category="Dodge")
 	UAnimMontage* DodgeRight;

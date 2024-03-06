@@ -20,7 +20,7 @@ public:
 	void StartEffectMoving(int32 NewStaminaCost);
 	void EndEffectMoving();
 	
-	bool ChangeStaminaCost(int32 NewCost);
+	bool ChangeStaminaCost(const int32& NewCost);
 	virtual void Attack() override;
 	void PreparationBossBeforeAttack(const EComboInput Type, const int32 NewCombo, const int32 NewCount, const bool NeedRandomCount,const int32 NewStaminaCost);
 	void DeathConfigurations();
@@ -33,7 +33,9 @@ protected:
 	float EffectTime = 0.2f;
 	
 	int32 CurrentAttackStaminaCost = 0;
-	
+	UPROPERTY(BlueprintReadOnly)
+	bool StaminaHaveRemainder = false;
+
 	void MakeEffect();
 
 	virtual void BeginPlay() override;
@@ -44,10 +46,8 @@ protected:
 	FTimerHandle StaminaRecoverTimer;
 	UPROPERTY(EditAnywhere,Category="Stamina")
 	float TimeStaminaRecover = 3.0f;
-	
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="Stamina")
 	int32 MaxStamina=40;
-
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="Stamina")
 	int32 CurrentStamina=40;
 
@@ -69,4 +69,6 @@ protected:
 	ADoorBaseActor* DoorThatNeedBossKey;
 	UPROPERTY(EditAnywhere,Category="Weapon")
 	TSubclassOf<ABaseWeapon> NewWeaponClassForPlayer;
+
+	float EndEnemyAttackTime=0.1f;
 };

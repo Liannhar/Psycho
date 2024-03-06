@@ -18,5 +18,5 @@ public:
 	
 	AActor* GetVisiblePlayer() const;
 	TArray<ABaseEnemy*> GetVisibleEnemies() const;
-	bool GetEnemyIsNotDamaged();
+	bool GetEnemyIsNotDamaged() const;
 };

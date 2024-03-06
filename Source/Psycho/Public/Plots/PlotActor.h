@@ -31,5 +31,5 @@ protected:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 public:
 	UFUNCTION(BlueprintCallable)
-	void PlayDialog(AActor* NeededOwner);
+	void PlayDialog(AActor*& NeededOwner);
 };

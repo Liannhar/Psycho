@@ -403,7 +403,7 @@ void AP_PlayerController::Dodge(const FInputActionValue& Value)
 	}
 	else
 	{
-		GetAttackComponent()->SprintDodge(Value);
+		GetAttackComponent()->SprintDodge();
 	}
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Dodge!"));
