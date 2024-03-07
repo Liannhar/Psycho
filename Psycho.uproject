@@ -12,7 +12,8 @@
 				"Engine",
 				"CoreUObject",
 				"AIModule",
-				"NavigationSystem"
+				"NavigationSystem",
+				"UMG"
 			]
 		}
 	],

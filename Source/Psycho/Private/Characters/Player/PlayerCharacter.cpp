@@ -18,6 +18,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Psycho/PsychoGameModeBase.h"
+#include "UMG/DeathScreen.h"
+#include "Blueprint/UserWidget.h"
 
 
 APlayerCharacter::APlayerCharacter()
@@ -68,12 +70,17 @@ APlayerCharacter::APlayerCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 
 	PillsComponent = CreateDefaultSubobject<UPillsComponent>(TEXT("Pills Component"));
+
+	DeathScreenClass = nullptr;
+	DeathScreen = nullptr;
 }
 
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	//LoadGame();
+
+	HealthComponent->OnDeath.AddUObject(this, &APlayerCharacter::ShowDeathScreen);
 }
 
 void APlayerCharacter::LoadGame()
@@ -111,4 +118,16 @@ void APlayerCharacter::EndStunPlayer()
 	//здесь вернуть idle
 	if(!GetWorld()) return;
 	GetWorld()->GetTimerManager().ClearTimer(StunTimerHandle);
+}
+
+void APlayerCharacter::ShowDeathScreen()
+{
+	if (DeathScreenClass && !DeathScreen)
+	{
+		const auto PlayerController = Cast<AP_PlayerController>(GetController());
+		check(PlayerController);
+		DeathScreen = CreateWidget<UDeathScreen>(PlayerController, DeathScreenClass);
+		check(DeathScreen);
+		DeathScreen->AddToPlayerScreen();
+	}
 }
