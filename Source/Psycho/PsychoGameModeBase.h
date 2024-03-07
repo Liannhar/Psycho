@@ -32,7 +32,7 @@ public:
 	void SaveAll(UPsychoSaveGame* Save) const ;
 	virtual void BeginPlay() override;
 
-	void SetCurrentStartFightActor(AStartFightActor* NewStartFightActor){CurrentStartFightActor=NewStartFightActor;}
+	void SetCurrentStartFightActor(AStartFightActor*&& NewStartFightActor){CurrentStartFightActor=NewStartFightActor;}
 
 	void CheckEnemySpawners() const;
 

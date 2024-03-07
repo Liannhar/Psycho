@@ -26,14 +26,13 @@ protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="AI")
 	FName FightStatusKeyName = "FightStatus";
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="AI")
-	FName IsPawnNotDamaged = "IsNotDamaged";
+	FName IsPawnNotDamagedKeyName = "IsNotDamaged";
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="AI")
-	FName IsPawnCanAttack = "IsCanAttack";
+	FName IsPawnCanAttackKeyName = "IsCanAttack";
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual bool GetCanFocus() const;
 	virtual void Tick(float DeltaSeconds) override;
-	//virtual FPathFollowingRequestResult MoveTo(const FAIMoveRequest& MoveRequest, FNavPathSharedPtr* OutPath) override;
-private:
+	
 	AActor* GetFocusOnActor() const;
 	
 	void ChangeFightStatus(const bool FightStatus);
@@ -42,9 +41,10 @@ private:
 
 	UPROPERTY()
 	APlayerCharacter* PlayerCharacter;
+	
 public:
 	
-	APlayerCharacter* GetPlayerCharacter() const {return PlayerCharacter;}
+	AActor* GetPlayerActor() const ;
 	void ChangeIsPawnDamage(const bool& NewBool);
 	void ChangeIsPawnCanAttack(const bool& NewBool);
 };

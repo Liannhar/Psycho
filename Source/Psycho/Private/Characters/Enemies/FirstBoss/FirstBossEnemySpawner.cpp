@@ -5,11 +5,12 @@
 
 #include "FirstBossEnemy.h"
 
-void AFirstBossEnemySpawner::ActionWithEnemy(ABaseEnemy* Enemy)
+void AFirstBossEnemySpawner::ActionWithEnemy(ABaseEnemy*& Enemy)
 {
 	Super::ActionWithEnemy(Enemy);
-	if(const auto Boss = Cast<AFirstBossEnemy>(Enemy))
+	FirstBoss = Cast<AFirstBossEnemy>(Enemy);
+	if(FirstBoss)
 	{
-		Boss->SetThatNeedBossKey(DoorThatNeedBossKey);
+		FirstBoss->SetThatNeedBossKey(DoorThatNeedBossKey);
 	}
 }

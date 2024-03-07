@@ -14,7 +14,7 @@ APsychoGameModeBase::APsychoGameModeBase()
 	
 }
 
-void APsychoGameModeBase::SetFightStatus(bool CurrentStatus)
+void APsychoGameModeBase::SetFightStatus(const bool CurrentStatus)
 {
 	FightStatus=CurrentStatus;
 	OnChangeFightStatus.Broadcast(CurrentStatus);

@@ -7,15 +7,22 @@
 #include "FirstBossEnemySpawner.generated.h"
 
 
+class AFirstBossEnemy;
 class ADoorBaseActor;
 
 UCLASS()
 class PSYCHO_API AFirstBossEnemySpawner : public AEnemySpawner
 {
 	GENERATED_BODY()
+public:
+	AFirstBossEnemy* GetFirstBoss() const {return FirstBoss;}
 protected:
-	virtual void ActionWithEnemy(ABaseEnemy* Enemy) override;
-
+	virtual void ActionWithEnemy(ABaseEnemy*& Enemy) override;
+	
 	UPROPERTY(EditAnywhere,Category="Key")
 	ADoorBaseActor* DoorThatNeedBossKey;
+
+private:
+	UPROPERTY()
+	AFirstBossEnemy* FirstBoss;
 };

@@ -26,7 +26,6 @@ void AStartFightActor::EndFight()
 	Destroy();
 }
 
-
 void AStartFightActor::BeginPlay()
 {
 	Super::BeginPlay();
@@ -36,9 +35,6 @@ void AStartFightActor::BeginPlay()
 	}
 }
 
-void AStartFightActor::ActionInNotify(AActor* OtherActor)
-{
-}
 
 
 void AStartFightActor::CheckEnemySpawners()
@@ -67,23 +63,13 @@ void AStartFightActor::NotifyActorBeginOverlap(AActor* OtherActor)
 	{
 		return;
 	}
-	const auto PlayerChar= Cast<APlayerCharacter>(OtherActor);
-	if(PlayerChar && !FightWasStarted)
+	if(Cast<APlayerCharacter>(OtherActor))
 	{
-		FightWasStarted=true;
-		CurrentGameMode->SetStartEnemies(StartEnemies);
-		CurrentGameMode->SetCurrentStartFightActor(this);
-		CurrentGameMode->SetFightStatus(true);
-		CurrentGameMode->ChangeEnemiesCount(nullptr);
-		PlayerActor=OtherActor;
-		CurrentGameMode->Player=OtherActor;
-		OpenDoor.Broadcast(false);
-		ActionInNotify(OtherActor);
-		GetWorld()->GetTimerManager().SetTimer(CheckEnemiesTimer,this,&AStartFightActor::CheckEnemies,TimeForCheckEnemies,true);
+		ActionStartFightActor(OtherActor);	
 	}
 }
 
-void AStartFightActor::CheckEnemies()
+void AStartFightActor::CheckEnemies() const
 {
 	const auto EnemiesInBattle = CurrentGameMode->GetEnemiesInBattle();
 
@@ -132,6 +118,30 @@ float AStartFightActor::CalculateDistance(const AActor* Actor1, const ABaseEnemy
 	const FVector Location1 = Actor1->GetActorLocation();
 	const FVector Location2 = Actor2->GetActorLocation();
 	return FVector::Dist(Location1, Location2);
+}
+
+void AStartFightActor::AddStartEnemies(ABaseEnemy* NewStartEnemy)
+{
+	if(NewStartEnemy)
+	{
+		StartEnemies.Add(NewStartEnemy);	
+	}
+}
+
+void AStartFightActor::ActionStartFightActor(AActor*& OtherActor)
+{
+	if(!FightWasStarted)
+	{
+		FightWasStarted=true;
+		CurrentGameMode->SetStartEnemies(StartEnemies);
+		CurrentGameMode->SetCurrentStartFightActor(this);
+		CurrentGameMode->SetFightStatus(true);
+		CurrentGameMode->ChangeEnemiesCount(nullptr);
+		PlayerActor=OtherActor;
+		CurrentGameMode->Player=OtherActor;
+		OpenDoor.Broadcast(false);
+		GetWorld()->GetTimerManager().SetTimer(CheckEnemiesTimer,this,&AStartFightActor::CheckEnemies,TimeForCheckEnemies,true);
+	}
 }
 
 

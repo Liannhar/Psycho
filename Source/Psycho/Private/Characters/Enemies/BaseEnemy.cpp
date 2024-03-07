@@ -49,23 +49,26 @@ void ABaseEnemy::Attack()
 		return;
 	}
 
-	const auto Distance = FVector::Dist(CurrentAiController->GetPlayerCharacter()->GetActorLocation(),GetActorLocation());
-	if(Distance>80.0f)
+	if(CurrentAiController->GetPlayerActor())
 	{
-		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,EndEnemyAttackTime);	
-		return;
+		const auto Distance = FVector::Dist(CurrentAiController->GetPlayerActor()->GetActorLocation(),GetActorLocation());
+		if(Distance>80.0f)
+		{
+			GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,EndEnemyAttackTime);	
+			return;
+		}	
 	}
-	
-	
+
 	const auto AttackIndex = AttackComponent->GetAttackIndex();
 	if(AttackIndex<=AttacksCount && (!IsTakenDamage || Cast<AFirstBossEnemy>(this)))
 	{
+		
 		AttackComponent->CurrentComboAttack=ComboIndex;
 		AttackComponent->StartComboAttack(AttackType);
-		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndWait,AttackComponent->GetTimeToEndCurrentAnimNotage()-0.1f);
+		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndWait,0.3f);
 		return;
 	}
-	GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,EndEnemyAttackTime);	
+	GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndEnemyAttack,EndEnemyAttackTime);	
 }
 
 void ABaseEnemy::EndWait()
@@ -84,6 +87,7 @@ void ABaseEnemy::EndEnemyAttack()
 	NotIsAttackingNow=true;
 	GetWorldTimerManager().ClearTimer(WaitNextAttemptAttack);
 }
+
 
 void ABaseEnemy::SetStartAttack()
 {

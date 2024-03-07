@@ -21,9 +21,10 @@ public:
 	void EndEffectMoving();
 	
 	bool ChangeStaminaCost(const int32& NewCost);
-	virtual void Attack() override;
 	void PreparationBossBeforeAttack(const EComboInput Type, const int32 NewCombo, const int32 NewCount, const bool NeedRandomCount,const int32 NewStaminaCost);
 	void DeathConfigurations();
+
+	virtual void Attack() override;
 
 	int32 GetCurrentStamina() const {return CurrentStamina;}
 	void SetThatNeedBossKey(ADoorBaseActor* NewDoor){DoorThatNeedBossKey = NewDoor;}
@@ -71,4 +72,5 @@ protected:
 	TSubclassOf<ABaseWeapon> NewWeaponClassForPlayer;
 
 	float EndEnemyAttackTime=0.1f;
+	
 };

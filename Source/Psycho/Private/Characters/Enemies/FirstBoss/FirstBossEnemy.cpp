@@ -48,39 +48,6 @@ void AFirstBossEnemy::BeginPlay()
 	
 }
 
-void AFirstBossEnemy::Attack()
-{
-	auto const CurrentAiController = Cast<ABaseEnemyAIController>(OwnController);
-	if(!CurrentAiController)
-	{
-		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndEnemyAttack,EndEnemyAttackTime);	
-		return;
-	}
-
-	const auto Distance = FVector::Dist(CurrentAiController->GetPlayerCharacter()->GetActorLocation(),GetActorLocation());
-	if(Distance>100.0f)
-	{
-		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndEnemyAttack,EndEnemyAttackTime);	
-		return;
-	}
-	
-	
-	const auto AttackIndex = AttackComponent->GetAttackIndex();
-	if(AttackIndex<=AttacksCount && (!IsTakenDamage || Cast<AFirstBossEnemy>(this)))
-	{
-		if(ChangeStaminaCost(CurrentAttackStaminaCost))
-		{
-			GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndEnemyAttack,EndEnemyAttackTime);	
-			return;
-		}
-		AttackComponent->CurrentComboAttack=ComboIndex;
-		AttackComponent->StartComboAttack(AttackType);
-		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndWait,0.3f);
-		return;
-	}
-	GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndEnemyAttack,EndEnemyAttackTime);	
-}
-
 void AFirstBossEnemy::PreparationBossBeforeAttack(const EComboInput Type, const int32 NewCombo, const int32 NewCount, const bool NeedRandomCount,const int32 NewStaminaCost)
 {
 	CurrentAttackStaminaCost=NewStaminaCost;
@@ -104,6 +71,42 @@ void AFirstBossEnemy::DeathConfigurations()
 			NewSpawnedWeapon->EnablePhysics();
 		}
 	}
+}
+
+void AFirstBossEnemy::Attack()
+{
+	auto const CurrentAiController = Cast<AFirstBossAIController>(OwnController);
+	if(!CurrentAiController)
+	{
+		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,EndEnemyAttackTime);	
+		return;
+	}
+
+	if(CurrentAiController->GetPlayerActor())
+	{
+		const auto Distance = FVector::Dist(CurrentAiController->GetPlayerActor()->GetActorLocation(),GetActorLocation());
+		if(Distance>80.0f)
+		{
+			GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,EndEnemyAttackTime);	
+			return;
+		}	
+	}
+
+	const auto AttackIndex = AttackComponent->GetAttackIndex();
+	if(AttackIndex<=AttacksCount && (!IsTakenDamage || Cast<AFirstBossEnemy>(this)))
+	{
+		if(ChangeStaminaCost(CurrentAttackStaminaCost))
+		{
+			GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndEnemyAttack,EndEnemyAttackTime);	
+			return;
+		}
+		AttackComponent->CurrentComboAttack=ComboIndex;
+		AttackComponent->StartComboAttack(AttackType);
+		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndWait,0.3f);
+		return;
+	}
+	GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndEnemyAttack,EndEnemyAttackTime);	
+
 }
 
 
@@ -156,7 +159,7 @@ void AFirstBossEnemy::RecoverStamina()
 void AFirstBossEnemy::Death()
 {
 	Super::Death();
-	float DeathTime = PlayAnimMontage(DeathAnimMontage);
+	const float DeathTime = PlayAnimMontage(DeathAnimMontage);
 	SetActorEnableCollision(false);
 	GetWorld()->GetTimerManager().SetTimer(DeathTimer,this,&AFirstBossEnemy::AfterDeath,DeathTime-0.3f);
 }

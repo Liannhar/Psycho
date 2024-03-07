@@ -114,4 +114,5 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Collision", meta = (AllowPrivateAccess = "true"))
 	class UBoxComponent* EnemyChannelCollision;
+
 };

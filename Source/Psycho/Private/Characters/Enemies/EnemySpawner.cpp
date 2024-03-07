@@ -21,7 +21,7 @@ void AEnemySpawner::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AEnemySpawner::ActionWithEnemy(ABaseEnemy* Enemy)
+void AEnemySpawner::ActionWithEnemy(ABaseEnemy*& Enemy)
 {
 }
 
@@ -31,11 +31,10 @@ void AEnemySpawner::SpawnOneEnemy()
 	if(SpawnIndex<Enemies.Num())
 	{
 		const auto NewLocation = UKismetMathLibrary::RandomPointInBoundingBox(GetActorLocation(),BoxComponent->GetScaledBoxExtent());
-		const auto NewSpawnedEnemy = GetWorld()->SpawnActor<ABaseEnemy>(Enemies[SpawnIndex],NewLocation + FVector(0.0f,0.0f,10.0f),GetActorRotation());
-		if(NewSpawnedEnemy)
+		if(auto NewSpawnedEnemy = GetWorld()->SpawnActor<ABaseEnemy>(Enemies[SpawnIndex],NewLocation + FVector(0.0f,0.0f,10.0f),GetActorRotation()))
 		{
-			const auto GameMode = Cast<APsychoGameModeBase>(GetWorld()->GetAuthGameMode());
 			ActionWithEnemy(NewSpawnedEnemy);
+			const auto GameMode = Cast<APsychoGameModeBase>(GetWorld()->GetAuthGameMode());
 			GameMode->ChangeEnemiesCount(NewSpawnedEnemy,true);
 			SpawnIndex+=1;
 		}
@@ -52,7 +51,6 @@ void AEnemySpawner::SpawnEnemies()
 {
 	const auto World = GetWorld();
 	if(!World) return;
-
 	
 	if(!SpawnTimeHandle.IsValid() && GetWorld())
 	{
