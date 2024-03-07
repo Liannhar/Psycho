@@ -16,7 +16,7 @@ AActor* UEnemyAIPerceptionComponent::GetVisiblePlayer() const
 	GetCurrentlyPerceivedActors(UAISense_Sight::StaticClass(),FoundActors);
 	if(FoundActors.Num()==0) return nullptr;
 	
-	for (const auto Actor:FoundActors)
+	for (const auto& Actor:FoundActors)
 	{
 		const auto Player = Cast<APlayerCharacter>(Actor);
 		if(Player && !Player->GetHealthComponent()->IsDead()) return Player;
@@ -32,7 +32,6 @@ TArray<ABaseEnemy*> UEnemyAIPerceptionComponent::GetVisibleEnemies() const
 	if(FoundActors.Num()==0) return Enemies;
 	for (const auto Actor:FoundActors)
 	{
-		//TODO Проверка жив ли Actor 
 		if(const auto Enemy = Cast<ABaseEnemy>(Actor))
 		{
 			Enemies.Add(Enemy);
@@ -41,7 +40,7 @@ TArray<ABaseEnemy*> UEnemyAIPerceptionComponent::GetVisibleEnemies() const
 	return Enemies;
 }
 
-bool UEnemyAIPerceptionComponent::GetEnemyIsNotDamaged()
+bool UEnemyAIPerceptionComponent::GetEnemyIsNotDamaged() const
 {
 	TArray<AActor*> FoundActors;
 	
@@ -60,9 +59,8 @@ bool UEnemyAIPerceptionComponent::GetEnemyIsNotDamaged()
 	//GetCurrentlyPerceivedActors(UAISense_Damage::StaticClass(),FoundActors);
 	//GetKnownPerceivedActors(UAISense_Damage::StaticClass(),FoundActors);
 	if(FoundActors.Num()==0) return true;
-	for(auto const Actor:FoundActors)
+	for(auto const& Actor:FoundActors)
 	{
-		UE_LOG(LogTemp,Display,TEXT("%s"),*Actor->GetName());
 		if(Actor->IsA(ABaseEnemy::StaticClass()))
 		{
 			return false;

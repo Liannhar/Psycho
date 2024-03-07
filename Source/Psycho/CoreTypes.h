@@ -86,3 +86,11 @@ struct FWaves
 	UPROPERTY(EditAnywhere,Category="Enemy")
 	int32 HowManyEnemiesCanBeInFront=0;
 };
+
+USTRUCT(BlueprintType)
+struct FAttackAIMemory
+{
+	GENERATED_BODY()
+
+	bool EnemyNotIsAttackingNow=true;
+};

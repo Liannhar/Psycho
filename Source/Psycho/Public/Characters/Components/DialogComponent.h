@@ -26,5 +26,5 @@ protected:
 	USoundWave* SoundWave;
 public:
 	UFUNCTION(BlueprintCallable)
-	void PlayDialog(FName Name);
+	void PlayDialog(FName& Name);
 };

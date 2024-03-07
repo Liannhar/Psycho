@@ -14,7 +14,7 @@ class PSYCHO_API AAxeWeapon : public ABaseWeapon
 public:
 	AAxeWeapon();
 	virtual void AttachWeapon() override;
-	virtual void DettachWeapon(FVector NewLocation) override;
+	virtual void DettachWeapon(FVector& NewLocation) override;
 };
 
 

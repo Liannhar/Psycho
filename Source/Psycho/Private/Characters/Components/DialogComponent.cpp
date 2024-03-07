@@ -16,7 +16,7 @@ void UDialogComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
-void UDialogComponent::PlayDialog(FName Name)
+void UDialogComponent::PlayDialog(FName& Name)
 {
 	const auto World = GetWorld();
 	const auto DialogueWave = DialogueWaves[Name];

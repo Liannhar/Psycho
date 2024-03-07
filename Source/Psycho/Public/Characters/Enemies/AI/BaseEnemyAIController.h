@@ -36,7 +36,7 @@ protected:
 private:
 	AActor* GetFocusOnActor() const;
 	
-	void ChangeFightStatus(bool FightStatus);
+	void ChangeFightStatus(const bool FightStatus);
 
 	bool FightStatus = false;
 
@@ -45,8 +45,8 @@ private:
 public:
 	
 	APlayerCharacter* GetPlayerCharacter() const {return PlayerCharacter;}
-	void ChangeIsPawnDamage(bool NewBool);
-	void ChangeIsPawnCanAttack(bool NewBool);
+	void ChangeIsPawnDamage(const bool& NewBool);
+	void ChangeIsPawnCanAttack(const bool& NewBool);
 };
 
 

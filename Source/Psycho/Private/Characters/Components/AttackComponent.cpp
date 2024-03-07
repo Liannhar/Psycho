@@ -5,6 +5,7 @@
 #include "BaseCharacter.h"
 #include "Player/PlayerCharacter.h"
 #include "BaseEnemy.h"
+#include "BaseEnemyAIController.h"
 #include "BaseWeapon.h"
 #include "WeaponComponent.h"
 #include "CoreTypes.h"
@@ -71,7 +72,7 @@ void UAttackComponent::EndAttackCombo()
 void UAttackComponent::SetCombo()
 {
 	const UWeaponComponent* WeaponComponent = GetWeaponComponent();
-	if (const auto Weapon = WeaponComponent->GetCurrentWeapon())
+	if (const auto& Weapon = WeaponComponent->GetCurrentWeapon())
 	{
 		Combos = Weapon->DifferentCombos;
 	}
@@ -217,7 +218,7 @@ void UAttackComponent::Damage()
 	}
 }
 
-void UAttackComponent::ChooseNewCurrentTheNearestDamagedCharacter(ABaseCharacter* DamagedCharacter, const ABaseCharacter* ThisCharacter)
+void UAttackComponent::ChooseNewCurrentTheNearestDamagedCharacter(ABaseCharacter*& DamagedCharacter, const ABaseCharacter* ThisCharacter)
 {
 	DamagedCharacters.Add(DamagedCharacter);
 	FVector Direction1To2 = DamagedCharacter->GetActorLocation() - ThisCharacter->GetActorLocation();
@@ -247,14 +248,14 @@ void UAttackComponent::ChooseNewCurrentTheNearestDamagedCharacter(ABaseCharacter
 /*
  * использует AnimMontage и ставит таймер по истечению которого закончит атаку.
  */
-void UAttackComponent::ActiveAttack(FCombination Combo)
+void UAttackComponent::ActiveAttack(FCombination& Combo)
 {
 	const auto ThisCharacter = GetCharacter();
 	if(!ThisCharacter) return;
 	AttackTarget();
-	const auto TimeToEndAnimMontage = ThisCharacter->PlayAnimMontage(Combo.Attack[AttackIndex].AttackMontage,AttackSpeed);
+	TimeToEndCurrentAnimMontage = ThisCharacter->PlayAnimMontage(Combo.Attack[AttackIndex].AttackMontage,AttackSpeed);
 	if(!GetWorld()) return;
-	GetWorld()->GetTimerManager().SetTimer(TimerEndAnimMontage,this,&UAttackComponent::EndAttackCombo,TimeToEndAnimMontage,false);
+	GetWorld()->GetTimerManager().SetTimer(TimerEndAnimMontage,this,&UAttackComponent::EndAttackCombo,TimeToEndCurrentAnimMontage,false);
 	AttackIndex++;
 }
 
@@ -275,8 +276,14 @@ void UAttackComponent::AttackTarget() const
 	const auto Controller = ThisCharacter->GetController();
 	if(!Controller) return;		
 	const auto PlayerController = Cast<AP_PlayerController>(Controller);
-	if(!PlayerController) return;
-
+	if(!PlayerController)
+	{
+		const auto EnemyController = Cast<ABaseEnemyAIController>(Controller); 
+		if(!EnemyController) return;
+		
+		MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation("Attack",EnemyController->GetPlayerCharacter()->GetActorLocation());
+	}
+	
 	FTransform AttackTransform=ThisCharacter->GetActorTransform();
 	if(!PlayerController->GetLockOnTarget())
 	{
@@ -311,7 +318,7 @@ void UAttackComponent::ResetAttackSpeedToDefault()
 }
 
 
-FRotator UAttackComponent::CheckRotationWithAttack(const ABaseCharacter* DamagedActor, const ABaseCharacter* ThisCharacter,FRotator Rotation)
+FRotator UAttackComponent::CheckRotationWithAttack(const ABaseCharacter* DamagedActor, const ABaseCharacter* ThisCharacter,FRotator& Rotation)
 {
 	if(!DamagedActor || DamagedActor->GetHealthComponent()->IsDead())
 	{
@@ -378,7 +385,7 @@ void UAttackComponent::Dodge()
 	}
 }
 
-void UAttackComponent::SprintDodge(const FInputActionValue& NewValue)
+void UAttackComponent::SprintDodge()
 {
 	if(DodgeTimer.IsValid()) return;	
 	
@@ -407,7 +414,7 @@ void UAttackComponent::SprintDodge(const FInputActionValue& NewValue)
 	const auto Player = Cast<APlayerCharacter>(ThisCharacter);
 	if(!Player) return;
 	
-	const auto NewLocation = ThisCharacter->GetActorLocation()+Direction* 500.0f;
+	const auto NewLocation = ThisCharacter->GetActorLocation()+Direction* LengthOfDodge;
 
 	auto NewTransform = FTransform();
 	NewTransform.SetLocation(NewLocation);
@@ -425,7 +432,7 @@ float UAttackComponent::GetAngle(const FVector& RightVector, const FVector& Anot
 	return FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(RightVector, AnotherVector.GetSafeNormal())));
 }
 
-int32 UAttackComponent::CheckAngle(float Angle)
+int32 UAttackComponent::CheckAngle(const float& Angle)
 {
 	return (Angle > 95.0f) ? 1 : ((Angle<85.0f) ? -1 : 0);
 }

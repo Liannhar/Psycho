@@ -37,33 +37,46 @@ void ABaseEnemy::BeginPlay()
 void ABaseEnemy::Attack()
 {
 	auto const CurrentAiController = Cast<ABaseEnemyAIController>(OwnController);
-	if(!CurrentAiController) return;
+	if(!CurrentAiController)
+	{
+		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,EndEnemyAttackTime);	
+		return;
+	}
 
 	const auto Distance = FVector::Dist(CurrentAiController->GetPlayerCharacter()->GetActorLocation(),GetActorLocation());
-	if(Distance>130.0f) return;
+	if(Distance>80.0f)
+	{
+		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,EndEnemyAttackTime);	
+		return;
+	}
+	
 	
 	const auto AttackIndex = AttackComponent->GetAttackIndex();
 	if(AttackIndex<=AttacksCount && (!IsTakenDamage || Cast<AFirstBossEnemy>(this)))
 	{
 		AttackComponent->CurrentComboAttack=ComboIndex;
 		AttackComponent->StartComboAttack(AttackType);
-		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndWait,0.3f);
+		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndWait,AttackComponent->GetTimeToEndCurrentAnimNotage()-0.1f);
 		return;
 	}
-	GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,3.0f);	
+	GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,EndEnemyAttackTime);	
 }
 
 void ABaseEnemy::EndWait()
 {
 	if(!IsTakenDamage || Cast<AFirstBossEnemy>(this))
 	{
-		Attack();	
-	}	
+		GetWorldTimerManager().ClearTimer(WaitNextAttemptAttack);
+		Attack();
+		return;
+	}
+	EndEnemyAttack();
 }
 
 void ABaseEnemy::EndEnemyAttack()
 {
 	NotIsAttackingNow=true;
+	GetWorldTimerManager().ClearTimer(WaitNextAttemptAttack);
 }
 
 void ABaseEnemy::SetStartAttack()
@@ -72,7 +85,7 @@ void ABaseEnemy::SetStartAttack()
 	GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,5.0f);	
 }
 
-void ABaseEnemy::SetCanAttack(bool NewBool) const
+void ABaseEnemy::SetCanAttack(const bool& NewBool) const
 {
 	if(const auto AIController = Cast<ABaseEnemyAIController>(GetController()))
 	{
@@ -80,7 +93,7 @@ void ABaseEnemy::SetCanAttack(bool NewBool) const
 	}
 }
 
-void ABaseEnemy::ChangeMaxSpeed(float NewSpeed) const
+void ABaseEnemy::ChangeMaxSpeed(const float& NewSpeed) const
 {
 	const auto CharacterMovementComponent =Cast<UCharacterMovementComponent>(GetMovementComponent());
 	if(!CharacterMovementComponent) return;
@@ -101,7 +114,7 @@ void ABaseEnemy::BlockAttack()
 }
 
 
-void ABaseEnemy::DamageDecalCreate(bool ActorRotationIsHead)
+void ABaseEnemy::DamageDecalCreate(const bool& ActorRotationIsHead) const
 {
 	const auto RandomZ = FMath::FRandRange(DamageDecalLocationZDownLimit,DamageDecalLocationZUPLimit);
 	float RandomY;
@@ -122,8 +135,6 @@ void ABaseEnemy::DamageDecalCreate(bool ActorRotationIsHead)
 		Decal->GetDecal()->DecalSize = DecalSizeVector;
 		Decal->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
 		Decal->SetActorRelativeLocation(FVector(DamageDecalLocationXLimit,RandomY,RandomZ)); 
-		UE_LOG(LogTemp,Display,TEXT("X %f Y %f Z %f"),Decal->GetActorLocation().X,Decal->GetActorLocation().Y,Decal->GetActorLocation().Z);
-		UE_LOG(LogTemp,Display,TEXT("Relative X %f Y %f Z %f"),DamageDecalLocationXLimit,RandomY,RandomZ);
 	}
 	else
 	{
@@ -189,10 +200,6 @@ void ABaseEnemy::EndDamageEffects()
 	if(!GetWorld()) return;
 	GetWorld()->GetTimerManager().ClearTimer(EndDamageEffectTimer);
 }
-
-
-
-
 
 bool ABaseEnemy::GetLastAttackIsHeavy() const
 {

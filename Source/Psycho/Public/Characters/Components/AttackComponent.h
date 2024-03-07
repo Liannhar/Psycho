@@ -49,17 +49,18 @@ public:
 	void ResetAttackSpeedToDefault();
 	// новый множитель урона
 	void MultiplyAttackDamage(const float& Multiplier){AttackDamage*=Multiplier;}
-	void SprintDodge(const FInputActionValue& Value);
+	void SprintDodge();
 	//восстановление множителя урона
 	void ResetAttackDamage(){AttackDamage=1.f;}
 	//нанесение урона
 	void Damage();
 	// получить текущий номер атаки в комбинации
 	int32 GetAttackIndex() const {return AttackIndex;}
+	float GetTimeToEndCurrentAnimNotage() const {return TimeToEndCurrentAnimMontage;}
 	
 	//Номер текущего комбо
 	int32 CurrentComboAttack = 0;
-
+	
 	bool GetIsDodge() const {return IsDodge;}
 	
 	int32 GetCurrentAttackDirection() const {return CurrentAttackDirection;}
@@ -77,7 +78,7 @@ protected:
 	float RotationSpeed = 60.0f;
 
 	UPROPERTY(EditAnywhere,Category="Attack")
-	float LengthOfDodge = 350.0f;
+	float LengthOfDodge = 400.0f;
 	
 	//радиус сферы урона
 	UPROPERTY(EditAnywhere,Category="Attack")
@@ -90,6 +91,7 @@ protected:
 
 	UPROPERTY()
 	UAnimMontage* CurrentAttackMontage;
+	float TimeToEndCurrentAnimMontage=0.01f;
 
 	//получаем владельца AttackComponent
 	ABaseCharacter* GetCharacter() const;
@@ -105,7 +107,7 @@ protected:
 	bool IsLightAttackUse = false;
 	FTimerHandle TimerEndAnimMontage;
 	//Использование текущей атаки
-	void ActiveAttack(FCombination Attack);
+	void ActiveAttack(FCombination& Attack);
 	//Цель для атаки
 	void AttackTarget() const;
 	//Направление атаки при нанесение урона
@@ -113,7 +115,7 @@ protected:
 	//Отталкивание данной атаки
 	float CurrentAttackRepulsion=0.0f;
 
-	void ChooseNewCurrentTheNearestDamagedCharacter(ABaseCharacter* DamagedCharacter, const ABaseCharacter* ThisCharacter);
+	void ChooseNewCurrentTheNearestDamagedCharacter(ABaseCharacter*& DamagedCharacter, const ABaseCharacter* ThisCharacter);
 	
 	FVector2D AttackDirection=FVector2d(0.0f,0.0f);
 	FVector ForwardDirection;
@@ -123,7 +125,7 @@ protected:
 	//Вычисление угла поворота атаки персонажа между ударами
 	float RotationAngle(const ABaseCharacter* BaseCharacter) const;
 
-	static FRotator CheckRotationWithAttack(const ABaseCharacter* DamagedActor, const ABaseCharacter* ThisCharacter,FRotator Rotation);
+	static FRotator CheckRotationWithAttack(const ABaseCharacter* DamagedActor, const ABaseCharacter* ThisCharacter,FRotator& Rotation);
 	
 	UPROPERTY()
 	TArray<ABaseCharacter*> DamagedCharacters;
@@ -139,7 +141,7 @@ protected:
 	
 	template<typename T> static int32 CompareSign(T, T);
 
-	int32 CheckAngle(float Angle);
+	static int32 CheckAngle(const float& Angle);
 };
 
 template <typename T>

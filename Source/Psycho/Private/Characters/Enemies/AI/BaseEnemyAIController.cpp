@@ -49,7 +49,7 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
 	}
 }
 
-void ABaseEnemyAIController::ChangeFightStatus(bool NewFightStatus)
+void ABaseEnemyAIController::ChangeFightStatus(const bool NewFightStatus)
 {
 	if(const auto BlackBoard = GetBlackboardComponent())
 	{
@@ -58,7 +58,7 @@ void ABaseEnemyAIController::ChangeFightStatus(bool NewFightStatus)
 	}
 }
 
-void ABaseEnemyAIController::ChangeIsPawnDamage(bool NewBool)
+void ABaseEnemyAIController::ChangeIsPawnDamage(const bool& NewBool)
 {
 	if(const auto BlackBoard = GetBlackboardComponent())
 	{
@@ -66,7 +66,7 @@ void ABaseEnemyAIController::ChangeIsPawnDamage(bool NewBool)
 	}
 }
 
-void ABaseEnemyAIController::ChangeIsPawnCanAttack(bool NewBool)
+void ABaseEnemyAIController::ChangeIsPawnCanAttack(const bool& NewBool)
 {
 	if(const auto BlackBoard = GetBlackboardComponent())
 	{

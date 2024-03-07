@@ -18,7 +18,7 @@ void USpawnDecalNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBa
 		if(ADecalActor* NewDecalActor = GetWorld()->SpawnActor<ADecalActor>(ADecalActor::StaticClass(), Actor->GetActorLocation(), FRotator(0.0f, 0.0f, 0.0f)))
 		{
 			NewDecalActor->SetDecalMaterial(DecalMaterial);
-			NewDecalActor->SetActorLocation(FVector(NewDecalActor->GetActorLocation().X+Actor->GetActorForwardVector().X*ChangeLocationPositionForwardDecal,NewDecalActor->GetActorLocation().Y+Actor->GetActorForwardVector().Y*ChangeLocationPositionForwardDecal,NewDecalActor->GetActorLocation().Z-100.0f)); 
+			NewDecalActor->SetActorLocation(FVector(NewDecalActor->GetActorLocation().X+Actor->GetActorForwardVector().X*ChangeLocationPositionForwardDecal,NewDecalActor->GetActorLocation().Y+Actor->GetActorForwardVector().Y*ChangeLocationPositionForwardDecal,NewDecalActor->GetActorLocation().Z-ChangeLocationPositionDecalZ)); 
 			NewDecalActor->GetDecal()->DecalSize = DecalSize;
 		}
 	}

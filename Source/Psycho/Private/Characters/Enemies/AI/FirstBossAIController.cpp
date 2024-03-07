@@ -8,7 +8,7 @@
 #include "Player/PlayerCharacter.h"
 #include "Psycho/PsychoGameModeBase.h"
 
-void AFirstBossAIController::SetBoolCurrentStamina(const int32 CurrentStamina)
+void AFirstBossAIController::SetBoolCurrentStamina(const int32& CurrentStamina)
 {
 	const auto BlackBoard = GetBlackboardComponent();
 	if(!BlackBoard) return;

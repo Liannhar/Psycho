@@ -14,7 +14,7 @@ void AAxeWeapon::AttachWeapon()
 	Super::AttachWeapon();
 }
 
-void AAxeWeapon::DettachWeapon(FVector NewLocation)
+void AAxeWeapon::DettachWeapon(FVector& NewLocation)
 {
 	Super::DettachWeapon(NewLocation);
 	SetActorLocation(NewLocation);

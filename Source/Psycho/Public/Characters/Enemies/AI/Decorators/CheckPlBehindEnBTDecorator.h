@@ -7,6 +7,8 @@
 #include "CheckPlBehindEnBTDecorator.generated.h"
 
 
+class ABaseEnemy;
+
 UCLASS()
 class PSYCHO_API UCheckPlBehindEnBTDecorator : public UBTDecorator
 {
@@ -18,5 +20,5 @@ protected:
 	FBlackboardKeySelector PlayerKey;
 	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
 
-	static bool CheckPlayerBehindEnemy(const AActor* Enemy, const AActor* Player);
+	static bool CheckPlayerBehindEnemy(const ABaseEnemy* Enemy, const AActor* Player);
 };

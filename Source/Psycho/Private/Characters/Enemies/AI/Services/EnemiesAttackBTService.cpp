@@ -28,7 +28,7 @@ void UEnemiesAttackBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 		const auto CurrentEnemy = Cast<ABaseEnemy>(Pawn);
 		if (Enemies.Num()>0)
 		{
-			for (const auto Enemy:Enemies)
+			for (const auto& Enemy:Enemies)
 			{
 				if(!Enemy->GetNotIsAttackingNow())
 				{

@@ -80,6 +80,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RestoreHP(float RestoreAmount);
 
-	UAnimMontage* GetTakeDamageAnimMontage(const int32 Direction) const;
+	UAnimMontage* GetTakeDamageAnimMontage(const int32& Direction) const;
 };
 

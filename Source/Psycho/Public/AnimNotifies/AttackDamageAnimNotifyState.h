@@ -16,7 +16,4 @@ class PSYCHO_API UAttackDamageAnimNotifyState : public UAnimNotifyState
 	GENERATED_BODY()
 protected:
 	virtual void NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime) override;
-	//virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
-	UAttackComponent* GetAttackComponent(USkeletalMeshComponent* MeshComp);
-	
 };

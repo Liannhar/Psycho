@@ -31,7 +31,7 @@ public:
 	bool GetLastAttackIsHeavy() const;
 
 	void PreparationsBeforeTheAttack(EComboInput Type,int32 NewCombo,int32 NewCount,bool NeedRandomCount=false);
-	void ChangeMaxSpeed(float NewSpeed) const;
+	void ChangeMaxSpeed(const float& NewSpeed) const;
 	static void BlockAttack();
 
 	void Deactivate(float SpeedReduceMultiplier);
@@ -40,7 +40,7 @@ public:
 	virtual void BeginPlay() override;
 
 	void SetStartAttack();
-	void SetCanAttack(bool NewBool) const;
+	void SetCanAttack(const bool& NewBool) const;
 
 	float GetBaseSpeed() const {return BaseSpeed;}
 	
@@ -56,7 +56,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Speed")
 	float BaseSpeed = 600.0f;
-	
+
+	float EndEnemyAttackTime=3.0f;
 	void EndWait();
 	UPROPERTY(EditAnywhere,Category="Damage")
 	float TimeForWaitDamage=4.0f;
@@ -84,7 +85,7 @@ protected:
 
 	void EndDamageEffects();
 	
-	void DamageDecalCreate(bool ActorRotationIsHead);
+	void DamageDecalCreate(const bool& ActorRotationIsHead) const;
 	UPROPERTY(EditAnywhere,Category="Decal")
 	float DamageDecalLocationZUPLimit = 112.0f;
 	UPROPERTY(EditAnywhere,Category="Decal")

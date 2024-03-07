@@ -21,4 +21,6 @@ public:
 	FVector DecalSize;
 	UPROPERTY(EditAnywhere,Category="Decal")
 	float ChangeLocationPositionForwardDecal=0.0f;
+	UPROPERTY(EditAnywhere,Category="Decal")
+	float ChangeLocationPositionDecalZ=100.0f;
 };
