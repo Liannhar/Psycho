@@ -27,7 +27,7 @@ void ABaseCharacter::BeginPlay()
 	check(AttackComponent);
 	check(WeaponComponent);
 	AttackComponent->SetCombo();
-	HealthComponent->OnDeath.AddUObject(this,&ABaseCharacter::Death);
+	HealthComponent->OnDeath.AddDynamic(this,&ABaseCharacter::Death);
 }
 
 void ABaseCharacter::Death()
