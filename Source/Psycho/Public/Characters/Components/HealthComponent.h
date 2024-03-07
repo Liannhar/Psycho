@@ -7,8 +7,8 @@
 #include "HealthComponent.generated.h"
 
 
-DECLARE_MULTICAST_DELEGATE(FOnDeathSignature)
-DECLARE_MULTICAST_DELEGATE(FOnTakeDamageStartSignature)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeathSignature);
+DECLARE_MULTICAST_DELEGATE(FOnTakeDamageStartSignature);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PSYCHO_API UHealthComponent : public UActorComponent
@@ -73,6 +73,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsDead(){return CharacterIsDead;}	
 
+	UPROPERTY(BlueprintAssignable)
 	FOnDeathSignature OnDeath;
 	FOnTakeDamageStartSignature OnTakeDamage;
 	
