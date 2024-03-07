@@ -20,10 +20,10 @@ AKeyActor::AKeyActor()
 void AKeyActor::EnablePhysics()
 {
 	StaticMesh->SetSimulatePhysics(true);
-	if(GetWorld())
+	/*if(GetWorld())
 	{
 		GetWorld()->GetTimerManager().SetTimer(PhysicsTimer,this,&AKeyActor::DisablePhysics,TimeForFall);
-	}
+	}*/
 }
 
 void AKeyActor::DisablePhysics() const

@@ -28,9 +28,12 @@ public:
 
 	void CheckEnemySpawners();
 	void ChangeNeedTrigger(bool NewBool){NeedTrigger=NewBool;}
+
+	void AddStartEnemies(ABaseEnemy* NewStartEnemy);
+	
+	virtual void ActionStartFightActor(AActor*& OtherActor);
 protected:
 	virtual void BeginPlay() override;
-	virtual void ActionInNotify(AActor* OtherActor);
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	void EndFight();
 	bool FightWasStarted = false;
@@ -48,7 +51,7 @@ protected:
 
 	FTimerHandle CheckEnemiesTimer;
 	float TimeForCheckEnemies = 0.5f;
-	void CheckEnemies();
+	void CheckEnemies() const;
 	static float CalculateDistance(const AActor* Actor1, const ABaseEnemy* Actor2);
 	UPROPERTY()
 	APsychoGameModeBase* CurrentGameMode;

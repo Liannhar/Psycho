@@ -16,6 +16,6 @@ class PSYCHO_API ACanStartFightTriggerBox : public ABaseTriggerBox
 protected:
 	virtual void Action() override;
 
-	UPROPERTY(EditAnywhere,Category="StartFightActor")
+	UPROPERTY(EditAnywhere,Category="Trigger")
 	AStartFightActor* StartFightActor;
 };

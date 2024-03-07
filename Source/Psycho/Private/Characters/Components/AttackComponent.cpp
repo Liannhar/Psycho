@@ -12,9 +12,7 @@
 #include "HealthComponent.h"
 #include "MotionWarpingComponent.h"
 #include "P_PlayerController.h"
-#include "Components/DecalComponent.h"
 #include "DamageType/AttackDamageType.h"
-#include "Engine/DecalActor.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -281,7 +279,7 @@ void UAttackComponent::AttackTarget() const
 		const auto EnemyController = Cast<ABaseEnemyAIController>(Controller); 
 		if(!EnemyController) return;
 		
-		MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation("Attack",EnemyController->GetPlayerCharacter()->GetActorLocation());
+		MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation("Attack",EnemyController->GetPlayerActor()->GetActorLocation());
 	}
 	
 	FTransform AttackTransform=ThisCharacter->GetActorTransform();
@@ -326,8 +324,8 @@ FRotator UAttackComponent::CheckRotationWithAttack(const ABaseCharacter* Damaged
 	}
 	FVector Direction1To2 = DamagedActor->GetActorLocation() - ThisCharacter->GetActorLocation();
 	Direction1To2.Normalize();
-	FVector Forward1 = FRotationMatrix(Rotation).GetUnitAxis(EAxis::X);
-	float DistanceBetweenActors = FVector::Distance(ThisCharacter->GetActorLocation(),DamagedActor->GetActorLocation());
+	const FVector Forward1 = FRotationMatrix(Rotation).GetUnitAxis(EAxis::X);
+	const float DistanceBetweenActors = FVector::Distance(ThisCharacter->GetActorLocation(),DamagedActor->GetActorLocation());
 	if ((FVector::DotProduct(Forward1, Direction1To2) > 0.0f) && (DistanceBetweenActors<100.0f) )
 	{
 		return Direction1To2.Rotation();

@@ -28,41 +28,58 @@ void ABaseEnemyAIController::OnPossess(APawn* InPawn)
 	if(AICharacter && World)
 	{
 		RunBehaviorTree( AICharacter->BehaviorTreeAsset);
+
 		const auto GameModeBase = World->GetAuthGameMode();
 		if(const auto PsychoGameModeBase = Cast<APsychoGameModeBase>(GameModeBase))
 		{
-			ChangeFightStatus(PsychoGameModeBase->GetFightStatus());
+			FightStatus=PsychoGameModeBase->GetFightStatus();
 			PsychoGameModeBase->OnChangeFightStatus.AddUObject(this,&ABaseEnemyAIController::ChangeFightStatus);
+
 			const auto BlackBoard = GetBlackboardComponent();
 			if(!BlackBoard) return;
-			
-			BlackBoard->SetValueAsBool(IsPawnNotDamaged,true);
-			BlackBoard->SetValueAsBool(IsPawnCanAttack,false);
-
+			BlackBoard->SetValueAsBool(IsPawnNotDamagedKeyName,true);
+			BlackBoard->SetValueAsBool(IsPawnCanAttackKeyName,false);
+			BlackBoard->SetValueAsBool(FightStatusKeyName,FightStatus);
 			
 			if(PsychoGameModeBase->Player)
 			{
 				PlayerCharacter = Cast<APlayerCharacter>(PsychoGameModeBase->Player);
 				BlackBoard->SetValueAsObject(FocusOnKeyName,PsychoGameModeBase->Player);
 			}
+
 		}
+		
 	}
 }
 
 void ABaseEnemyAIController::ChangeFightStatus(const bool NewFightStatus)
 {
-	if(const auto BlackBoard = GetBlackboardComponent())
+	const auto GameModeBase = GetWorld()->GetAuthGameMode();
+	if(const auto PsychoGameModeBase = Cast<APsychoGameModeBase>(GameModeBase))
 	{
+		PlayerCharacter = Cast<APlayerCharacter>(PsychoGameModeBase->Player);
+		
+		const auto BlackBoard = GetBlackboardComponent();
+		if(!BlackBoard) return;
+
+		BlackBoard->SetValueAsObject(FocusOnKeyName,PlayerCharacter);
+
 		FightStatus=NewFightStatus;
 		BlackBoard->SetValueAsBool(FightStatusKeyName,FightStatus);
 	}
+}
+
+AActor* ABaseEnemyAIController::GetPlayerActor() const
+{
+	if(!GetBlackboardComponent()) return nullptr;
+	return Cast<AActor>(GetBlackboardComponent()->GetValueAsObject(FocusOnKeyName));
 }
 
 void ABaseEnemyAIController::ChangeIsPawnDamage(const bool& NewBool)
 {
 	if(const auto BlackBoard = GetBlackboardComponent())
 	{
-		BlackBoard->SetValueAsBool(IsPawnNotDamaged,NewBool);
+		BlackBoard->SetValueAsBool(IsPawnNotDamagedKeyName,NewBool);
 	}
 }
 
@@ -70,7 +87,7 @@ void ABaseEnemyAIController::ChangeIsPawnCanAttack(const bool& NewBool)
 {
 	if(const auto BlackBoard = GetBlackboardComponent())
 	{
-		BlackBoard->SetValueAsBool(IsPawnCanAttack,NewBool);
+		BlackBoard->SetValueAsBool(IsPawnCanAttackKeyName,NewBool);
 	}
 }
 
@@ -85,11 +102,10 @@ bool ABaseEnemyAIController::GetCanFocus() const
 
 AActor* ABaseEnemyAIController::GetFocusOnActor() const
 {
-	if(!GetBlackboardComponent()) return nullptr;
 	
 	if(GetCanFocus() && FightStatus)
 	{
-		return Cast<AActor>(GetBlackboardComponent()->GetValueAsObject(FocusOnKeyName));
+		return GetPlayerActor();
 	}
 	return nullptr;
 }

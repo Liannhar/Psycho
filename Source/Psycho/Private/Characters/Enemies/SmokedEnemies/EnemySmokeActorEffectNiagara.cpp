@@ -5,12 +5,11 @@
 
 #include "NiagaraComponent.h"
 
-// Sets default values
 AEnemySmokeActorEffectNiagara::AEnemySmokeActorEffectNiagara()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>("FirstSmokeNiagara");
-	NiagaraComponent->SetupAttachment(RootComponent);
+	RootComponent = NiagaraComponent;
 }
 
 void AEnemySmokeActorEffectNiagara::BeginPlay()
