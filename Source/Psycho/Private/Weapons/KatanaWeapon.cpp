@@ -9,16 +9,14 @@ AKatanaWeapon::AKatanaWeapon()
 	LightAttackDamage = 25.0f;
 }
 
-void AKatanaWeapon::EnablePhysics(FVector NewLocation)
+void AKatanaWeapon::AttachWeapon()
 {
-	Super::EnablePhysics(NewLocation);
-	SetActorLocation(NewLocation);
-	SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
-
+	Super::AttachWeapon();
 }
 
-void AKatanaWeapon::DisablePhysics()
+void AKatanaWeapon::DettachWeapon(FVector& NewLocation)
 {
-	Super::DisablePhysics();
-	SkeletalMeshComponent->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
+	Super::DettachWeapon(NewLocation);
+	SetActorLocation(NewLocation);
+	SetActorRotation(FRotator(0.0f,0.0f,0.0f));
 }

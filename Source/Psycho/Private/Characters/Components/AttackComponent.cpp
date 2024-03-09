@@ -146,7 +146,7 @@ void UAttackComponent::Damage()
 						}
 					}
 				
-					if(IsEnemy && (Cast<ABaseEnemy>(DamagedCharacter) || DamagedCharacter->GetAttackComponent()->IsDodge))
+					if(IsEnemy && (Cast<ABaseEnemy>(DamagedCharacter) || DamagedCharacter->GetAttackComponent()->GetIsDodge()))
 					{
 						return ;
 					}
@@ -337,28 +337,11 @@ void UAttackComponent::EndDodge()
 {
 	if(GetWorld())
 	{
+		IsDodge=false;
+			
 		GetWorld()->GetTimerManager().ClearTimer(DodgeTimer);
 	}
 }
-
-void UAttackComponent::EndSprintDodge()
-{
-	if(!GetWorld()) return;
-	const auto ThisCharacter = GetCharacter();
-	if(!ThisCharacter) return ;
-	
-	if(!GetWorld()) return;
-
-	const auto Controller = Cast<AP_PlayerController>(ThisCharacter->GetController());
-	if(!Controller) return;
-
-	Controller->StopSprint(Value);
-		
-	GetWorld()->GetTimerManager().ClearTimer(DodgeTimer);
-	
-}
-
-
 
 void UAttackComponent::SideDodge()
 {
@@ -381,7 +364,7 @@ void UAttackComponent::SideDodge()
 		const auto TimeDodge = PlayerCharacter->PlayAnimMontage(PlayerCharacter->DodgeLeft,1.5f);
 		GetWorld()->GetTimerManager().SetTimer(DodgeTimer,this,&UAttackComponent::EndDodge,TimeDodge);
 	}
-
+	IsDodge=true;
 	IdealDodgeCheck(ThisCharacter);
 }
 
@@ -421,8 +404,11 @@ void UAttackComponent::CommonDodge()
 	NewTransform.SetRotation(ThisCharacter->GetActorRotation().Quaternion());
 
 	MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform("Dodge",NewTransform);
+
+	IsDodge=true;
+	
 	const auto TimeDodge = Player->PlayAnimMontage(Player->DodgeForward);
-	GetWorld()->GetTimerManager().SetTimer( DodgeTimer, this,&UAttackComponent::EndSprintDodge, TimeDodge,false);	
+	GetWorld()->GetTimerManager().SetTimer( DodgeTimer, this,&UAttackComponent::EndDodge, TimeDodge,false);	
 	IdealDodgeCheck(ThisCharacter);
 }
 
@@ -445,7 +431,7 @@ void UAttackComponent::IdealDodgeCheck(ABaseCharacter*& ThisCharacter) const
 	TArray<FHitResult> HitResults;
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypesArray;
 	ObjectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
-
+	UE_LOG(LogTemp,Display,TEXT("KKKKK"));
 	if (UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), Start, End, CheckDodgeRadius, ObjectTypesArray, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResults, true))
 	{
 		for(auto& HitResult:HitResults)

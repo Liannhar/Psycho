@@ -136,7 +136,6 @@ protected:
 	FTimerHandle DodgeTimer;
 	bool IsDodge=false;
 	void EndDodge();
-	void EndSprintDodge();
 
 	FInputActionValue Value;
 	
@@ -145,7 +144,7 @@ protected:
 	static int32 CheckAngle(const float& Angle);
 
 	void IdealDodgeCheck(ABaseCharacter*& ThisCharacter) const;
-	float CheckDodgeRadius=100.0f;
+	float CheckDodgeRadius=300.0f;
 };
 
 template <typename T>

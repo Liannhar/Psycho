@@ -274,6 +274,7 @@ void ABaseEnemy::StunEnemy()
 {
 	if(GetWorld())
 	{
+		UE_LOG(LogTemp,Display,TEXT("AAAA"));
 		//bIsStunned=true;
 		OwnController->ChangeIsStun(true);
 		GetWorld()->GetTimerManager().SetTimer(StunTimerHandle,this,&ABaseEnemy::RemoveStun,StunTime);
@@ -284,6 +285,7 @@ void ABaseEnemy::RemoveStun()
 {
 	if(GetWorld())
 	{
+		UE_LOG(LogTemp,Display,TEXT("BBBB"));
 		//bIsStunned=false;
 		OwnController->ChangeIsStun(false);	
 		GetWorld()->GetTimerManager().ClearTimer(StunTimerHandle);

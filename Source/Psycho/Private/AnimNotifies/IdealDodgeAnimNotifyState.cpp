@@ -5,21 +5,23 @@
 
 #include "ComponentsCoreTypes.h"
 
-void UIdealDodgeAnimNotifyState::BranchingPointNotifyBegin(FBranchingPointNotifyPayload& BranchingPointPayload)
+void UIdealDodgeAnimNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	float TotalDuration)
 {
-	Super::BranchingPointNotifyBegin(BranchingPointPayload);
-	
-	if(const auto BaseEnemy = GetBaseEnemy(BranchingPointPayload.SkelMeshComponent))
+	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
+	if(const auto BaseEnemy = GetBaseEnemy(MeshComp))
 	{
+		UE_LOG(LogTemp,Display,TEXT("AAAA1"));
 		BaseEnemy->SetIdealDodge(true);
 	}
 }
 
-void UIdealDodgeAnimNotifyState::BranchingPointNotifyEnd(FBranchingPointNotifyPayload& BranchingPointPayload)
+void UIdealDodgeAnimNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
-	Super::BranchingPointNotifyEnd(BranchingPointPayload);
-	if(const auto BaseEnemy = GetBaseEnemy(BranchingPointPayload.SkelMeshComponent))
+	Super::NotifyEnd(MeshComp, Animation);
+	if(const auto BaseEnemy = GetBaseEnemy(MeshComp))
 	{
+		UE_LOG(LogTemp,Display,TEXT("BBBB1"));
 		BaseEnemy->SetIdealDodge(false);
 	}
 }

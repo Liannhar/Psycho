@@ -5,9 +5,6 @@
 
 #include "BaseEnemy.h"
 #include "EnemyAIPerceptionComponent.h"
-#include "NavigationSystem.h"
-#include "AI/NavigationSystemBase.h"
-#include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Player/PlayerCharacter.h"
 #include "Psycho/PsychoGameModeBase.h"
