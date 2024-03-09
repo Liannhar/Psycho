@@ -7,6 +7,7 @@
 #include "Psycho/CoreTypes.h"
 #include "BaseEnemy.generated.h"
 
+class ABaseEnemyAIController;
 class UNiagaraComponent;
 class UNiagaraSystem;
 class UBehaviorTree;
@@ -49,6 +50,12 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	FOnPlayerDiedSignature PlayerDied;
+
+	void SetIdealDodge(bool&& bNewBool){bIdealDodgeTiming=bNewBool;}
+	bool GetIdealDodge() const {return bIdealDodgeTiming;}
+
+	void StunEnemy();
+
 protected:
 	UPROPERTY()
 	bool IsTakenDamage = false;
@@ -56,7 +63,7 @@ protected:
 	virtual void GetDamage(AActor* Actor,const UDamageType* DamageType) override;
 
 	UPROPERTY()
-	AController* OwnController;
+	ABaseEnemyAIController* OwnController;
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Speed")
 	float BaseSpeed = 600.0f;
@@ -114,5 +121,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Collision", meta = (AllowPrivateAccess = "true"))
 	class UBoxComponent* EnemyChannelCollision;
+	
+	bool bIdealDodgeTiming=false;
+	bool bIsStunned=false;
+	void RemoveStun();
+	FTimerHandle StunTimerHandle;
+	UPROPERTY(EditAnywhere,Category="Stun")
+	float StunTime=5.0f;
 
 };

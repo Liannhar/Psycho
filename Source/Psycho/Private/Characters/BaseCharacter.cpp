@@ -32,7 +32,6 @@ void ABaseCharacter::BeginPlay()
 
 void ABaseCharacter::Death()
 {
-	//PlayAnimMontage();// Анимация смерти
 	GetCharacterMovement()->DisableMovement();
 	if(const auto PlayerController = Cast<AP_PlayerController>(GetController()))
 	{

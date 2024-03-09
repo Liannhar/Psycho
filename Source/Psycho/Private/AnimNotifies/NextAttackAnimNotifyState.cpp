@@ -19,6 +19,7 @@ void UNextAttackAnimNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, U
 	{
 		AttackComponent->SetNextAttack(true);
 	}
+	// ReSharper disable once CppDeprecatedEntity
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
 }
 //при прохождение конечной точки NotifyState выставляем bool в false, что  тайминг атаки закончился

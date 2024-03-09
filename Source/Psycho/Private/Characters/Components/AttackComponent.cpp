@@ -146,7 +146,7 @@ void UAttackComponent::Damage()
 						}
 					}
 				
-					if(IsEnemy && (Cast<ABaseEnemy>(DamagedCharacter) || DamagedCharacter->GetAttackComponent()->IsDodge))
+					if(IsEnemy && (Cast<ABaseEnemy>(DamagedCharacter) || DamagedCharacter->GetAttackComponent()->GetIsDodge()))
 					{
 						return ;
 					}
@@ -337,34 +337,17 @@ void UAttackComponent::EndDodge()
 {
 	if(GetWorld())
 	{
+		IsDodge=false;
+			
 		GetWorld()->GetTimerManager().ClearTimer(DodgeTimer);
 	}
 }
 
-void UAttackComponent::EndSprintDodge()
-{
-	if(!GetWorld()) return;
-	const auto ThisCharacter = GetCharacter();
-	if(!ThisCharacter) return ;
-	
-	if(!GetWorld()) return;
-
-	const auto Controller = Cast<AP_PlayerController>(ThisCharacter->GetController());
-	if(!Controller) return;
-
-	Controller->StopSprint(Value);
-		
-	GetWorld()->GetTimerManager().ClearTimer(DodgeTimer);
-	
-}
-
-
-
-void UAttackComponent::Dodge()
+void UAttackComponent::SideDodge()
 {
 	if(DodgeTimer.IsValid()) return;	
 	
-	const auto ThisCharacter = GetCharacter();
+	auto ThisCharacter = GetCharacter();
 	if(!ThisCharacter) return ;
 	const auto RotationDodge = RotationAngle(ThisCharacter);
 	const auto PlayerCharacter = Cast<APlayerCharacter>(ThisCharacter);
@@ -381,13 +364,15 @@ void UAttackComponent::Dodge()
 		const auto TimeDodge = PlayerCharacter->PlayAnimMontage(PlayerCharacter->DodgeLeft,1.5f);
 		GetWorld()->GetTimerManager().SetTimer(DodgeTimer,this,&UAttackComponent::EndDodge,TimeDodge);
 	}
+	IsDodge=true;
+	IdealDodgeCheck(ThisCharacter);
 }
 
-void UAttackComponent::SprintDodge()
+void UAttackComponent::CommonDodge()
 {
 	if(DodgeTimer.IsValid()) return;	
 	
-	const auto ThisCharacter = GetCharacter();
+	auto ThisCharacter = GetCharacter();
 	if(!ThisCharacter) return ;
 	
 	if(!GetWorld()) return;
@@ -404,7 +389,6 @@ void UAttackComponent::SprintDodge()
 	const float YawInRadians = FMath::DegreesToRadians(NewRotation.Yaw);
 	const FVector Direction = FVector(FMath::Cos(YawInRadians), FMath::Sin(YawInRadians), 0.0f).GetSafeNormal();
 	
-	//const FVector NewDirection = FQuat(FRotator(0, RotationAngle(ThisCharacter), 0)) * ThisCharacter->GetActorForwardVector();
 	const auto Component = ThisCharacter->GetComponentByClass(UMotionWarpingComponent::StaticClass());
 	if(!Component) return;
 	const auto MotionWarpingComponent = Cast<UMotionWarpingComponent>(Component);
@@ -420,9 +404,12 @@ void UAttackComponent::SprintDodge()
 	NewTransform.SetRotation(ThisCharacter->GetActorRotation().Quaternion());
 
 	MotionWarpingComponent->AddOrUpdateWarpTargetFromTransform("Dodge",NewTransform);
-	const auto TimeDodge = Player->PlayAnimMontage(Player->DodgeForward);
-	GetWorld()->GetTimerManager().SetTimer( DodgeTimer, this,&UAttackComponent::EndSprintDodge, TimeDodge,false);	
+
+	IsDodge=true;
 	
+	const auto TimeDodge = Player->PlayAnimMontage(Player->DodgeForward);
+	GetWorld()->GetTimerManager().SetTimer( DodgeTimer, this,&UAttackComponent::EndDodge, TimeDodge,false);	
+	IdealDodgeCheck(ThisCharacter);
 }
 
 float UAttackComponent::GetAngle(const FVector& RightVector, const FVector& AnotherVector)
@@ -433,6 +420,31 @@ float UAttackComponent::GetAngle(const FVector& RightVector, const FVector& Anot
 int32 UAttackComponent::CheckAngle(const float& Angle)
 {
 	return (Angle > 95.0f) ? 1 : ((Angle<85.0f) ? -1 : 0);
+}
+
+void UAttackComponent::IdealDodgeCheck(ABaseCharacter*& ThisCharacter) const
+{
+	const FVector Start = ThisCharacter->GetActorLocation();
+	const FVector End = Start;
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(ThisCharacter);
+	TArray<FHitResult> HitResults;
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypesArray;
+	ObjectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
+	UE_LOG(LogTemp,Display,TEXT("KKKKK"));
+	if (UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), Start, End, CheckDodgeRadius, ObjectTypesArray, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResults, true))
+	{
+		for(auto& HitResult:HitResults)
+		{
+			if (ABaseEnemy* EnemyCharacter = Cast<ABaseEnemy>(HitResult.GetActor()))
+			{
+				if(EnemyCharacter->GetIdealDodge())
+				{
+					EnemyCharacter->StunEnemy();
+				}
+			}
+		}
+	}
 }
 
 float UAttackComponent::RotationAngle(const ABaseCharacter* BaseCharacter) const

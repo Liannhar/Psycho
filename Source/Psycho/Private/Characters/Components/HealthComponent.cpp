@@ -65,7 +65,7 @@ float UHealthComponent::GetPercentHP()
 void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	
-	if (isInvulnerable) return;
+	if (bIsInvulnerable) return;
 	
 	Damage *= TakeDamageMultiplier;
 

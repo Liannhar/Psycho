@@ -32,7 +32,7 @@ ABaseEnemy::ABaseEnemy()
 void ABaseEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	OwnController = GetController();
+	OwnController = Cast<ABaseEnemyAIController>(GetController());
 
 	if (APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
 	{
@@ -49,20 +49,18 @@ void ABaseEnemy::Attack()
 		return;
 	}
 
-	if(CurrentAiController->GetPlayerActor())
+	if(CurrentAiController->GetPlayerCharacter())
 	{
-		const auto Distance = FVector::Dist(CurrentAiController->GetPlayerActor()->GetActorLocation(),GetActorLocation());
-		if(Distance>80.0f)
+		const auto Distance = FVector::Dist(CurrentAiController->GetPlayerCharacter()->GetActorLocation(),GetActorLocation());
+		if(Distance>100.0f)
 		{
 			GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,EndEnemyAttackTime);	
 			return;
 		}	
 	}
-
 	const auto AttackIndex = AttackComponent->GetAttackIndex();
 	if(AttackIndex<=AttacksCount && (!IsTakenDamage || Cast<AFirstBossEnemy>(this)))
 	{
-		
 		AttackComponent->CurrentComboAttack=ComboIndex;
 		AttackComponent->StartComboAttack(AttackType);
 		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndWait,0.3f);
@@ -271,3 +269,26 @@ void ABaseEnemy::Reactivate()
 	// // }
 	// OwnController->Possess(this);
 }
+
+void ABaseEnemy::StunEnemy()
+{
+	if(GetWorld())
+	{
+		UE_LOG(LogTemp,Display,TEXT("AAAA"));
+		//bIsStunned=true;
+		OwnController->ChangeIsStun(true);
+		GetWorld()->GetTimerManager().SetTimer(StunTimerHandle,this,&ABaseEnemy::RemoveStun,StunTime);
+	}
+}
+
+void ABaseEnemy::RemoveStun()
+{
+	if(GetWorld())
+	{
+		UE_LOG(LogTemp,Display,TEXT("BBBB"));
+		//bIsStunned=false;
+		OwnController->ChangeIsStun(false);	
+		GetWorld()->GetTimerManager().ClearTimer(StunTimerHandle);
+	}
+}
+

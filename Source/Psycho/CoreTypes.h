@@ -14,6 +14,15 @@ enum EComboInput
 	HeavyAttack
 };
 
+//Стадии атак
+UENUM(BlueprintType)
+enum ESecondBossStages
+{
+	First,
+	Second,
+	Third
+};
+
 //AnimMontage и нужна ли была предыдущей атаке особое попадание
 USTRUCT(BlueprintType)
 struct FBlueprintMontageAttack
