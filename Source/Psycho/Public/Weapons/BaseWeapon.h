@@ -8,6 +8,7 @@
 #include "Psycho/CoreTypes.h"
 #include "BaseWeapon.generated.h"
 
+class UNiagaraComponent;
 class UBoxComponent;
 
 
@@ -39,7 +40,9 @@ protected:
 	UBoxComponent* CollisionComponent;
 	UPROPERTY(EditAnywhere,Category="Components")
 	USkeletalMeshComponent* SkeletalMeshComponent;
-
+	UPROPERTY(EditAnywhere,Category="Components")
+	UNiagaraComponent* InteractLightNiagaraComponent;
+	
 	FTimerHandle PhysicsTimer;
 	float TimeForFall=2.0f;
 };

@@ -43,20 +43,18 @@ void ABaseEnemy::Attack()
 		return;
 	}
 
-	if(CurrentAiController->GetPlayerActor())
+	if(CurrentAiController->GetPlayerCharacter())
 	{
-		const auto Distance = FVector::Dist(CurrentAiController->GetPlayerActor()->GetActorLocation(),GetActorLocation());
-		if(Distance>80.0f)
+		const auto Distance = FVector::Dist(CurrentAiController->GetPlayerCharacter()->GetActorLocation(),GetActorLocation());
+		if(Distance>100.0f)
 		{
 			GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,EndEnemyAttackTime);	
 			return;
 		}	
 	}
-
 	const auto AttackIndex = AttackComponent->GetAttackIndex();
 	if(AttackIndex<=AttacksCount && (!IsTakenDamage || Cast<AFirstBossEnemy>(this)))
 	{
-		
 		AttackComponent->CurrentComboAttack=ComboIndex;
 		AttackComponent->StartComboAttack(AttackType);
 		GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&AFirstBossEnemy::EndWait,0.3f);

@@ -135,10 +135,10 @@ void AStartFightActor::ActionStartFightActor(AActor*& OtherActor)
 		FightWasStarted=true;
 		CurrentGameMode->SetStartEnemies(StartEnemies);
 		CurrentGameMode->SetCurrentStartFightActor(this);
-		CurrentGameMode->SetFightStatus(true);
 		CurrentGameMode->ChangeEnemiesCount(nullptr);
 		PlayerActor=OtherActor;
 		CurrentGameMode->Player=OtherActor;
+		CurrentGameMode->SetFightStatus(true);
 		OpenDoor.Broadcast(false);
 		GetWorld()->GetTimerManager().SetTimer(CheckEnemiesTimer,this,&AStartFightActor::CheckEnemies,TimeForCheckEnemies,true);
 	}

@@ -3,28 +3,33 @@
 
 #include "Weapons/BaseWeapon.h"
 
+#include "NiagaraComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 
 ABaseWeapon::ABaseWeapon()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	CollisionComponent = CreateDefaultSubobject<UBoxComponent>("Box component");
 	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("Skeletal Mesh");
+	SetRootComponent(SkeletalMeshComponent);
+	InteractLightNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>("InteractLight");
+	InteractLightNiagaraComponent->SetupAttachment(RootComponent);
+	CollisionComponent = CreateDefaultSubobject<UBoxComponent>("Box component");
 	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CollisionComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
-	SetRootComponent(SkeletalMeshComponent);
 	CollisionComponent->SetupAttachment(RootComponent);
 }
 
 void ABaseWeapon::DettachWeapon(FVector& NewLocation)
 {
 	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	InteractLightNiagaraComponent->SetVisibility(true);
 }
 
 void ABaseWeapon::AttachWeapon()
 {
 	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	InteractLightNiagaraComponent->SetVisibility(false);
 }
 
 void ABaseWeapon::EnablePhysics()
@@ -46,7 +51,6 @@ void ABaseWeapon::BeginPlay()
 	Super::BeginPlay();
 	if(GetAttachParentActor())
 	{
-		UE_LOG(LogTemp,Display,TEXT("%s"),*GetAttachParentActor()->GetName());
 		CollisionComponent->Deactivate();
 	}
 }

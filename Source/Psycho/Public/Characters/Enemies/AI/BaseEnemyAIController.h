@@ -47,6 +47,8 @@ public:
 	AActor* GetPlayerActor() const ;
 	void ChangeIsPawnDamage(const bool& NewBool);
 	void ChangeIsPawnCanAttack(const bool& NewBool);
+
+	APlayerCharacter* GetPlayerCharacter() const{return PlayerCharacter;}
 };
 
 

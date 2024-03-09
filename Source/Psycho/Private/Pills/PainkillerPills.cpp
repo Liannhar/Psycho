@@ -19,7 +19,7 @@ void UPainkillerPills::UsePill()
     if (!Player) return;
 
     // Setting invulnerability timer
-    Player->GetHealthComponent()->isInvulnerable = true;
+    Player->GetHealthComponent()->bIsInvulnerable = true;
     Player->GetCharacterMovement()->MaxWalkSpeed *= SpeedMultiplier;
     Player->GetAttackComponent()->MultiplyAttackSpeed(AttackSpeedMultiplier);
     GetWorld()->GetTimerManager().SetTimer(PillEffectsTimer,this,&UPainkillerPills::EndInvulnerability,InvulnerabilityTime,false);
@@ -31,7 +31,7 @@ void UPainkillerPills::EndInvulnerability()
 {
     if (Player)
     {
-        Player->GetHealthComponent()->isInvulnerable = false;
+        Player->GetHealthComponent()->bIsInvulnerable = false;
         Player->GetHealthComponent()->SetTakeDamageMultiplier(TakeDamageMultiplier);
         Player->GetCharacterMovement()->MaxWalkSpeed /= SpeedMultiplier;
         Player->GetAttackComponent()->ResetAttackSpeedToDefault();

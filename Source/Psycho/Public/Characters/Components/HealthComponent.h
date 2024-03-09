@@ -69,7 +69,7 @@ public:
 	void ResetTakeDamageMultiplier() { TakeDamageMultiplier = 1.f;}
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Values)
-	bool isInvulnerable;
+	bool bIsInvulnerable=false;
 	UFUNCTION(BlueprintCallable)
 	bool IsDead(){return CharacterIsDead;}	
 

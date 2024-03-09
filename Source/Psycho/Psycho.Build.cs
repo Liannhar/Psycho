@@ -16,6 +16,7 @@ public class Psycho : ModuleRules
 			"Psycho/Public/Characters",
 			"Psycho/Public/Characters/Enemies",
 			"Psycho/Public/Characters/Enemies/FirstBoss",
+			"Psycho/Public/Characters/Enemies/SecondBoss",
 			"Psycho/Public/Characters/Enemies/SmokedEnemies",
 			"Psycho/Public/Characters/Enemies/Components",
 			"Psycho/Public/Characters/Enemies/AI",
