@@ -29,6 +29,8 @@ protected:
 	FName IsPawnNotDamagedKeyName = "IsNotDamaged";
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="AI")
 	FName IsPawnCanAttackKeyName = "IsCanAttack";
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="AI")
+	FName IsPawnStun="IsStun";
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual bool GetCanFocus() const;
 	virtual void Tick(float DeltaSeconds) override;
@@ -47,6 +49,7 @@ public:
 	AActor* GetPlayerActor() const ;
 	void ChangeIsPawnDamage(const bool& NewBool);
 	void ChangeIsPawnCanAttack(const bool& NewBool);
+	void ChangeIsStun(const bool& NewBool);
 
 	APlayerCharacter* GetPlayerCharacter() const{return PlayerCharacter;}
 };

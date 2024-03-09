@@ -34,7 +34,7 @@ public:
 	void SetTimeAttack(bool CanAttack){CantAttackInTime=CanAttack;}
 	
 	//Перекат
-	void Dodge();
+	void SideDodge();
 	//Ставим новое комбо в AttackComponent
 	void SetCombo();
 	//новое направление атаки
@@ -49,7 +49,7 @@ public:
 	void ResetAttackSpeedToDefault();
 	// новый множитель урона
 	void MultiplyAttackDamage(const float& Multiplier){AttackDamage*=Multiplier;}
-	void SprintDodge();
+	void CommonDodge();
 	//восстановление множителя урона
 	void ResetAttackDamage(){AttackDamage=1.f;}
 	//нанесение урона
@@ -61,6 +61,7 @@ public:
 	//Номер текущего комбо
 	int32 CurrentComboAttack = 0;
 	
+
 	bool GetIsDodge() const {return IsDodge;}
 	
 	int32 GetCurrentAttackDirection() const {return CurrentAttackDirection;}
@@ -142,6 +143,9 @@ protected:
 	template<typename T> static int32 CompareSign(T, T);
 
 	static int32 CheckAngle(const float& Angle);
+
+	void IdealDodgeCheck(ABaseCharacter*& ThisCharacter) const;
+	float CheckDodgeRadius=100.0f;
 };
 
 template <typename T>

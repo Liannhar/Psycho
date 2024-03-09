@@ -399,11 +399,11 @@ void AP_PlayerController::Dodge(const FInputActionValue& Value)
 {
 	if(bIsLockedOnTarget)
 	{
-		GetAttackComponent()->Dodge();	
+		GetAttackComponent()->SideDodge();	
 	}
 	else
 	{
-		GetAttackComponent()->SprintDodge();
+		GetAttackComponent()->CommonDodge();
 	}
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Dodge!"));

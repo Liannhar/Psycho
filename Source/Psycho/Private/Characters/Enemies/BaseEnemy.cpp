@@ -32,7 +32,7 @@ ABaseEnemy::ABaseEnemy()
 void ABaseEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	OwnController = GetController();
+	OwnController = Cast<ABaseEnemyAIController>(GetController());
 
 	if (APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
 	{
@@ -269,3 +269,24 @@ void ABaseEnemy::Reactivate()
 	// // }
 	// OwnController->Possess(this);
 }
+
+void ABaseEnemy::StunEnemy()
+{
+	if(GetWorld())
+	{
+		//bIsStunned=true;
+		OwnController->ChangeIsStun(true);
+		GetWorld()->GetTimerManager().SetTimer(StunTimerHandle,this,&ABaseEnemy::RemoveStun,StunTime);
+	}
+}
+
+void ABaseEnemy::RemoveStun()
+{
+	if(GetWorld())
+	{
+		//bIsStunned=false;
+		OwnController->ChangeIsStun(false);	
+		GetWorld()->GetTimerManager().ClearTimer(StunTimerHandle);
+	}
+}
+

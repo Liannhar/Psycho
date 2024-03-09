@@ -91,6 +91,14 @@ void ABaseEnemyAIController::ChangeIsPawnCanAttack(const bool& NewBool)
 	}
 }
 
+void ABaseEnemyAIController::ChangeIsStun(const bool& NewBool)
+{
+	if(const auto BlackBoard = GetBlackboardComponent())
+	{
+		BlackBoard->SetValueAsBool(IsPawnStun,NewBool);
+	}
+}
+
 bool ABaseEnemyAIController::GetCanFocus() const
 {
 	if(const auto BaseEnemy = Cast<ABaseEnemy>(GetPawn()))
