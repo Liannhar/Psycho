@@ -11,7 +11,7 @@ class UNiagaraComponent;
 class UNiagaraSystem;
 class UBehaviorTree;
 
-
+DECLARE_DYNAMIC_DELEGATE(FOnPlayerDiedSignature);
 
 UCLASS()
 class PSYCHO_API ABaseEnemy : public ABaseCharacter
@@ -43,8 +43,12 @@ public:
 	void SetCanAttack(const bool& NewBool) const;
 
 	float GetBaseSpeed() const {return BaseSpeed;}
-	
 
+	UFUNCTION()
+	void OnPlayerDied();
+
+	UPROPERTY(BlueprintReadWrite)
+	FOnPlayerDiedSignature PlayerDied;
 protected:
 	UPROPERTY()
 	bool IsTakenDamage = false;

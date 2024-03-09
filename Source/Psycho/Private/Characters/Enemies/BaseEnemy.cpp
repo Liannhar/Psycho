@@ -16,6 +16,7 @@
 #include "Engine/DecalActor.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/PlayerCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 ABaseEnemy::ABaseEnemy()
 {
@@ -32,6 +33,11 @@ void ABaseEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	OwnController = GetController();
+
+	if (APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+	{
+		Player->GetHealthComponent()->OnDeath.AddUObject(this, &ABaseEnemy::OnPlayerDied);
+	}
 }
 
 void ABaseEnemy::Attack()
@@ -221,6 +227,10 @@ void ABaseEnemy::Death()
 }
 
 
+void ABaseEnemy::OnPlayerDied()
+{
+	PlayerDied.Execute();
+}
 
 
 void ABaseEnemy::Deactivate(float SpeedReduceMultiplier)

@@ -52,4 +52,7 @@ public:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     UInputAction* NextPillAction;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    UInputAction* PauseMenuAction;
 };

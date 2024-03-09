@@ -33,6 +33,8 @@ private:
 protected:
 	void LoadGame();
 	virtual void BeginPlay() override;
+
+	void ShowDeathScreen();
 public:
 	APlayerCharacter();
 
@@ -51,4 +53,9 @@ public:
 	UAnimMontage* DodgeLeft;
 	UPROPERTY(EditAnywhere,Category="Dodge")
 	UAnimMontage* DodgeForward;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UDeathScreen> DeathScreenClass;
+	UPROPERTY()
+	class UDeathScreen* DeathScreen;
 };
