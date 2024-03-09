@@ -94,6 +94,25 @@ void AP_PlayerController::SetupInputComponent()
 	}
 }
 
+
+void AP_PlayerController::AddInputMappingContext(class UInputMappingContext* NewIMC)
+{
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		Subsystem->AddMappingContext(NewIMC, 0);
+	}
+}
+
+
+void AP_PlayerController::RemoveInputMappingContext(class UInputMappingContext* RemoveIMC)
+{
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		Subsystem->RemoveMappingContext(RemoveIMC);
+	}
+}
+
+
 void AP_PlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
