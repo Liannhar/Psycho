@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "AttackComponent.h"
 #include "BaseCharacter.h"
+#include "BaseEnemy.h"
 
 
 //получаем AttackComponent с персонажа, вызвавшего DamageNotify
@@ -16,4 +17,14 @@ inline UAttackComponent* GetAttackComponent(USkeletalMeshComponent*& MeshComp)
 	if(!AttackComponent) return nullptr;
 	
 	return AttackComponent;
+}
+
+//получаем BaseEnemy
+inline ABaseEnemy* GetBaseEnemy(USkeletalMeshComponent*& MeshComp)
+{
+	const auto Actor = MeshComp->GetOwner();
+	if(!Actor) return nullptr;
+	const auto BaseEnemy = Cast<ABaseEnemy>(Actor);
+	if(!BaseEnemy) return nullptr;
+	return BaseEnemy;
 }

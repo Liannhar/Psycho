@@ -72,6 +72,9 @@ public:
 	void StopSprint(const FInputActionValue& Value);
 	void DodgeSprint(const FInputActionValue& Value);
 
+	void AddInputMappingContext(class UInputMappingContext* NewIMC);
+	void RemoveInputMappingContext(class UInputMappingContext* RemoveIMC);
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
