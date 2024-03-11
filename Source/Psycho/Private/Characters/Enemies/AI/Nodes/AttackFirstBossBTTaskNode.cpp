@@ -46,18 +46,3 @@ void UAttackFirstBossBTTaskNode::TickTask(UBehaviorTreeComponent& OwnerComp, uin
 	}
 }
 
-/*AFirstBossEnemy*  UAttackFirstBossBTTaskNode::GetEnemy(UBehaviorTreeComponent& OwnerComp)
-{
-	
-	const auto Controller = OwnerComp.GetAIOwner();
-	if(!Controller) return nullptr;
-                   	
-	const auto Pawn = Controller->GetPawn();
-	if(!Pawn) return nullptr;
-	
-	const auto Enemy = Cast<AFirstBossEnemy>(Pawn);
-	if(!Enemy) return nullptr;
-
-	return Enemy;
-}*/
-
