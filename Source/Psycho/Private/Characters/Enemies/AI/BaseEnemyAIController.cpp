@@ -66,12 +66,6 @@ void ABaseEnemyAIController::ChangeFightStatus(const bool NewFightStatus)
 	}
 }
 
-AActor* ABaseEnemyAIController::GetPlayerActor() const
-{
-	if(!GetBlackboardComponent()) return nullptr;
-	return Cast<AActor>(GetBlackboardComponent()->GetValueAsObject(FocusOnKeyName));
-}
-
 void ABaseEnemyAIController::ChangeIsPawnDamage(const bool& NewBool)
 {
 	if(const auto BlackBoard = GetBlackboardComponent())
@@ -110,7 +104,7 @@ AActor* ABaseEnemyAIController::GetFocusOnActor() const
 	
 	if(GetCanFocus() && FightStatus)
 	{
-		return GetPlayerActor();
+		return Cast<AActor>(GetBlackboardComponent()->GetValueAsObject(FocusOnKeyName));
 	}
 	return nullptr;
 }

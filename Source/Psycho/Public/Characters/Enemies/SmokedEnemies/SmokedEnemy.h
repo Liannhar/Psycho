@@ -6,6 +6,7 @@
 #include "Characters/Enemies/BaseEnemy.h"
 #include "SmokedEnemy.generated.h"
 
+class APlayerCharacter;
 class AEnemySmokeActorEffectNiagara;
 /**
  * 
@@ -29,9 +30,9 @@ protected:
 	UPROPERTY(EditAnywhere,Category="Effect")
 	TSubclassOf<AEnemySmokeActorEffectNiagara> EnemySmokeDeathEffect;
 
-	virtual void GetDamage(AActor* Actor,const UDamageType* DamageType) override;
+	virtual void GetDamage(AActor* Actor) override;
 
-	virtual void Death() override;
+	virtual void Death(ABaseCharacter* Character) override;
 	void EndNiagaraEffect();
 	UPROPERTY(EditAnywhere,Category="Damage")
 	float TimeForEndNiagara=2.0f;

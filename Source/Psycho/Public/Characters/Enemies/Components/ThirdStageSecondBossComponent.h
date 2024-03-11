@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SecondBossEnemy.h"
 #include "Components/ActorComponent.h"
 #include "ThirdStageSecondBossComponent.generated.h"
 
@@ -15,15 +16,26 @@ class PSYCHO_API UThirdStageSecondBossComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UThirdStageSecondBossComponent();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="FirstStage")
 	UBehaviorTree* ThirdStageBehaviorTreeAsset;
 
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="SecondStage")
+	float ActionTime=20.0f;
+	UPROPERTY()
+	ASecondBossEnemy* SecondBoss;
+
+private:
+	FTimerHandle ActionTimer;
+
+	void EndThirdStage();
+	
 public:
 	UBehaviorTree* GetBehaviorTree() const {return ThirdStageBehaviorTreeAsset;}
+
+	void ThirdStageStartAction();
+	
 };

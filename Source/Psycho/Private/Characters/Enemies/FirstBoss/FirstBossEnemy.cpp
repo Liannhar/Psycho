@@ -155,9 +155,9 @@ void AFirstBossEnemy::RecoverStamina()
 
 
 
-void AFirstBossEnemy::Death()
+void AFirstBossEnemy::Death(ABaseCharacter* Character)
 {
-	Super::Death();
+	Super::Death(Character);
 	const float DeathTime = PlayAnimMontage(DeathAnimMontage);
 	SetActorEnableCollision(false);
 	GetWorld()->GetTimerManager().SetTimer(DeathTimer,this,&AFirstBossEnemy::AfterDeath,DeathTime-0.3f);

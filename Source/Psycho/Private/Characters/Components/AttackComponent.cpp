@@ -279,7 +279,7 @@ void UAttackComponent::AttackTarget() const
 		const auto EnemyController = Cast<ABaseEnemyAIController>(Controller); 
 		if(!EnemyController) return;
 		
-		MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation("Attack",EnemyController->GetPlayerActor()->GetActorLocation());
+		MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation("Attack",EnemyController->GetPlayerCharacter()->GetActorLocation());
 	}
 	
 	FTransform AttackTransform=ThisCharacter->GetActorTransform();
@@ -440,7 +440,7 @@ void UAttackComponent::IdealDodgeCheck(ABaseCharacter*& ThisCharacter) const
 			{
 				if(EnemyCharacter->GetIdealDodge())
 				{
-					EnemyCharacter->StunEnemy();
+					EnemyCharacter->StunEnemy(10.0f);
 				}
 			}
 		}

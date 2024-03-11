@@ -34,10 +34,10 @@ void ABaseEnemy::BeginPlay()
 	Super::BeginPlay();
 	OwnController = Cast<ABaseEnemyAIController>(GetController());
 
-	if (APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+	/*if (APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
 	{
 		Player->GetHealthComponent()->OnDeath.AddUObject(this, &ABaseEnemy::OnPlayerDied);
-	}
+	}*/
 }
 
 void ABaseEnemy::Attack()
@@ -150,9 +150,9 @@ void ABaseEnemy::DamageDecalCreate(const bool& ActorRotationIsHead) const
 	}
 }
 
-void ABaseEnemy::GetDamage(AActor* Actor,const UDamageType* DamageType)
+void ABaseEnemy::GetDamage(AActor* Actor)
 {
-	Super::GetDamage(Actor,DamageType);
+	Super::GetDamage(Actor);
 
 	IsTakenDamage=true;
 	
@@ -214,9 +214,9 @@ bool ABaseEnemy::GetLastAttackIsHeavy() const
 	return HealthComponent->GetLastAttackIsHeavy();
 }
 
-void ABaseEnemy::Death()
+void ABaseEnemy::Death(ABaseCharacter* Character)
 {
-	Super::Death();
+	Super::Death(Character);
 	
 	const auto World = GetWorld();
 	if(!World) return;
@@ -270,14 +270,14 @@ void ABaseEnemy::Reactivate()
 	// OwnController->Possess(this);
 }
 
-void ABaseEnemy::StunEnemy()
+void ABaseEnemy::StunEnemy(const float& TimeStun)
 {
 	if(GetWorld())
 	{
 		UE_LOG(LogTemp,Display,TEXT("AAAA"));
 		//bIsStunned=true;
 		OwnController->ChangeIsStun(true);
-		GetWorld()->GetTimerManager().SetTimer(StunTimerHandle,this,&ABaseEnemy::RemoveStun,StunTime);
+		GetWorld()->GetTimerManager().SetTimer(StunTimerHandle,this,&ABaseEnemy::RemoveStun,TimeStun);
 	}
 }
 

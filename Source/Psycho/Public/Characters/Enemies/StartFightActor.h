@@ -52,7 +52,6 @@ protected:
 	FTimerHandle CheckEnemiesTimer;
 	float TimeForCheckEnemies = 0.5f;
 	void CheckEnemies() const;
-	static float CalculateDistance(const AActor* Actor1, const ABaseEnemy* Actor2);
 	UPROPERTY()
 	APsychoGameModeBase* CurrentGameMode;
 	UPROPERTY()

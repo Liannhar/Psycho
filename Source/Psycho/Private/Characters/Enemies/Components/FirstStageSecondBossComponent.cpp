@@ -76,7 +76,6 @@ void UFirstStageSecondBossComponent::TurnOffSwitchLight(ASwitchLightActor* Switc
 	if(CurrentTurnedOnSwitchLightActors.Num()==0)
 	{
 		EndFirstStage();
-		SecondBoss->EndStage();
 	}
 }
 
@@ -84,5 +83,6 @@ void UFirstStageSecondBossComponent::EndFirstStage()
 {
 	ChangeIntensityAllLights(BrightLight);
 	SecondBoss->ChangeInvulnerable(false);
-	SecondBoss->ChangeNiagaraVisibility(false);	
+	SecondBoss->ChangeNiagaraVisibility(false);
+	SecondBoss->EndStage();
 }

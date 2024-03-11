@@ -21,8 +21,17 @@ void AEnemySpawner::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AEnemySpawner::ActionWithEnemy(ABaseEnemy*& Enemy)
+void AEnemySpawner::SpawnEnemies()
 {
+	const auto World = GetWorld();
+	if(!World) return;
+
+	StartSpawnAction();
+	
+	if(!SpawnTimeHandle.IsValid() && GetWorld())
+	{
+		GetWorld()->GetTimerManager().SetTimer(SpawnTimeHandle,this,&AEnemySpawner::SpawnOneEnemy,0.2f,true);
+	}
 }
 
 void AEnemySpawner::SpawnOneEnemy()
@@ -43,19 +52,24 @@ void AEnemySpawner::SpawnOneEnemy()
 	{
 		SpawnIndex=0;
 		GetWorld()->GetTimerManager().ClearTimer(SpawnTimeHandle);
-		Destroy();
+		EndSpawned();
 	}
 }
 
-void AEnemySpawner::SpawnEnemies()
+void AEnemySpawner::ActionWithEnemy(ABaseEnemy*& Enemy)
 {
-	const auto World = GetWorld();
-	if(!World) return;
-	
-	if(!SpawnTimeHandle.IsValid() && GetWorld())
-	{
-		GetWorld()->GetTimerManager().SetTimer(SpawnTimeHandle,this,&AEnemySpawner::SpawnOneEnemy,0.2f,true);
-	}
 }
+
+void AEnemySpawner::EndSpawned()
+{
+	Destroy();
+}
+
+void AEnemySpawner::StartSpawnAction()
+{
+	
+}
+
+
 
 

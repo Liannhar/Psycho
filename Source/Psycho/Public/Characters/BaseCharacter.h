@@ -25,8 +25,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UFUNCTION()
-	virtual void Death();
+	
 	
 	
 
@@ -40,7 +39,7 @@ protected:
 	UMotionWarpingComponent* MotionWarpingComponent;
 
 public:	
-	virtual void GetDamage(AActor* Actor,const UDamageType* DamageType);
+	virtual void GetDamage(AActor* Actor);
 	UHealthComponent* GetHealthComponent() const { return HealthComponent; };
 	UAttackComponent* GetAttackComponent() const { return AttackComponent; };
 	UWeaponComponent* GetWeaponComponent() const { return WeaponComponent; };
@@ -48,4 +47,7 @@ public:
 	//длина попадания атаки для урона
 	UPROPERTY(EditAnywhere,Category="Attack")
 	float LengthLineAttack=40.0f;
+
+	UFUNCTION()
+	virtual void Death(ABaseCharacter* Character);
 };

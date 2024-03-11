@@ -46,7 +46,6 @@ protected:
 	
 public:
 	
-	AActor* GetPlayerActor() const ;
 	void ChangeIsPawnDamage(const bool& NewBool);
 	void ChangeIsPawnCanAttack(const bool& NewBool);
 	void ChangeIsStun(const bool& NewBool);

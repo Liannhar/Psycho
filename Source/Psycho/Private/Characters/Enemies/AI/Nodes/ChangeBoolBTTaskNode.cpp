@@ -13,6 +13,6 @@ UChangeBoolBTTaskNode::UChangeBoolBTTaskNode()
 EBTNodeResult::Type UChangeBoolBTTaskNode::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	const auto BlackBoard = OwnerComp.GetBlackboardComponent();
-	BlackBoard->SetValueAsBool(IsNotRangeAttack.SelectedKeyName,NewBool);
+	BlackBoard->SetValueAsBool(Key.SelectedKeyName,NewBool);
 	return EBTNodeResult::Succeeded;
 }

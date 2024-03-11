@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Characters/BaseCharacter.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Psycho/CoreTypes.h"
 #include "BaseEnemy.generated.h"
 
@@ -54,14 +55,16 @@ public:
 	void SetIdealDodge(bool&& bNewBool){bIdealDodgeTiming=bNewBool;}
 	bool GetIdealDodge() const {return bIdealDodgeTiming;}
 
-	void StunEnemy();
+	void StunEnemy(const float& TimeStun);
+	FTimerHandle GetStunTimerHandle() const {return StunTimerHandle;}
 
+	virtual void Death(ABaseCharacter* Character) override;
 protected:
 	UPROPERTY()
 	bool IsTakenDamage = false;
 
-	virtual void GetDamage(AActor* Actor,const UDamageType* DamageType) override;
-
+	virtual void GetDamage(AActor* Actor) override;
+	
 	UPROPERTY()
 	ABaseEnemyAIController* OwnController;
 
@@ -78,9 +81,8 @@ protected:
 	int32 ComboIndex = 0;
 
 	float DefaultMaxWalkSpeed;
-
-	UPROPERTY(EditAnywhere,Category="Health")
-	float DistanceOfRepulsion= 20.0f;
+	
+	float DistanceOfRepulsion= 0.0f;
 	
 	EComboInput AttackType=None;
 	
@@ -92,7 +94,7 @@ protected:
 	
 	bool NotIsAttackingNow=true;
 
-	virtual void Death() override;
+	
 
 	void EndDamageEffects();
 	
@@ -126,7 +128,5 @@ protected:
 	bool bIsStunned=false;
 	void RemoveStun();
 	FTimerHandle StunTimerHandle;
-	UPROPERTY(EditAnywhere,Category="Stun")
-	float StunTime=5.0f;
 
 };

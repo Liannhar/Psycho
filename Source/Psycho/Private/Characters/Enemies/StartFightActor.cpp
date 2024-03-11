@@ -77,7 +77,7 @@ void AStartFightActor::CheckEnemies() const
 
 	for (ABaseEnemy* Actor : EnemiesInBattle)
 	{
-		float Distance = CalculateDistance(PlayerActor, Actor);
+		float Distance = CalculateDistanceBetweenActors(PlayerActor, Actor);
 		Distances.Emplace(Actor, Distance);
 	}
 
@@ -111,13 +111,6 @@ void AStartFightActor::CheckEnemies() const
 			Dist.Key->SetCanAttack(false);
 		}
 	}
-}
-
-float AStartFightActor::CalculateDistance(const AActor* Actor1, const ABaseEnemy* Actor2)
-{
-	const FVector Location1 = Actor1->GetActorLocation();
-	const FVector Location2 = Actor2->GetActorLocation();
-	return FVector::Dist(Location1, Location2);
 }
 
 void AStartFightActor::AddStartEnemies(ABaseEnemy* NewStartEnemy)

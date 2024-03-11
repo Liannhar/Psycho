@@ -2,11 +2,13 @@
 
 
 #include "Characters/Player/PlayerCharacter.h"
+
+#include "BaseEnemy.h"
 #include "Characters/Components/PillsComponent.h"
 
 #include "BaseWeapon.h"
-#include "DialogComponent.h"
 #include "HealthComponent.h"
+#include "MotionWarpingComponent.h"
 #include "PsychoSaveGame.h"
 #include "P_PlayerController.h"
 #include "WeaponComponent.h"
@@ -110,17 +112,53 @@ void APlayerCharacter::StartStunPlayer(const float& TimeStun)
 	GetWorld()->GetTimerManager().SetTimer(StunTimerHandle,this,&APlayerCharacter::EndStunPlayer,TimeStun);
 }
 
+void APlayerCharacter::ScreamReaction(ASecondBossEnemy*&& SecondBossEnemy) const
+{
+	FVector Direction = GetActorLocation()-SecondBossEnemy->GetActorLocation();
+	Direction.Normalize();
+	const FRotator Rotation = Direction.Rotation();
+	const float DotProduct = FVector::DotProduct(GetActorForwardVector(),SecondBossEnemy->GetActorForwardVector());
+	const int32 Angle = DotProduct>0?1:-1;
+	const FVector NewLocation = FVector(GetActorLocation().X+Angle*Rotation.Yaw*100.0f,GetActorLocation().Y+Angle*Rotation.Yaw*100.0f,GetActorLocation().Z);
+
+	//MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation("ScreamReaction",NewLocation);	
+	//PlayAnimMontage(ScreamReactionMontage);
+}
+
+void APlayerCharacter::GetDamage(AActor* Actor)
+{
+	Super::GetDamage(Actor);
+	auto AttackDirection = 0;
+	auto DistanceOfRepulsion = 0.0f;
+	if(const auto Enemy = Cast<ABaseEnemy>(Actor))
+	{
+		AttackDirection = Enemy->GetAttackComponent()->GetCurrentAttackDirection();
+		DistanceOfRepulsion = Enemy->GetAttackComponent()->GetCurrentAttackRepulsion();
+	}
+	FVector NewLocation;
+	
+	if(AttackDirection!=0)
+	{	
+		NewLocation = FVector(GetActorLocation().X+GetActorRightVector().X*AttackDirection*DistanceOfRepulsion*10.0f,GetActorLocation().Y+GetActorRightVector().Y*AttackDirection*DistanceOfRepulsion*10.0f,GetActorLocation().Z);
+	}
+	else
+	{
+		NewLocation = GetActorLocation()+(GetActorForwardVector()+Actor->GetActorForwardVector())*DistanceOfRepulsion;
+	}
+	SetActorLocation(NewLocation);
+}
+
+
 void APlayerCharacter::EndStunPlayer()
 {
 	const auto PlayerController = Cast<AP_PlayerController>(GetController());
 	if(!PlayerController) return;
 	PlayerController->EnableInput(PlayerController);
-	//здесь вернуть idle
 	if(!GetWorld()) return;
 	GetWorld()->GetTimerManager().ClearTimer(StunTimerHandle);
 }
 
-void APlayerCharacter::ShowDeathScreen()
+void APlayerCharacter::ShowDeathScreen(ABaseCharacter* Character)
 {
 	if (DeathScreenClass && !DeathScreen)
 	{

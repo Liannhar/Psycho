@@ -7,7 +7,9 @@
 #include "HealthComponent.generated.h"
 
 
-DECLARE_MULTICAST_DELEGATE(FOnDeathSignature);
+class ABaseCharacter;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnDeathSignature, ABaseCharacter*);
 DECLARE_MULTICAST_DELEGATE(FOnTakeDamageStartSignature);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -71,7 +73,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Values)
 	bool bIsInvulnerable=false;
 	UFUNCTION(BlueprintCallable)
-	bool IsDead(){return CharacterIsDead;}	
+	bool IsDead() const {return CharacterIsDead;}	
 
 	FOnDeathSignature OnDeath;
 	FOnTakeDamageStartSignature OnTakeDamage;

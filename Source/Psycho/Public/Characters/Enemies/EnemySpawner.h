@@ -29,7 +29,10 @@ protected:
 	int32 SpawnIndex;
 
 	virtual void ActionWithEnemy(ABaseEnemy*& Enemy);
-public:	
+
+	virtual void EndSpawned();
+public:
+	virtual void StartSpawnAction();
 	UFUNCTION(BlueprintCallable)
 	void SpawnEnemies();
 	UFUNCTION(BlueprintCallable)

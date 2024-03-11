@@ -24,11 +24,9 @@ void ASmokedEnemy::BeginPlay()
 	ThirdSmokeNiagaraComponent->SetVisibility(false);
 }
 
-void ASmokedEnemy::GetDamage(AActor* Actor,const UDamageType* DamageType)
+void ASmokedEnemy::GetDamage(AActor* Actor)
 {
-	Super::GetDamage(Actor,DamageType);
-	const auto EnemyMesh=GetMesh();
-	if(!EnemyMesh) return;
+	Super::GetDamage(Actor);
 	if(!EndNiagaraEffectTimer.IsValid())
 	{
 		FirstSmokeNiagaraComponent->SetVisibility(false);
@@ -38,9 +36,9 @@ void ASmokedEnemy::GetDamage(AActor* Actor,const UDamageType* DamageType)
 	GetWorld()->GetTimerManager().SetTimer(EndNiagaraEffectTimer,this,&ASmokedEnemy::EndNiagaraEffect,TimeForEndNiagara);
 }
 
-void ASmokedEnemy::Death()
+void ASmokedEnemy::Death(ABaseCharacter* Character)
 {
-	Super::Death();
+	Super::Death(Character);
 	if(GetWorld())
 	{
 		GetWorld()->SpawnActor<AEnemySmokeActorEffectNiagara>(EnemySmokeDeathEffect,GetActorLocation(), GetActorRotation());

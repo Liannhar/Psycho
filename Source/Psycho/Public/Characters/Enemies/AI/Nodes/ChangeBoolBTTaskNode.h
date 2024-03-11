@@ -18,7 +18,7 @@ public:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="AI")
-	FBlackboardKeySelector IsNotRangeAttack;
+	FBlackboardKeySelector Key;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="AI")
 	bool NewBool=false;
 };

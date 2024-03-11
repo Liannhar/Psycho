@@ -7,18 +7,16 @@
 #include "DamageType/AttackDamageType.h"
 #include "Math/UnrealMathUtility.h"
 
-// Sets default values for this component's properties
+
 UHealthComponent::UHealthComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 
 	TakeDamageMultiplier = 1.f;
 }
 
 
-// Called when the game starts
+
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -32,7 +30,6 @@ void UHealthComponent::BeginPlay()
 }
 
 
-// Called every frame
 void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
@@ -78,7 +75,7 @@ void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDa
 	const auto BaseCharacter = Cast<ABaseCharacter>(DamagedActor);
 	if(BaseCharacter && DamageCauser != GetOwner())
 	{
-		BaseCharacter->GetDamage(DamageCauser,DamageType);
+		BaseCharacter->GetDamage(DamageCauser);
 	}
 	if (CurrentHP == 0)
 	{ 
@@ -106,7 +103,11 @@ UAnimMontage* UHealthComponent::GetTakeDamageAnimMontage(const int32& Direction)
 
 void UHealthComponent::OnDied()
 {
-	OnDeath.Broadcast();
+	
+	
+	OnDeath.Broadcast(Cast<ABaseCharacter>(GetOwner()));	
+	
+	
 	CharacterIsDead=true;
 	
 	if(GEngine)

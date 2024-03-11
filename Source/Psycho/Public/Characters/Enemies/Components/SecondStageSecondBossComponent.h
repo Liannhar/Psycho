@@ -3,10 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseEnemy.h"
 #include "Components/ActorComponent.h"
 #include "SecondStageSecondBossComponent.generated.h"
 
 
+class ABaseCharacter;
+class ABaseEnemy;
+class ASecondBossEnemy;
+class ABaseEnemySpawnerForSecondBoss;
 class UBehaviorTree;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -19,9 +24,37 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="FirstStage")
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="SecondStage")
 	UBehaviorTree* SecondStageBehaviorTreeAsset;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="SecondStage")
+	float ActionTime=2.0f;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="SecondStage")
+	float StunTime=10.0f;
+	int32 CurrentHowManyEnemiesCanBeInFront=3;
+	float TimeForCheckEnemies;
 
+private:
+	UPROPERTY()
+	TArray<ABaseEnemySpawnerForSecondBoss*> EnemiesSpawners;
+	UPROPERTY()
+	ASecondBossEnemy* SecondBoss;
+
+	FTimerHandle StunTimer;
+	FTimerHandle ActionTimer;
+	FTimerHandle CheckEnemiesTimer;
+
+	void CheckEnemies();
+	void AddEnemies(ABaseEnemy* Enemy);
+	void DeleteEnemy(ABaseCharacter* Character);
+
+	UPROPERTY()
+	TArray<ABaseEnemy*> EnemiesInBattle; 
+
+	
+	void SecondStageAction();
 public:
 	UBehaviorTree* GetBehaviorTree() const {return SecondStageBehaviorTreeAsset;}
+	void SecondStageStartAction();
+	void EndSecondStage();
+	void SetEnemiesSpawners(const TArray<ABaseEnemySpawnerForSecondBoss*>& NewEnemiesSpawners){EnemiesSpawners=NewEnemiesSpawners;}
 };

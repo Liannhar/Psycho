@@ -30,7 +30,7 @@ void ABaseCharacter::BeginPlay()
 	HealthComponent->OnDeath.AddUObject(this,&ABaseCharacter::Death);
 }
 
-void ABaseCharacter::Death()
+void ABaseCharacter::Death(ABaseCharacter* Character)
 {
 	GetCharacterMovement()->DisableMovement();
 	if(const auto PlayerController = Cast<AP_PlayerController>(GetController()))
@@ -44,7 +44,7 @@ void ABaseCharacter::Death()
 }
 
 //здесь персонаж реагирует на урон
-void ABaseCharacter::GetDamage(AActor* Actor,const UDamageType* DamageType)
+void ABaseCharacter::GetDamage(AActor* Actor)
 {
 	/*//PlayAnimMontage();// Анимация получения урона
 	*/

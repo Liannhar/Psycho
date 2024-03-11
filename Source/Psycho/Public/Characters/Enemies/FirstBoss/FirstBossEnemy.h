@@ -55,7 +55,7 @@ protected:
 	void UpdateStaminaAI();
 	void RecoverStamina();
 
-	virtual void Death() override;
+	virtual void Death(ABaseCharacter* Character) override;
 	void AfterDeath() const;
 	FTimerHandle DeathTimer;
 	UPROPERTY(EditAnywhere,Category="Death")

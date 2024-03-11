@@ -14,6 +14,6 @@ class PSYCHO_API UAttackDamageType : public UDamageType
 {
 	GENERATED_BODY()
 public:
-	float DamageDistance=10.0f;
+	float DamageDistance=30.0f;
 	int32 DamageDirection=0;
 };

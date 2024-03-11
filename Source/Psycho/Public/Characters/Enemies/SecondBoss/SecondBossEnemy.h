@@ -5,9 +5,11 @@
 #include "CoreMinimal.h"
 #include "FirstStageSecondBossComponent.h"
 #include "NiagaraComponent.h"
+#include "SecondStageSecondBossComponent.h"
 #include "Characters/Enemies/BaseEnemy.h"
 #include "SecondBossEnemy.generated.h"
 
+class ABaseEnemySpawnerForSecondBoss;
 class ASecondBossEnemyAIController;
 class UThirdStageSecondBossComponent;
 class USecondStageSecondBossComponent;
@@ -35,21 +37,30 @@ protected:
 	USecondStageSecondBossComponent* SecondStageSecondBossComponent;
 	UPROPERTY(EditAnywhere,Category="ThirdStage")
 	UThirdStageSecondBossComponent* ThirdStageSecondBossComponent;
-
-	void SecondStageAction();
-	void ThirdStageAction();
-	void ChangeStage(const ESecondBossStages& CurrentStage);
 	
 	virtual void BeginPlay() override;
 	
-	ESecondBossStages CurrentStage;
+	ESecondBossStages NextStage;
+	void ChangeStage(const ESecondBossStages& CurrentStage);
 
 	UPROPERTY()
 	ASecondBossEnemyAIController* SecondBossEnemyAIController;
+
+	UPROPERTY(EditAnywhere,Category="Scream")
+	UNiagaraSystem* ScreamNiagara;
+	UPROPERTY(EditAnywhere,Category="Scream")
+	UAnimMontage* ScreamMontage;
+	UPROPERTY(EditAnywhere,Category="Scream")
+	float ScreamRadius=300.0f;
+	bool bScreamAttack=false;
+	FTimerHandle ScreamTimer;
+	void EndScreamAttack();
+	void ScreamLogic();
 public:
 
 	void SetSwitchLightActors(const TArray<ASwitchLightActor*>& NewSwitchLightActors) const { FirstStageSecondBossComponent->SetSwitchLightActors(NewSwitchLightActors);}
 	void SetPointsLightsOnLevel(const TArray<APointLight*>& NewPointsLights) const { FirstStageSecondBossComponent->SetPointsLightsOnLevel(NewPointsLights);}
+	void SetBaseEnemiesSpawners(const TArray<ABaseEnemySpawnerForSecondBoss*>& EnemiesSpawners) const {SecondStageSecondBossComponent->SetEnemiesSpawners(EnemiesSpawners);}
 
 	void ChangeNiagaraVisibility(const bool&& NewBool) const{ SmokeNiagaraComponent->SetVisibility(NewBool);}
 
@@ -57,4 +68,9 @@ public:
 
 	void EndStage();
 	void StartBoss();
+
+	ASecondBossEnemyAIController* GetControllerSecondBoss() const {return SecondBossEnemyAIController;}
+
+	void ScreamAttack();
+	bool GetScreamAttack() const {return bScreamAttack;}
 };

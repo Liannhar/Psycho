@@ -14,7 +14,7 @@ enum EComboInput
 	HeavyAttack
 };
 
-//Стадии атак
+//Стадии второго босса
 UENUM(BlueprintType)
 enum ESecondBossStages
 {
@@ -103,3 +103,10 @@ struct FAttackAIMemory
 
 	bool EnemyNotIsAttackingNow=true;
 };
+
+inline float CalculateDistanceBetweenActors(const AActor* Actor1, const AActor* Actor2)
+{
+	const FVector Location1 = Actor1->GetActorLocation();
+	const FVector Location2 = Actor2->GetActorLocation();
+	return FVector::Dist(Location1, Location2);
+}
