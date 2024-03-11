@@ -56,6 +56,9 @@ public:
 
 	void StunEnemy();
 
+	bool isBoss = false;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FText EnemyName;
 protected:
 	UPROPERTY()
 	bool IsTakenDamage = false;

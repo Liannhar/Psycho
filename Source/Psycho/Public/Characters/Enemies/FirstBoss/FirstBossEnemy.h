@@ -17,6 +17,7 @@ class PSYCHO_API AFirstBossEnemy : public ABaseEnemy
 {
 	GENERATED_BODY()
 public:
+	AFirstBossEnemy();
 	void StartEffectMoving(int32 NewStaminaCost);
 	void EndEffectMoving();
 	
@@ -72,5 +73,4 @@ protected:
 	TSubclassOf<ABaseWeapon> NewWeaponClassForPlayer;
 
 	float EndEnemyAttackTime=0.1f;
-	
 };

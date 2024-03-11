@@ -18,6 +18,8 @@
 #include "Player/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
+int delegateCallCount = 0;
+
 ABaseEnemy::ABaseEnemy()
 {
 	EnemyChannelCollision = CreateDefaultSubobject<UBoxComponent>("Enemy Channel Collision");
@@ -229,7 +231,10 @@ void ABaseEnemy::Death()
 
 void ABaseEnemy::OnPlayerDied()
 {
-	PlayerDied.Execute();
+	delegateCallCount++;
+	if (PlayerDied.IsBound()) 
+		PlayerDied.Execute();
+	UE_LOG(LogTemp, Warning, TEXT("delegate call count = %d"), delegateCallCount);
 }
 
 

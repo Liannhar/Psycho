@@ -64,7 +64,7 @@ float UHealthComponent::GetPercentHP()
 
 void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	
+	if (CurrentHP == 0) return; // return if already dead
 	if (bIsInvulnerable) return;
 	
 	Damage *= TakeDamageMultiplier;
@@ -73,8 +73,6 @@ void UHealthComponent::ApplyDamage(AActor* DamagedActor, float Damage, const UDa
 	OnTakeDamage.Broadcast();
 	CalculatePercentHP();
 
-	
-	
 	const auto BaseCharacter = Cast<ABaseCharacter>(DamagedActor);
 	if(BaseCharacter && DamageCauser != GetOwner())
 	{
