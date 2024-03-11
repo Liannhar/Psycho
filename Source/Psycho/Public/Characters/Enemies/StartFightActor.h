@@ -9,7 +9,7 @@
 #include "StartFightActor.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDoorOpen, bool, IsOpen);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBossFightStarted, ABaseEnemy*, BossCharacter);
 
 class APsychoGameModeBase;
 class ABaseEnemy;
@@ -61,6 +61,9 @@ protected:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnDoorOpen OpenDoor;
+
+	UPROPERTY(BlueprintAssignable)
+	FBossFightStarted OnBossFightStarted;
 
 	UPROPERTY(EditAnywhere,Category="Trigger")
 	bool NeedTrigger=false;

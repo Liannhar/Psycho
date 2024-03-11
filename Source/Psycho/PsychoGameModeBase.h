@@ -10,7 +10,8 @@ class APlayerCharacter;
 class ABaseEnemy;
 class AStartFightActor;
 class UPsychoSaveGame;
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnChangeFightStatus, bool)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnChangeFightStatus, bool);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBossFightStarted, ABaseEnemy*, BossEnemy);
 
 /**
  * BaseGameMode in all Game
@@ -23,6 +24,8 @@ public:
 	APsychoGameModeBase();
 
 	FOnChangeFightStatus OnChangeFightStatus;
+	UPROPERTY(BlueprintAssignable)
+	FOnBossFightStarted OnBossFightStarted;
 	
 	UFUNCTION(BlueprintCallable)
 	void SetFightStatus(bool CurrentStatus);
@@ -39,6 +42,10 @@ public:
 	void SetStartEnemies(const TArray<ABaseEnemy*>& Enemies){EnemiesInBattle = Enemies;}
 
 	void ChangeEnemiesCount(ABaseEnemy* Enemy,bool Add=false);
+
+	void OnFightingBoss(bool CurrFightStatus);
+
+	ABaseEnemy* IsFightingBoss();
 
 	TArray<ABaseEnemy*> GetEnemiesInBattle(){return EnemiesInBattle;}
 	

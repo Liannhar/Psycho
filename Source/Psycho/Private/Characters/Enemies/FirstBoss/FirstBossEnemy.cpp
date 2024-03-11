@@ -10,6 +10,12 @@
 #include "WeaponComponent.h"
 #include "Components/BoxComponent.h"
 #include "Player/PlayerCharacter.h"
+#include "Enemies/Components/BossHealthWidgetComponent.h"
+
+AFirstBossEnemy::AFirstBossEnemy()
+{
+	isBoss = true;
+}
 
 void AFirstBossEnemy::StartEffectMoving(const int32 NewStaminaCost)
 {

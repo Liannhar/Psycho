@@ -8,6 +8,8 @@
 #include "StartFightActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/PlayerCharacter.h"
+#include "Characters/Enemies/BaseEnemy.h"
+#include "Characters/Enemies/Components/BossHealthWidgetComponent.h"
 
 APsychoGameModeBase::APsychoGameModeBase()
 {
@@ -44,6 +46,7 @@ void APsychoGameModeBase::BeginPlay()
 	Super::BeginPlay();
 	CurrentSaveGame = Cast<UPsychoSaveGame>(UGameplayStatics::CreateSaveGameObject(UPsychoSaveGame::StaticClass()));
 	CurrentSaveGame = CurrentSaveGame->Load();
+	OnChangeFightStatus.AddUObject(this, &APsychoGameModeBase::OnFightingBoss);
 }
 
 void APsychoGameModeBase::CheckEnemySpawners() const
@@ -70,4 +73,25 @@ void APsychoGameModeBase::ChangeEnemiesCount(ABaseEnemy* Enemy, const bool Add)
 	{
 		CheckEnemySpawners();
 	}
+}
+
+void APsychoGameModeBase::OnFightingBoss(bool CurrFightStatus)
+{
+	ABaseEnemy* Boss = IsFightingBoss();
+
+	if (CurrFightStatus && Boss)
+	{
+		OnBossFightStarted.Broadcast(Boss);
+	}
+}
+
+ABaseEnemy* APsychoGameModeBase::IsFightingBoss()
+{
+	for (ABaseEnemy* Enemy : EnemiesInBattle)
+	{
+		if (Enemy->isBoss)
+			return Enemy;
+	}
+
+	return nullptr;
 }
