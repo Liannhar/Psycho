@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "GameFramework/Actor.h"
 #include "Templates/SubclassOf.h"
 #include "CoreTypes.generated.h"
 
@@ -110,3 +111,4 @@ inline float CalculateDistanceBetweenActors(const AActor* Actor1, const AActor* 
 	const FVector Location2 = Actor2->GetActorLocation();
 	return FVector::Dist(Location1, Location2);
 }
+

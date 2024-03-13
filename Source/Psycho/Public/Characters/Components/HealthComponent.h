@@ -24,9 +24,6 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
-	UFUNCTION()
-	void ApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
-	
 	UPROPERTY(EditAnywhere,Category="Animations")
 	UAnimMontage* TakingDamageBackAnimMontage;
 	UPROPERTY(EditAnywhere,Category="Animations")
@@ -58,14 +55,14 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float GetMaxHP();
-	void SetMaxHP(float NewMaxHP){MaxHP=NewMaxHP;}
+	void SetMaxHP(const float NewMaxHP){MaxHP=NewMaxHP;}
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentHP();
-	void SetCurrentHP(float NewCurrentHP){CurrentHP=NewCurrentHP;}
+	void SetCurrentHP(const float NewCurrentHP){CurrentHP=NewCurrentHP;}
 	UFUNCTION(BlueprintCallable)
 	float GetPercentHP();
 	
-	bool GetLastAttackIsHeavy(){return LastAttackIsHeavy;};
+	bool GetLastAttackIsHeavy() const {return LastAttackIsHeavy;};
 
 	void SetTakeDamageMultiplier(float Multiplier) { TakeDamageMultiplier = Multiplier; };
 	void ResetTakeDamageMultiplier() { TakeDamageMultiplier = 1.f;}
@@ -82,5 +79,9 @@ public:
 	void RestoreHP(float RestoreAmount);
 
 	UAnimMontage* GetTakeDamageAnimMontage(const int32& Direction) const;
+
+	UFUNCTION()
+	void ApplyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
+	
 };
 

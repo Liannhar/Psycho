@@ -9,6 +9,8 @@
 #include "Characters/Enemies/BaseEnemy.h"
 #include "SecondBossEnemy.generated.h"
 
+class ASecondBossBaseEnemyVersion;
+class ABlockingVolume;
 class ABaseEnemySpawnerForSecondBoss;
 class ASecondBossEnemyAIController;
 class UThirdStageSecondBossComponent;
@@ -56,6 +58,18 @@ protected:
 	FTimerHandle ScreamTimer;
 	void EndScreamAttack();
 	void ScreamLogic();
+
+	UPROPERTY(EditAnywhere,CAtegory="Circle")
+	ABlockingVolume* BlockCylinder;
+	TArray<ASecondBossBaseEnemyVersion*> SpawnedEnemies;
+	void DeleteEnemy(ABaseCharacter* BaseCharacter);
+	void SpawnOneEnemy();
+	TArray<FVector> LocationsAroundPlayer();
+	FTimerHandle SpawnTimer;
+	int32 CurrentEnemyCount=0;
+	int32 MaxCountEnemies=0;
+	FVector PlayerLocation;
+	
 public:
 
 	void SetSwitchLightActors(const TArray<ASwitchLightActor*>& NewSwitchLightActors) const { FirstStageSecondBossComponent->SetSwitchLightActors(NewSwitchLightActors);}
@@ -73,4 +87,7 @@ public:
 
 	void ScreamAttack();
 	bool GetScreamAttack() const {return bScreamAttack;}
+
+	void CircleAction(const int32& CountEnemies);
+	void SpawnEnemies(const int32& CountEnemies);
 };
