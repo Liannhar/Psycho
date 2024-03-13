@@ -14,10 +14,10 @@ class PSYCHO_API UTutorialWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere, meta = (BindWIdget))
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* Name;
-	UPROPERTY(EditAnywhere, meta = (BindWIdget))
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class URichTextBlock* Description;
-	UPROPERTY(EditAnywhere, meta = (BindWIdget))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (BindWidget))
 	class UImage* Showcase;
 };
