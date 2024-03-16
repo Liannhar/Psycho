@@ -96,7 +96,7 @@ void UTutorialWidgetComponent::CloseTutorialWidget(const FInputActionValue& Valu
 		PlayerController->RemoveInputMappingContext(TutorialInputMappingContext);
 
 		TutorialWidget->RemoveFromParent();
-		TutorialClosed.Broadcast();
+w		TutorialClosed.Broadcast();
 	}
 }
 

@@ -18,6 +18,7 @@ void AFirstBossStartFightTriggerBox::Action()
 		if(const auto StartFightFirstBossActor = Cast<AFirstBossStartFightActor>(StartFightActor); FirstBossEnemy && StartFightFirstBossActor)
 		{
 			StartFightFirstBossActor->AddStartEnemies(FirstBossEnemy);
+			StartFightFirstBossActor->FirstBoss = FirstBossEnemy;
 		}
 	}
 }

@@ -65,6 +65,8 @@ protected:
 	UPROPERTY(BlueprintAssignable)
 	FBossFightStarted OnBossFightStarted;
 
-	UPROPERTY(EditAnywhere,Category="Trigger")
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="Trigger")
 	bool NeedTrigger=false;
+
+	
 };

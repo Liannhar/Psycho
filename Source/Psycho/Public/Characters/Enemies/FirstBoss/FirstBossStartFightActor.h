@@ -14,4 +14,7 @@ UCLASS()
 class PSYCHO_API AFirstBossStartFightActor : public AStartFightActor
 {
 	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Boss")
+	AFirstBossEnemy* FirstBoss;
 };
