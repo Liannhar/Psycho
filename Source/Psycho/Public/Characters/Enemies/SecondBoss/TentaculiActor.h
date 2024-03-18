@@ -24,23 +24,37 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere,Category="Tentaculi")
+	float Damage=10.0f;
+
+	UPROPERTY(EditAnywhere,Category="Tentaculi")
+	float WaitTime=10.0f;
+	UPROPERTY(EditAnywhere,Category="Tentaculi")
+	float StartWaitTime=2.0f;
+	FTimerHandle TimerHandle;
+
+	void EndWait();
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Tentaculi")
-
 	UNiagaraComponent* NiagaraComponent;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	APlayerCharacter* Player;
 	
-	void SpawnSphers();
+	void NiagaraChangePosition();
+
+	UPROPERTY(EditAnywhere,Category="Tentaculi")
+	float Speed=20.f;
+	UPROPERTY(EditAnywhere,Category="Tentaculi")
+	float Height=40.f;
 
 	FVector CurrentLocation;
 
-	UPROPERTY()
-	TArray<ATentaculiDamage*> TentaculiDamageActors;
+	FTimerHandle AttackTimer;
+	void NiagaraChangeBackPosition();
+	UFUNCTION(BlueprintCallable)
+	void OnComponentBeginOverlap();
 
-	FTimerHandle SpawnTimer;
-	void OverlapActor(AActor* InOwner);
 public:
 	void SetPlayer(APlayerCharacter*& NewPlayer){Player=NewPlayer;}
 };
