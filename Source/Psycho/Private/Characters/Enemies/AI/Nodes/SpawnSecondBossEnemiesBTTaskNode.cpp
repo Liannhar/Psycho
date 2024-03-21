@@ -22,7 +22,7 @@ EBTNodeResult::Type USpawnSecondBossEnemiesBTTaskNode::ExecuteTask(UBehaviorTree
                    
 	if(const auto Enemy = Cast<ASecondBossEnemy>(Pawn))
 	{
-		Enemy->SpawnEnemies(EnemiesCount);
+		Enemy->CircleAction(EnemiesCount);
 		return EBTNodeResult::Succeeded;
 	}
 	return EBTNodeResult::Failed;

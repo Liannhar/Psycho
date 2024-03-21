@@ -25,7 +25,6 @@ bool UCheckProcentHPBTDecorator::CalculateRawConditionValue(UBehaviorTreeCompone
 
 	const auto CurrentPercentHp =Enemy->GetHealthComponent()->GetPercentHP();
 
-	UE_LOG(LogTemp,Display,TEXT("PHP,%f"),CurrentPercentHp);
 	if(CurrentPercentHp<MaxValue && CurrentPercentHp>=MinValue)
 	{
 		return true;

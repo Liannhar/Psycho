@@ -43,6 +43,8 @@ protected:
 
 	UPROPERTY()
 	APlayerCharacter* PlayerCharacter;
+
+	
 	
 public:
 	
@@ -51,6 +53,8 @@ public:
 	void ChangeIsStun(const bool& NewBool);
 
 	APlayerCharacter* GetPlayerCharacter() const{return PlayerCharacter;}
+	
+	void ChangeBT();
 };
 
 

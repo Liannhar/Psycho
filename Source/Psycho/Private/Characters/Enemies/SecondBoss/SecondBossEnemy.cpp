@@ -35,10 +35,7 @@ void ASecondBossEnemy::StartBoss()
 	ChangeStage(NextStage);
 }
 
-void ASecondBossEnemy::ChangeBehaviorTreeAsset(UBehaviorTree*& NewBehaviorTree)
-{
-	SecondBossEnemyAIController->ChangeBTStage();
-}
+
 
 void ASecondBossEnemy::ChangeStage(const ESecondBossStages& NewStage)
 {
@@ -46,21 +43,21 @@ void ASecondBossEnemy::ChangeStage(const ESecondBossStages& NewStage)
 	{
 	case FirstStage:
 		{
-			ChangeBehaviorTreeAsset(BehaviorTreeAsset=FirstStageSecondBossComponent->GetBehaviorTree());
+			ChangeBehaviorTreeAsset(FirstStageSecondBossComponent->GetBehaviorTree());
 			FirstStageSecondBossComponent->FirstStageAction();
 			NextStage=SecondStage;
 			break;
 		}
 	case SecondStage:
 		{
-			ChangeBehaviorTreeAsset(BehaviorTreeAsset=SecondStageSecondBossComponent->GetBehaviorTree());
+			ChangeBehaviorTreeAsset(SecondStageSecondBossComponent->GetBehaviorTree());
 			SecondStageSecondBossComponent->SecondStageStartAction();
 			NextStage=ThirdStage;
 			break;
 		}
 	case ThirdStage:
 		{
-			ChangeBehaviorTreeAsset(BehaviorTreeAsset=ThirdStageSecondBossComponent->GetBehaviorTree());
+			ChangeBehaviorTreeAsset(ThirdStageSecondBossComponent->GetBehaviorTree());
 			ThirdStageSecondBossComponent->ThirdStageStartAction();
 			NextStage=FirstStage;
 			break;
@@ -88,7 +85,6 @@ void ASecondBossEnemy::ScreamAttack()
 	const float ScreamTime = PlayAnimMontage(ScreamMontage);
 	if(GetWorld())
 	{
-		GetWorld()->GetTimerManager().SetTimer(ScreamTimer,this,&ASecondBossEnemy::ScreamLogic,ScreamTime/5,true);
 		GetWorld()->GetTimerManager().SetTimer(EndScreamTimer,this,&ASecondBossEnemy::EndScreamAttack,ScreamTime);
 	}
 	ScreamLogic();
@@ -97,7 +93,7 @@ void ASecondBossEnemy::ScreamAttack()
 void ASecondBossEnemy::ScreamLogic()
 {
 	FVector Start = GetActorLocation();
-	FVector End = SecondBossEnemyAIController->GetPlayerCharacter()->GetActorLocation();
+	FVector End = SecondBossEnemyAIController->GetPlayerCharacter()->GetActorLocation()+FVector(10.f,10.f,0.0f);
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(this);
 	FHitResult HitResult;
@@ -117,7 +113,7 @@ void ASecondBossEnemy::EndScreamAttack()
 	bScreamAttack=false;
 	if(GetWorld())
 	{
-		GetWorld()->GetTimerManager().ClearTimer(ScreamTimer);
+		//GetWorld()->GetTimerManager().ClearTimer(ScreamTimer);
 		GetWorld()->GetTimerManager().ClearTimer(EndScreamTimer);
 	}
 }
@@ -161,8 +157,13 @@ void ASecondBossEnemy::SpawnOneEnemy()
 		MaxCountEnemies=0;
 		GetWorld()->GetTimerManager().ClearTimer(SpawnTimer);
 	}
+
+	if(CurrentEnemyCount>=LocationsAroundPlayer.Num())
+	{
+		return;
+	}
 	
-	if(const auto Enemy = GetWorld()->SpawnActor<ASecondBossBaseEnemyVersion>(ASecondBossBaseEnemyVersion::StaticClass(),LocationsAroundPlayer[CurrentEnemyCount],GetActorRotation()))
+	if(const auto Enemy = GetWorld()->SpawnActor<ASecondBossBaseEnemyVersion>(SecondBossSubClass,LocationsAroundPlayer[CurrentEnemyCount],GetActorRotation()))
 	{
 		SpawnedEnemies.Add(Enemy);
 		CurrentEnemyCount++;
@@ -202,12 +203,14 @@ void ASecondBossEnemy::ActivateTentaculis()
 {
 	if(ActiveTimerHandleTentaciuli.IsValid()) return;
 	
-	if(GetWorld() ) GetWorld()->GetTimerManager().SetTimer(ActiveTimerHandleTentaciuli,this,&ASecondBossEnemy::DeactivateTentaculis,TentaculiActiveTime);
 
 	for(const auto& Tentaculi:Tentaculis)
 	{
 		Tentaculi->Activate();
 	}
+
+	if(GetWorld()) GetWorld()->GetTimerManager().SetTimer(ActiveTimerHandleTentaciuli,this,&ASecondBossEnemy::DeactivateTentaculis,TentaculiActiveTime);
+
 }
 
 void ASecondBossEnemy::DeactivateTentaculis()

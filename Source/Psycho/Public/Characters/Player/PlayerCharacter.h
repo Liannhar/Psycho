@@ -47,7 +47,7 @@ public:
 	FORCEINLINE class UPillsComponent* GetPillsComponent() const { return PillsComponent; }
 
 	void StartStunPlayer(const float& TimeStun);
-	void ScreamReaction(ASecondBossEnemy*&& SecondBossEnemy) const;
+	void ScreamReaction(ASecondBossEnemy*&& SecondBossEnemy);
 
 	UPROPERTY(EditAnywhere,Category="Dodge")
 	UAnimMontage* DodgeRight;

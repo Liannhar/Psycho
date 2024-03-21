@@ -49,27 +49,29 @@ protected:
 	UPROPERTY()
 	ASecondBossEnemyAIController* SecondBossEnemyAIController;
 
-	UPROPERTY(EditAnywhere,Category="Scream")
+	UPROPERTY(EditAnywhere,Category="ThirdStage")
 	UNiagaraSystem* ScreamNiagara;
-	UPROPERTY(EditAnywhere,Category="Scream")
+	UPROPERTY(EditAnywhere,Category="ThirdStage")
 	UAnimMontage* ScreamMontage;
-	UPROPERTY(EditAnywhere,Category="Scream")
-	float ScreamRadius=300.0f;
+	UPROPERTY(EditAnywhere,Category="ThirdStage")
+	float ScreamRadius=150.0f;
 	bool bScreamAttack=false;
 	FTimerHandle ScreamTimer;
 	FTimerHandle EndScreamTimer;
 	void EndScreamAttack();
 	void ScreamLogic();
 
-	UPROPERTY(EditAnywhere,CAtegory="Circle")
+	UPROPERTY(EditAnywhere,CAtegory="ThirdStage")
 	ABlockingVolume* BlockCylinder;
 	TArray<ASecondBossBaseEnemyVersion*> SpawnedEnemies;
 	FTimerHandle SpawnTimer;
 	int32 CurrentEnemyCount=0;
 	int32 MaxCountEnemies=0;
-	float SpawnRadiusAroundPlayer=500.f;
+	float SpawnRadiusAroundPlayer=100.f;
 	UPROPERTY()
 	TArray<FVector> LocationsAroundPlayer;
+	UPROPERTY(EditAnywhere,Category="ThirdStage")
+	TSubclassOf<ASecondBossBaseEnemyVersion> SecondBossSubClass;
 	
 	void DeleteEnemy(ABaseCharacter* BaseCharacter);
 	void SpawnOneEnemy();
@@ -80,7 +82,7 @@ protected:
 	TArray<ATentaculiActor*> Tentaculis; 
 	FTimerHandle ActiveTimerHandleTentaciuli;
 	void DeactivateTentaculis();
-	UPROPERTY(EditAnywhere,Category="SecondBoss")
+	UPROPERTY(EditAnywhere,Category="ThirdStage")
 	float TentaculiActiveTime=60.f;
 public:
 
@@ -92,9 +94,7 @@ public:
 	void ChangeNiagaraVisibility(const bool&& NewBool) const{ SmokeNiagaraComponent->SetVisibility(NewBool);}
 
 	void ChangeInvulnerable(const bool&& NewBool) const;
-
-	void ChangeBehaviorTreeAsset(UBehaviorTree*& NewBehaviorTree);
-
+	
 	void EndStage();
 	void StartBoss();
 

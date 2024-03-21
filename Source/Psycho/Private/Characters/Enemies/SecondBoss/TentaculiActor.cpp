@@ -16,14 +16,6 @@ ATentaculiActor::ATentaculiActor()
 void ATentaculiActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	CurrentLocation=FVector(0.0f,0.0f,TentaculiParameters.Height);
-	NiagaraComponent->SetNiagaraVariableVec3("User.VelocityTentaculi",CurrentLocation);
-	if(GetWorld())
-	{
-		GetWorld()->GetTimerManager().SetTimer(AttackTimer,this,&ATentaculiActor::NiagaraChangePosition,1.f,true,StartWaitTime);
-	}
-
 	Deactivate();
 }
 
@@ -93,10 +85,18 @@ void ATentaculiActor::EndWait()
 }
 
 
-void ATentaculiActor::Activate() const
+void ATentaculiActor::Activate()
 {
 	NiagaraComponent->SetVisibility(true);
 	NiagaraComponent->Activate();
+
+	CurrentLocation=FVector(0.0f,0.0f,TentaculiParameters.Height);
+	NiagaraComponent->SetNiagaraVariableVec3("User.VelocityTentaculi",CurrentLocation);
+	if(GetWorld())
+	{
+		GetWorld()->GetTimerManager().SetTimer(AttackTimer,this,&ATentaculiActor::NiagaraChangePosition,1.f,true,StartWaitTime);
+	}
+
 }
 
 void ATentaculiActor::Deactivate() const

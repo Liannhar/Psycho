@@ -29,7 +29,7 @@ protected:
 	float Damage=10.0f;
 
 	UPROPERTY(EditAnywhere,Category="Tentaculi")
-	float WaitTimeAfterAttack=10.0f;
+	float WaitTimeAfterAttack=3.0f;
 	UPROPERTY(EditAnywhere,Category="Tentaculi")
 	float WaitTimeAfterCheckRadius=0.3f;
 	UPROPERTY(EditAnywhere,Category="Tentaculi")
@@ -65,7 +65,7 @@ protected:
 public:
 	void SetPlayer(APlayerCharacter*& NewPlayer){Player=NewPlayer;}
 
-	void Activate() const;
+	void Activate();
 	void Deactivate() const;
 	
 };

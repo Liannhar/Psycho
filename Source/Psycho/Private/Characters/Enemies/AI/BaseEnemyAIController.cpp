@@ -66,6 +66,14 @@ void ABaseEnemyAIController::ChangeFightStatus(const bool NewFightStatus)
 	}
 }
 
+void ABaseEnemyAIController::ChangeBT()
+{
+	if(const auto AICharacter = Cast<ABaseEnemy>(GetPawn()) )
+	{
+		RunBehaviorTree( AICharacter->BehaviorTreeAsset);
+	}
+}
+
 void ABaseEnemyAIController::ChangeIsPawnDamage(const bool& NewBool)
 {
 	if(const auto BlackBoard = GetBlackboardComponent())

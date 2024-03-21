@@ -92,7 +92,7 @@ void ABaseEnemy::EndEnemyAttack()
 void ABaseEnemy::SetStartAttack()
 {
 	NotIsAttackingNow=false;
-	GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,5.0f);	
+	GetWorldTimerManager().SetTimer(WaitNextAttemptAttack,this,&ABaseEnemy::EndEnemyAttack,EndEnemyAttackTime);	
 }
 
 void ABaseEnemy::SetCanAttack(const bool& NewBool) const
@@ -295,5 +295,11 @@ void ABaseEnemy::RemoveStun()
 		OwnController->ChangeIsStun(false);	
 		GetWorld()->GetTimerManager().ClearTimer(StunTimerHandle);
 	}
+}
+
+void ABaseEnemy::ChangeBehaviorTreeAsset(UBehaviorTree* NewBehaviorTree)
+{
+	BehaviorTreeAsset=NewBehaviorTree;
+	OwnController->ChangeBT();
 }
 

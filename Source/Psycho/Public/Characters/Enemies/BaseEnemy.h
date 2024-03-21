@@ -62,6 +62,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FText EnemyName;
 	virtual void Death(ABaseCharacter* Character) override;
+
+	UFUNCTION(BlueprintCallable)
+	void ChangeBehaviorTreeAsset(UBehaviorTree* NewBehaviorTree);
 protected:
 	UPROPERTY()
 	bool IsTakenDamage = false;
@@ -74,7 +77,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Speed")
 	float BaseSpeed = 600.0f;
 
-	float EndEnemyAttackTime=3.0f;
+	float EndEnemyAttackTime=1.5f;
 	void EndWait();
 	UPROPERTY(EditAnywhere,Category="Damage")
 	float TimeForWaitDamage=4.0f;
@@ -130,6 +133,8 @@ protected:
 	bool bIdealDodgeTiming=false;
 	bool bIsStunned=false;
 	void RemoveStun();
+
+	
 	FTimerHandle StunTimerHandle;
 
 };
