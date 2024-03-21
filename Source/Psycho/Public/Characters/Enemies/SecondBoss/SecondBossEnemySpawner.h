@@ -6,6 +6,7 @@
 #include "Characters/Enemies/EnemySpawner.h"
 #include "SecondBossEnemySpawner.generated.h"
 
+class ATentaculiActor;
 class ABaseEnemySpawnerForSecondBoss;
 class APointLight;
 class ASwitchLightActor;
@@ -24,6 +25,8 @@ protected:
 	TArray<ASwitchLightActor*> SwitchLightsActors;
 	UPROPERTY(EditAnywhere,Category="SecondBoss")
 	TArray<ABaseEnemySpawnerForSecondBoss*> EnemiesSpawners;
+	UPROPERTY(EditAnywhere,Category="SecondBoss")
+	TArray<ATentaculiActor*> TentaculiActors;
 
 	virtual void ActionWithEnemy(ABaseEnemy*& Enemy) override;
 	
