@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SecondBossCoreTypes.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
 #include "TentaculiActor.generated.h"
@@ -28,10 +29,15 @@ protected:
 	float Damage=10.0f;
 
 	UPROPERTY(EditAnywhere,Category="Tentaculi")
-	float WaitTime=10.0f;
+	float WaitTimeAfterAttack=10.0f;
+	UPROPERTY(EditAnywhere,Category="Tentaculi")
+	float WaitTimeAfterCheckRadius=0.3f;
 	UPROPERTY(EditAnywhere,Category="Tentaculi")
 	float StartWaitTime=2.0f;
+	UPROPERTY(EditAnywhere,Category="Tentaculi")
+	double HeightAttackZ=20.f;
 	FTimerHandle TimerHandle;
+
 
 	void EndWait();
 	
@@ -40,21 +46,26 @@ protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	APlayerCharacter* Player;
-	
+
+	bool CheckIsPlayerNearTentaculi(const FVector& Distance);
 	void NiagaraChangePosition();
 
-	UPROPERTY(EditAnywhere,Category="Tentaculi")
-	float Speed=20.f;
-	UPROPERTY(EditAnywhere,Category="Tentaculi")
-	float Height=40.f;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Tentaculi")
+	FTentaculiParameters TentaculiParameters;
+	
 
 	FVector CurrentLocation;
 
 	FTimerHandle AttackTimer;
 	void NiagaraChangeBackPosition();
+    void ReturnInStartPosition(float WaitNextAttackAttemptTime);
 	UFUNCTION(BlueprintCallable)
 	void OnComponentBeginOverlap();
 
 public:
 	void SetPlayer(APlayerCharacter*& NewPlayer){Player=NewPlayer;}
+
+	void Activate() const;
+	void Deactivate() const;
+	
 };

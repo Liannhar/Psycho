@@ -19,10 +19,21 @@ enum EComboInput
 UENUM(BlueprintType)
 enum ESecondBossStages
 {
-	First,
-	Second,
-	Third
+	FirstStage,
+	SecondStage,
+	ThirdStage
 };
+
+/*
+//Раунды боя 3 стадии
+UENUM(BlueprintType)
+enum ESecondBossRounds
+{
+	FirstRound,
+	SecondRound,
+	ThirdRound
+};
+*/
 
 //AnimMontage и нужна ли была предыдущей атаке особое попадание
 USTRUCT(BlueprintType)
