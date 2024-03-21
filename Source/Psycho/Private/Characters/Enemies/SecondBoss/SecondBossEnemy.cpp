@@ -88,7 +88,8 @@ void ASecondBossEnemy::ScreamAttack()
 	const float ScreamTime = PlayAnimMontage(ScreamMontage);
 	if(GetWorld())
 	{
-		GetWorld()->GetTimerManager().SetTimer(ScreamTimer,this,&ASecondBossEnemy::EndScreamAttack,ScreamTime);
+		GetWorld()->GetTimerManager().SetTimer(ScreamTimer,this,&ASecondBossEnemy::ScreamLogic,ScreamTime/5,true);
+		GetWorld()->GetTimerManager().SetTimer(EndScreamTimer,this,&ASecondBossEnemy::EndScreamAttack,ScreamTime);
 	}
 	ScreamLogic();
 }
@@ -117,6 +118,7 @@ void ASecondBossEnemy::EndScreamAttack()
 	if(GetWorld())
 	{
 		GetWorld()->GetTimerManager().ClearTimer(ScreamTimer);
+		GetWorld()->GetTimerManager().ClearTimer(EndScreamTimer);
 	}
 }
 

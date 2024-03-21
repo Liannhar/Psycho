@@ -57,6 +57,7 @@ protected:
 	float ScreamRadius=300.0f;
 	bool bScreamAttack=false;
 	FTimerHandle ScreamTimer;
+	FTimerHandle EndScreamTimer;
 	void EndScreamAttack();
 	void ScreamLogic();
 
