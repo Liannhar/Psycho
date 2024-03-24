@@ -9,6 +9,7 @@
 #include "Characters/Enemies/BaseEnemy.h"
 #include "SecondBossEnemy.generated.h"
 
+class ATentaculiActor;
 class ASecondBossBaseEnemyVersion;
 class ABlockingVolume;
 class ABaseEnemySpawnerForSecondBoss;
@@ -40,54 +41,72 @@ protected:
 	UPROPERTY(EditAnywhere,Category="ThirdStage")
 	UThirdStageSecondBossComponent* ThirdStageSecondBossComponent;
 	
+
 	virtual void BeginPlay() override;
 	
 	ESecondBossStages NextStage;
-	void ChangeStage(const ESecondBossStages& CurrentStage);
 
 	UPROPERTY()
 	ASecondBossEnemyAIController* SecondBossEnemyAIController;
 
-	UPROPERTY(EditAnywhere,Category="Scream")
+	UPROPERTY(EditAnywhere,Category="ThirdStage")
 	UNiagaraSystem* ScreamNiagara;
-	UPROPERTY(EditAnywhere,Category="Scream")
+	UPROPERTY(EditAnywhere,Category="ThirdStage")
 	UAnimMontage* ScreamMontage;
-	UPROPERTY(EditAnywhere,Category="Scream")
-	float ScreamRadius=300.0f;
+	UPROPERTY(EditAnywhere,Category="ThirdStage")
+	float ScreamRadius=150.0f;
 	bool bScreamAttack=false;
 	FTimerHandle ScreamTimer;
+	FTimerHandle EndScreamTimer;
 	void EndScreamAttack();
 	void ScreamLogic();
 
-	UPROPERTY(EditAnywhere,CAtegory="Circle")
+	UPROPERTY(EditAnywhere,CAtegory="ThirdStage")
 	ABlockingVolume* BlockCylinder;
 	TArray<ASecondBossBaseEnemyVersion*> SpawnedEnemies;
-	void DeleteEnemy(ABaseCharacter* BaseCharacter);
-	void SpawnOneEnemy();
-	TArray<FVector> LocationsAroundPlayer();
 	FTimerHandle SpawnTimer;
 	int32 CurrentEnemyCount=0;
 	int32 MaxCountEnemies=0;
-	FVector PlayerLocation;
+	float SpawnRadiusAroundPlayer=100.f;
+	UPROPERTY()
+	TArray<FVector> LocationsAroundPlayer;
+	UPROPERTY(EditAnywhere,Category="ThirdStage")
+	TSubclassOf<ASecondBossBaseEnemyVersion> SecondBossSubClass;
 	
+	void DeleteEnemy(ABaseCharacter* BaseCharacter);
+	void SpawnOneEnemy();
+	TArray<FVector> FindLocationsAroundPlayer() const;
+	FVector PlayerLocation;
+
+	UPROPERTY()
+	TArray<ATentaculiActor*> Tentaculis; 
+	FTimerHandle ActiveTimerHandleTentaciuli;
+	void DeactivateTentaculis();
+	UPROPERTY(EditAnywhere,Category="ThirdStage")
+	float TentaculiActiveTime=60.f;
 public:
 
 	void SetSwitchLightActors(const TArray<ASwitchLightActor*>& NewSwitchLightActors) const { FirstStageSecondBossComponent->SetSwitchLightActors(NewSwitchLightActors);}
 	void SetPointsLightsOnLevel(const TArray<APointLight*>& NewPointsLights) const { FirstStageSecondBossComponent->SetPointsLightsOnLevel(NewPointsLights);}
 	void SetBaseEnemiesSpawners(const TArray<ABaseEnemySpawnerForSecondBoss*>& EnemiesSpawners) const {SecondStageSecondBossComponent->SetEnemiesSpawners(EnemiesSpawners);}
+	void SetTentaculisActors(const TArray<ATentaculiActor*>& TentaculiActors) {Tentaculis=TentaculiActors;}
 
 	void ChangeNiagaraVisibility(const bool&& NewBool) const{ SmokeNiagaraComponent->SetVisibility(NewBool);}
 
-	void ChangeInvulnerable(const bool&& NewBool);
-
+	void ChangeInvulnerable(const bool&& NewBool) const;
+	
 	void EndStage();
 	void StartBoss();
 
 	ASecondBossEnemyAIController* GetControllerSecondBoss() const {return SecondBossEnemyAIController;}
 
 	void ScreamAttack();
-	bool GetScreamAttack() const {return bScreamAttack;}
+	bool GetIsScreamAttack() const {return bScreamAttack;}
 
 	void CircleAction(const int32& CountEnemies);
 	void SpawnEnemies(const int32& CountEnemies);
+
+	void ActivateTentaculis();
+
+	void ChangeStage(const ESecondBossStages& CurrentStage);
 };

@@ -3,48 +3,104 @@
 
 #include "Characters/Enemies/SecondBoss/TentaculiActor.h"
 
-#include "TentaculiDamage.h"
+#include "HealthComponent.h"
 #include "Player/PlayerCharacter.h"
 
-// Sets default values
 ATentaculiActor::ATentaculiActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>("Tentaculi");
 	NiagaraComponent->SetupAttachment(RootComponent);
 }
 
-// Called when the game starts or when spawned
 void ATentaculiActor::BeginPlay()
 {
 	Super::BeginPlay();
-	CurrentLocation=GetActorLocation();
+	Deactivate();
+}
+
+void ATentaculiActor::NiagaraChangePosition()
+{
+	const auto NewTargetLocation = Player->GetActorLocation();
+	const auto NewActorLocation=GetActorLocation();
+	const auto DistanceBetweenPlayerTentaculi =  NewTargetLocation-NewActorLocation;
+
+	if(!CheckIsPlayerNearTentaculi(DistanceBetweenPlayerTentaculi))
+	{
+		ReturnInStartPosition(WaitTimeAfterCheckRadius);
+		return;
+	}
+
+	const auto Direction =DistanceBetweenPlayerTentaculi/3.f;
+	const auto NormDirection = Direction.GetSafeNormal();
+	
+	const float AngleDirectionX = NewActorLocation.X>NewTargetLocation.X?1.f:-1.f;
+	const float AngleDirectionY = NewActorLocation.Y>NewTargetLocation.Y?-1.f:1.f;
+	
+	const float ClampedX = CurrentLocation.X+AngleDirectionX*TentaculiParameters.Speed*NormDirection.X;
+	const float ClampedY = CurrentLocation.Y+AngleDirectionY*TentaculiParameters.Speed*NormDirection.Y;
+	const float ClampedZ = CurrentLocation.Z+TentaculiParameters.Speed*NormDirection.Z+HeightAttackZ;
+
+	CurrentLocation = FVector(ClampedX, ClampedY, ClampedZ);
+	
+	NiagaraComponent->SetNiagaraVariableVec3("User.VelocityTentaculi",Direction);
+}
+
+bool ATentaculiActor::CheckIsPlayerNearTentaculi(const FVector& Distance)
+{
+	return Distance.Size() <= TentaculiParameters.Radius;
+}
+
+void ATentaculiActor::NiagaraChangeBackPosition()
+{
+	NiagaraComponent->SetNiagaraVariableVec3("User.VelocityTentaculi",CurrentLocation);
+}
+
+void ATentaculiActor::OnComponentBeginOverlap()
+{
+	if(GetWorld()  && !TimerHandle.IsValid())
+	{
+		const auto DamageType = NewObject<UDamageType>() ;
+		Player->GetHealthComponent()->ApplyDamage(Player,Damage,DamageType,GetController(),this);
+		ReturnInStartPosition(WaitTimeAfterAttack);
+	}
+}
+
+void ATentaculiActor::ReturnInStartPosition(float WaitNextAttackAttemptTime)
+{
+	CurrentLocation= FVector(0.0f,0.0f,TentaculiParameters.Height);
+	GetWorld()->GetTimerManager().ClearTimer(AttackTimer);
+	GetWorld()->GetTimerManager().SetTimer(AttackTimer,this,&ATentaculiActor::NiagaraChangeBackPosition,0.1f,true);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle,this,&ATentaculiActor::EndWait,WaitNextAttackAttemptTime);
+}
+
+void ATentaculiActor::EndWait()
+{
 	if(GetWorld())
 	{
-		GetWorld()->GetTimerManager().SetTimer(SpawnTimer,this,&ATentaculiActor::SpawnSphers,0.3f,true);
+		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+		GetWorld()->GetTimerManager().ClearTimer(AttackTimer);
+		GetWorld()->GetTimerManager().SetTimer(AttackTimer,this,&ATentaculiActor::NiagaraChangePosition,0.1f,true);
 	}
-	//NiagaraComponent->OnComponentBeginOverlap.AddDynamic(this,&ATentaculiActor::OverlapActor);
 }
 
 
-void ATentaculiActor::SpawnSphers()
+void ATentaculiActor::Activate()
 {
-	const auto Direction = Player->GetActorLocation()-CurrentLocation;
-	const auto NormDirection = Direction.GetSafeNormal();
-	CurrentLocation+=NormDirection*150.0f;
+	NiagaraComponent->SetVisibility(true);
+	NiagaraComponent->Activate();
 
-	/*if(GetWorld())
+	CurrentLocation=FVector(0.0f,0.0f,TentaculiParameters.Height);
+	NiagaraComponent->SetNiagaraVariableVec3("User.VelocityTentaculi",CurrentLocation);
+	if(GetWorld())
 	{
-		const auto TentaculiDamage = GetWorld()->SpawnActor<ATentaculiDamage>(CurrentLocation,GetActorRotation());
-		TentaculiDamageActors.Add(TentaculiDamage);
-	}*/
-	UE_LOG(LogTemp,Display,TEXT("X %f Y %f Z %f "),NormDirection.X,NormDirection.Y,NormDirection.Z);
-	NiagaraComponent->SetNiagaraVariableVec3("User.VelocityTentaculi",Direction/1.5f);
+		GetWorld()->GetTimerManager().SetTimer(AttackTimer,this,&ATentaculiActor::NiagaraChangePosition,1.f,true,StartWaitTime);
+	}
+
 }
 
-void ATentaculiActor::OverlapActor(AActor* InOwner)
+void ATentaculiActor::Deactivate() const
 {
-	
+	NiagaraComponent->Deactivate();
+	NiagaraComponent->SetVisibility(false);
 }
-

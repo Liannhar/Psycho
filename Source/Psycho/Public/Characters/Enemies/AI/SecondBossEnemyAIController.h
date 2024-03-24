@@ -13,6 +13,5 @@ UCLASS()
 class PSYCHO_API ASecondBossEnemyAIController : public ABaseEnemyAIController
 {
 	GENERATED_BODY()
-public:
-	void ChangeBTStage();
+	
 };

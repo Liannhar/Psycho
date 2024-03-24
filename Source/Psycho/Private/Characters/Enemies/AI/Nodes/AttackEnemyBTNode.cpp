@@ -8,6 +8,7 @@
 UAttackEnemyBTNode::UAttackEnemyBTNode()
 {
 	NodeName="Attack";
+	bNotifyTick=true;
 }
 
 EBTNodeResult::Type UAttackEnemyBTNode::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -17,11 +18,20 @@ EBTNodeResult::Type UAttackEnemyBTNode::ExecuteTask(UBehaviorTreeComponent& Owne
                    	
 	const auto Pawn = Controller->GetPawn();
 	if(!Pawn) return EBTNodeResult::Failed;
-                   
-	if(const auto Enemy = Cast<ABaseEnemy>(Pawn))
+
+	Enemy = Cast<ABaseEnemy>(Pawn);
+	if(Enemy)
 	{
 		Enemy->PreparationsBeforeTheAttack(ComboType,ComboIndex,AttackCount-1,NeedRandom);
 		Enemy->Attack();
+		return EBTNodeResult::InProgress;
 	}
-	return EBTNodeResult::Succeeded;
+	return EBTNodeResult::Failed;
 }
+
+void UAttackEnemyBTNode::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+{
+	if (Enemy && Enemy->GetNotIsAttackingNow())
+	{
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+	}}

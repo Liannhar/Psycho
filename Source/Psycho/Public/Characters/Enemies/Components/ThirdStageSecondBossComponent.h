@@ -24,7 +24,7 @@ protected:
 	UBehaviorTree* ThirdStageBehaviorTreeAsset;
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="SecondStage")
-	float ActionTime=20.0f;
+	float ActionTime=100.0f;
 	UPROPERTY()
 	ASecondBossEnemy* SecondBoss;
 

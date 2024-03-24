@@ -8,10 +8,9 @@
 #include "NiagaraComponent.h"
 #include "SecondBossBaseEnemyVersion.h"
 #include "SecondBossEnemyAIController.h"
-#include "SecondBossEnemySpawner.h"
 #include "SecondStageSecondBossComponent.h"
+#include "TentaculiActor.h"
 #include "ThirdStageSecondBossComponent.h"
-#include "Engine/BlockingVolume.h"
 #include "Player/PlayerCharacter.h"
 
 ASecondBossEnemy::ASecondBossEnemy()
@@ -31,36 +30,36 @@ void ASecondBossEnemy::BeginPlay()
 
 void ASecondBossEnemy::StartBoss()
 {
-	NextStage=First;
+	//TODO for tests
+	NextStage=ThirdStage;
 	ChangeStage(NextStage);
 }
+
+
 
 void ASecondBossEnemy::ChangeStage(const ESecondBossStages& NewStage)
 {
 	switch (NewStage)
 	{
-	case First:
+	case FirstStage:
 		{
-			BehaviorTreeAsset=FirstStageSecondBossComponent->GetBehaviorTree();
-			SecondBossEnemyAIController->ChangeBTStage();
+			ChangeBehaviorTreeAsset(FirstStageSecondBossComponent->GetBehaviorTree());
 			FirstStageSecondBossComponent->FirstStageAction();
-			NextStage=Second;
+			NextStage=SecondStage;
 			break;
 		}
-	case Second:
+	case SecondStage:
 		{
-			BehaviorTreeAsset=SecondStageSecondBossComponent->GetBehaviorTree();
-			SecondBossEnemyAIController->ChangeBTStage();
+			ChangeBehaviorTreeAsset(SecondStageSecondBossComponent->GetBehaviorTree());
 			SecondStageSecondBossComponent->SecondStageStartAction();
-			NextStage=Third;
+			NextStage=ThirdStage;
 			break;
 		}
-	case Third:
+	case ThirdStage:
 		{
-			BehaviorTreeAsset=ThirdStageSecondBossComponent->GetBehaviorTree();
-			SecondBossEnemyAIController->ChangeBTStage();
+			ChangeBehaviorTreeAsset(ThirdStageSecondBossComponent->GetBehaviorTree());
 			ThirdStageSecondBossComponent->ThirdStageStartAction();
-			NextStage=First;
+			NextStage=FirstStage;
 			break;
 		}
 	}
@@ -70,7 +69,7 @@ void ASecondBossEnemy::ChangeStage(const ESecondBossStages& NewStage)
 
 
 
-void ASecondBossEnemy::ChangeInvulnerable(const bool&& NewBool)
+void ASecondBossEnemy::ChangeInvulnerable(const bool&& NewBool) const
 {
 	HealthComponent->bIsInvulnerable=NewBool;
 }
@@ -86,7 +85,7 @@ void ASecondBossEnemy::ScreamAttack()
 	const float ScreamTime = PlayAnimMontage(ScreamMontage);
 	if(GetWorld())
 	{
-		GetWorld()->GetTimerManager().SetTimer(ScreamTimer,this,&ASecondBossEnemy::EndScreamAttack,ScreamTime);
+		GetWorld()->GetTimerManager().SetTimer(EndScreamTimer,this,&ASecondBossEnemy::EndScreamAttack,ScreamTime);
 	}
 	ScreamLogic();
 }
@@ -94,7 +93,7 @@ void ASecondBossEnemy::ScreamAttack()
 void ASecondBossEnemy::ScreamLogic()
 {
 	FVector Start = GetActorLocation();
-	FVector End = SecondBossEnemyAIController->GetPlayerCharacter()->GetActorLocation();
+	FVector End = SecondBossEnemyAIController->GetPlayerCharacter()->GetActorLocation()+FVector(10.f,10.f,0.0f);
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(this);
 	FHitResult HitResult;
@@ -114,7 +113,8 @@ void ASecondBossEnemy::EndScreamAttack()
 	bScreamAttack=false;
 	if(GetWorld())
 	{
-		GetWorld()->GetTimerManager().ClearTimer(ScreamTimer);
+		//GetWorld()->GetTimerManager().ClearTimer(ScreamTimer);
+		GetWorld()->GetTimerManager().ClearTimer(EndScreamTimer);
 	}
 }
 
@@ -124,8 +124,11 @@ void ASecondBossEnemy::CircleAction(const int32& CountEnemies)
 	if(GetWorld())
 	{
 		PlayerLocation = SecondBossEnemyAIController->GetPlayerCharacter()->GetActorLocation();
-		BlockCylinder = GetWorld()->SpawnActor<ABlockingVolume>(ABlockingVolume::StaticClass(),PlayerLocation,GetActorRotation());
+		/*BlockCylinder = GetWorld()->SpawnActor<ABlockingVolume>(ABlockingVolume::StaticClass(),PlayerLocation,GetActorRotation());
 
+		const auto Angle = 360.f/CountEnemies;
+		BlockCylinder->Brush->NumSharedSides=CountEnemies;*/
+		LocationsAroundPlayer = FindLocationsAroundPlayer();
 		SpawnEnemies(CountEnemies);
 	}
 }
@@ -134,7 +137,11 @@ void ASecondBossEnemy::SpawnEnemies(const int32& CountEnemies)
 {
 	if(GetWorld())
 	{
-		MaxCountEnemies=CountEnemies;
+		PlayerLocation = SecondBossEnemyAIController->GetPlayerCharacter()->GetActorLocation();
+		const auto Player = SecondBossEnemyAIController->GetPlayerCharacter();
+		MaxCountEnemies=CountEnemies-1;
+		SetActorLocation(PlayerLocation+SpawnRadiusAroundPlayer*Player->GetActorForwardVector().RotateAngleAxis(0.0f,FVector(0,0,1.f)));
+		
 		GetWorld()->GetTimerManager().SetTimer(SpawnTimer,this,&ASecondBossEnemy::SpawnOneEnemy,0.2f,true);
 	}
 }
@@ -151,10 +158,12 @@ void ASecondBossEnemy::SpawnOneEnemy()
 		GetWorld()->GetTimerManager().ClearTimer(SpawnTimer);
 	}
 
-	//]
-	//const auto& LocationsAroundPlayer = LocationsAroundPlayer;
+	if(CurrentEnemyCount>=LocationsAroundPlayer.Num())
+	{
+		return;
+	}
 	
-	if(const auto Enemy = GetWorld()->SpawnActor<ASecondBossBaseEnemyVersion>(ASecondBossBaseEnemyVersion::StaticClass(),PlayerLocation,GetActorRotation()))
+	if(const auto Enemy = GetWorld()->SpawnActor<ASecondBossBaseEnemyVersion>(SecondBossSubClass,LocationsAroundPlayer[CurrentEnemyCount],GetActorRotation()))
 	{
 		SpawnedEnemies.Add(Enemy);
 		CurrentEnemyCount++;
@@ -171,18 +180,47 @@ void ASecondBossEnemy::DeleteEnemy(ABaseCharacter* BaseCharacter)
 	
 }
 
-TArray<FVector> ASecondBossEnemy::LocationsAroundPlayer()
+TArray<FVector> ASecondBossEnemy::FindLocationsAroundPlayer() const
 {
 	if(PlayerLocation.IsZero()) return TArray<FVector>();
-	const auto Locations = TArray<FVector>();
+	auto Locations = TArray<FVector>();
 
-	float Angle = 360.0f/MaxCountEnemies;
+	const float AngleChange = 360.0f/MaxCountEnemies;
+	float Angle=AngleChange;
+
+	const auto PlayerForwardVector = SecondBossEnemyAIController->GetPlayerCharacter()->GetActorForwardVector();
+
 	for(int32 i=0;i<MaxCountEnemies;i++)
 	{
-		
+		const auto NewLocation=PlayerLocation+SpawnRadiusAroundPlayer*PlayerForwardVector.RotateAngleAxis(Angle,FVector(0,0,1.f));
+		Locations.Add(NewLocation);
+		Angle=FMath::Clamp(Angle+AngleChange,0.0f,360.f);
 	}
-	//Locations.Add(PlayerLocation.);
 	return Locations;
+}
+
+void ASecondBossEnemy::ActivateTentaculis()
+{
+	if(ActiveTimerHandleTentaciuli.IsValid()) return;
+	
+
+	for(const auto& Tentaculi:Tentaculis)
+	{
+		Tentaculi->Activate();
+	}
+
+	if(GetWorld()) GetWorld()->GetTimerManager().SetTimer(ActiveTimerHandleTentaciuli,this,&ASecondBossEnemy::DeactivateTentaculis,TentaculiActiveTime);
+
+}
+
+void ASecondBossEnemy::DeactivateTentaculis()
+{
+	if(GetWorld() ) GetWorld()->GetTimerManager().ClearTimer(ActiveTimerHandleTentaciuli);
+	
+	for(const auto& Tentaculi:Tentaculis)
+	{
+		Tentaculi->Deactivate();
+	}
 }
 
 

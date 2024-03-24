@@ -409,7 +409,6 @@ void AP_PlayerController::ChangeTargetOn(const FInputActionValue& Value)
 
 void AP_PlayerController::Interact(const FInputActionValue& Value)
 {
-	// TODO: Interact
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Interacted"));
 }

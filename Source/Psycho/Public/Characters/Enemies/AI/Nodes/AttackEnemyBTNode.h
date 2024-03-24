@@ -9,6 +9,8 @@
 #include "AttackEnemyBTNode.generated.h"
 
 
+class ABaseEnemy;
+
 UCLASS()
 class PSYCHO_API UAttackEnemyBTNode : public UBTTaskNode
 {
@@ -17,6 +19,7 @@ public:
 	UAttackEnemyBTNode();
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
+	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 	UPROPERTY(EditAnywhere,Category="Attacks")
 	int32 AttackCount=0;
 	
@@ -28,4 +31,7 @@ public:
 	
 	UPROPERTY(EditAnywhere,Category="Attacks")
 	bool NeedRandom=false;
+
+	UPROPERTY()
+	ABaseEnemy* Enemy=nullptr;
 };

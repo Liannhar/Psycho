@@ -13,6 +13,8 @@ void ASecondBossEnemySpawner::ActionWithEnemy(ABaseEnemy*& Enemy)
 		SecondBoss->SetSwitchLightActors(SwitchLightsActors);
 		SecondBoss->SetPointsLightsOnLevel(PointsLightsOnLevel);
 		SecondBoss->SetBaseEnemiesSpawners(EnemiesSpawners);
+		SecondBoss->SetTentaculisActors(TentaculiActors);
+		
 		SecondBoss->StartBoss();
 	}
 	

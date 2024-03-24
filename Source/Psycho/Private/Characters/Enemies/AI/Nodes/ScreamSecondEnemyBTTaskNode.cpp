@@ -23,7 +23,7 @@ EBTNodeResult::Type UScreamSecondEnemyBTTaskNode::ExecuteTask(UBehaviorTreeCompo
 	Enemy = Cast<ASecondBossEnemy>(Pawn);
 	if(!Enemy) return EBTNodeResult::Failed;
 	
-	if(!Enemy->GetScreamAttack())
+	if(!Enemy->GetIsScreamAttack())
 	{
 		Enemy->ScreamAttack();
 		return EBTNodeResult::InProgress;
@@ -33,7 +33,7 @@ EBTNodeResult::Type UScreamSecondEnemyBTTaskNode::ExecuteTask(UBehaviorTreeCompo
 
 void UScreamSecondEnemyBTTaskNode::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
-	if (Enemy && !Enemy->GetScreamAttack())
+	if (Enemy && !Enemy->GetIsScreamAttack())
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}

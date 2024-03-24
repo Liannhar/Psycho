@@ -112,17 +112,17 @@ void APlayerCharacter::StartStunPlayer(const float& TimeStun)
 	GetWorld()->GetTimerManager().SetTimer(StunTimerHandle,this,&APlayerCharacter::EndStunPlayer,TimeStun);
 }
 
-void APlayerCharacter::ScreamReaction(ASecondBossEnemy*&& SecondBossEnemy) const
+void APlayerCharacter::ScreamReaction(ASecondBossEnemy*&& SecondBossEnemy)
 {
 	FVector Direction = GetActorLocation()-SecondBossEnemy->GetActorLocation();
 	Direction.Normalize();
-	const FRotator Rotation = Direction.Rotation();
-	const float DotProduct = FVector::DotProduct(GetActorForwardVector(),SecondBossEnemy->GetActorForwardVector());
-	const int32 Angle = DotProduct>0?1:-1;
-	const FVector NewLocation = FVector(GetActorLocation().X+Angle*Rotation.Yaw*100.0f,GetActorLocation().Y+Angle*Rotation.Yaw*100.0f,GetActorLocation().Z);
-
-	//MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation("ScreamReaction",NewLocation);	
-	//PlayAnimMontage(ScreamReactionMontage);
+	const float DotProduct = FVector::DotProduct(GetActorForwardVector().GetSafeNormal(),Direction.GetSafeNormal());
+	const int32 Distance = DotProduct>0?100:-100;
+	UE_LOG(LogTemp,Display,TEXT("%d"),Distance);
+	const FVector NewLocation = FVector(GetActorLocation().X+Distance,GetActorLocation().Y+Distance,GetActorLocation().Z);
+	
+	MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation("ScreamReaction",NewLocation);	
+	PlayAnimMontage(ScreamReactionMontage);
 }
 
 void APlayerCharacter::GetDamage(AActor* Actor)
