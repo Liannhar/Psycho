@@ -48,6 +48,6 @@ public:
 	UPROPERTY(EditAnywhere,Category="Attack")
 	float LengthLineAttack=40.0f;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	virtual void Death(ABaseCharacter* Character);
 };

@@ -61,6 +61,7 @@ public:
 	bool isBoss = false;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FText EnemyName;
+
 	virtual void Death(ABaseCharacter* Character) override;
 protected:
 	UPROPERTY()
