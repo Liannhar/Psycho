@@ -9,7 +9,7 @@
 
 class ABaseCharacter;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnDeathSignature, ABaseCharacter*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeathSignature, ABaseCharacter*,Character);
 DECLARE_MULTICAST_DELEGATE(FOnTakeDamageStartSignature);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -70,8 +70,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Values)
 	bool bIsInvulnerable=false;
 	UFUNCTION(BlueprintCallable)
-	bool IsDead() const {return CharacterIsDead;}	
-
+	bool IsDead() const {return CharacterIsDead;}
+	
+	UPROPERTY(BlueprintAssignable)
 	FOnDeathSignature OnDeath;
 	FOnTakeDamageStartSignature OnTakeDamage;
 	

@@ -82,7 +82,7 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	//LoadGame();
 
-	HealthComponent->OnDeath.AddUObject(this, &APlayerCharacter::ShowDeathScreen);
+	HealthComponent->OnDeath.AddDynamic(this, &APlayerCharacter::ShowDeathScreen);
 }
 
 void APlayerCharacter::LoadGame()

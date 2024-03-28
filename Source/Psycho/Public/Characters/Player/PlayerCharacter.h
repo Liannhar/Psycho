@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Characters/BaseCharacter.h"
-#include "InputActionValue.h"
 #include "SecondBossEnemy.h"
 #include "PlayerCharacter.generated.h"
 
@@ -35,6 +34,7 @@ protected:
 	void LoadGame();
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
 	void ShowDeathScreen(ABaseCharacter* Character);
 public:
 	APlayerCharacter();

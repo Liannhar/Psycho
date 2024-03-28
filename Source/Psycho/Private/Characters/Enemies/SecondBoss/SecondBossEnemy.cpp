@@ -167,7 +167,7 @@ void ASecondBossEnemy::SpawnOneEnemy()
 	{
 		SpawnedEnemies.Add(Enemy);
 		CurrentEnemyCount++;
-		Enemy->GetHealthComponent()->OnDeath.AddUObject(this,&ASecondBossEnemy::DeleteEnemy);	
+		Enemy->GetHealthComponent()->OnDeath.AddDynamic(this,&ASecondBossEnemy::DeleteEnemy);	
 	}
 }
 
