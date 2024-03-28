@@ -45,6 +45,7 @@ private:
 
 	void CheckEnemies();
 	void AddEnemies(ABaseEnemy* Enemy);
+	UFUNCTION()
 	void DeleteEnemy(ABaseCharacter* Character);
 
 	UPROPERTY()

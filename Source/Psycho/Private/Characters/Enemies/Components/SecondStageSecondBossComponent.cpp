@@ -104,7 +104,7 @@ void USecondStageSecondBossComponent::AddEnemies(ABaseEnemy* Enemy)
 	if(Enemy)
 	{
 		EnemiesInBattle.Add(Enemy);
-		Enemy->GetHealthComponent()->OnDeath.AddUObject(this,&USecondStageSecondBossComponent::DeleteEnemy);
+		Enemy->GetHealthComponent()->OnDeath.AddDynamic(this,&USecondStageSecondBossComponent::DeleteEnemy);
 	}
 }
 
@@ -129,6 +129,7 @@ void USecondStageSecondBossComponent::EndSecondStage()
 		GetWorld()->GetTimerManager().ClearTimer(StunTimer);
 	}
 	SecondBoss->EndStage();
+	//www
 }
 
 

@@ -62,6 +62,7 @@ protected:
 	UPROPERTY(EditAnywhere,CAtegory="Circle")
 	ABlockingVolume* BlockCylinder;
 	TArray<ASecondBossBaseEnemyVersion*> SpawnedEnemies;
+	UFUNCTION()
 	void DeleteEnemy(ABaseCharacter* BaseCharacter);
 	void SpawnOneEnemy();
 	TArray<FVector> LocationsAroundPlayer();

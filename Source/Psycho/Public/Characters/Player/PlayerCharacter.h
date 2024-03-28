@@ -35,6 +35,7 @@ protected:
 	void LoadGame();
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
 	void ShowDeathScreen(ABaseCharacter* Character);
 public:
 	APlayerCharacter();
